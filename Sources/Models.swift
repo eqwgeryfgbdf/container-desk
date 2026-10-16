@@ -1,4 +1,49 @@
 import Foundation
+import Darwin
+
+struct PublishedPort: Hashable {
+    let hostAddress: String
+    let hostPort: Int?
+    let containerPort: Int?
+    let transport: String
+
+    init(_ raw: [String: Any]) {
+        hostAddress = raw["hostAddress"] as? String ?? "?"
+        hostPort = raw["hostPort"] as? Int
+        containerPort = raw["containerPort"] as? Int
+        transport = (raw["proto"] as? String ?? "?").lowercased()
+    }
+
+    var display: String {
+        let host = hostAddress.contains(":") ? "[\(hostAddress)]" : hostAddress
+        return "\(host):\(hostPort.map(String.init) ?? "?") → \(containerPort.map(String.init) ?? "?")/\(transport)"
+    }
+
+    var webURL: URL? {
+        guard transport == "tcp", let hostPort, (1...65535).contains(hostPort),
+              let containerPort, (1...65535).contains(containerPort) else { return nil }
+        var ipv4 = in_addr()
+        var ipv6 = in6_addr()
+        let host: String
+        if inet_pton(AF_INET, hostAddress, &ipv4) == 1 {
+            host = ipv4.s_addr == 0 ? "127.0.0.1" : hostAddress
+        } else if inet_pton(AF_INET6, hostAddress, &ipv6) == 1 {
+            let wildcard = withUnsafeBytes(of: ipv6) { $0.allSatisfy { $0 == 0 } }
+            host = "[\(wildcard ? "::1" : hostAddress)]"
+        } else if hostAddress == "localhost" {
+            host = hostAddress
+        } else {
+            return nil
+        }
+        // Port metadata cannot detect the application protocol. Use HTTPS for
+        // container port 443; other TCP services open as HTTP by default.
+        var url = URLComponents()
+        url.scheme = containerPort == 443 ? "https" : "http"
+        url.host = host
+        url.port = hostPort
+        return url.url
+    }
+}
 
 struct ContainerItem: Identifiable, Hashable {
     let id: String
@@ -6,7 +51,7 @@ struct ContainerItem: Identifiable, Hashable {
     var image: String
     var cpus: Int
     var memory: Int64
-    var ports: [String]
+    var ports: [PublishedPort]
     var networks: [String]
     var mounts: [String]
     var running: Bool { state == "running" }
@@ -18,9 +63,7 @@ struct ContainerItem: Identifiable, Hashable {
             let status = row["status"] as? [String:Any] ?? [:]
             let resources = c["resources"] as? [String:Any] ?? [:]
             let image = (c["image"] as? [String:Any])?["reference"] as? String ?? "—"
-            let ports = (c["publishedPorts"] as? [[String:Any]] ?? []).map { p in
-                "\(p["hostAddress"] ?? "127.0.0.1"):\(p["hostPort"] ?? "?") → \(p["containerPort"] ?? "?")/\(p["proto"] ?? "tcp")"
-            }
+            let ports = (c["publishedPorts"] as? [[String:Any]] ?? []).map(PublishedPort.init)
             let mounts = (c["mounts"] as? [[String:Any]] ?? []).map { m in
                 let source=m["source"] as? String ?? ""
                 return "\(source.isEmpty ? (m["type"] as? String ?? "—") : source) → \(m["destination"] ?? "—")"

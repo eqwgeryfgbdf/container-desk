@@ -60,6 +60,8 @@ rows.update({
 rows['migrationUnsupported']=('This custom layout or data directory cannot be migrated automatically. Keep using its original installer.','此自定义布局或数据目录无法自动迁移，请继续使用原安装工具。','此自訂配置或資料目錄無法自動遷移，請繼續使用原安裝工具。')
 rows['migrationPolicy']=('Only the recognized per-user Apple Container layout can migrate to the same tested version. /usr/local must be unused and containers stopped. Original files and data are retained.','仅支持已识别的个人用户 Apple Container 安装迁移到相同已验证版本。/usr/local 必须尚未安装且容器已停止。保留原文件与数据。','僅支援已識別的個人使用者 Apple Container 安裝遷移至相同已驗證版本。/usr/local 必須尚未安裝且容器已停止。保留原檔案與資料。')
 rows['releaseBuild']=('Developer ID distribution build.','Developer ID 分发构建。','Developer ID 散佈版本。')
+rows['openPortInBrowser']=('Open in default browser','在默认浏览器中打开','在預設瀏覽器中開啟')
+rows['copyPortURL']=('Copy URL','复制网址','複製網址')
 root=Path(__file__).resolve().parents[1]
 strings={k:{'localizations':{lang:{'stringUnit':{'state':'translated','value':value}} for lang,value in zip(['en','zh-Hans','zh-Hant'],values)}} for k,values in rows.items()}
 (root/'Resources/Localizable.xcstrings').write_text(json.dumps({'sourceLanguage':'en','strings':strings,'version':'1.0'},ensure_ascii=False,indent=2)+'\n')

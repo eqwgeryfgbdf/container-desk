@@ -12,6 +12,23 @@ import Foundation
         try expect(parsed.count==2 && parsed.first(where:{$0.id=="web"})?.running==true,"Container state parsing failed")
         try expect(parsed.first(where:{$0.id=="web"})?.memory==1073741824,"Memory limit changed")
         try expect(parsed.first(where:{$0.id=="old"})?.image=="—","Missing field must remain unknown")
+        try expect(parsed.first(where:{$0.id=="web"})?.ports.first?.webURL?.absoluteString=="http://127.0.0.1:8080","Port link must use the published host port")
+        func port(_ host:String="127.0.0.1",_ published:Int=8765,_ target:Int=8080,_ transport:String="tcp")->PublishedPort {
+            PublishedPort(["hostAddress":host,"hostPort":published,"containerPort":target,"proto":transport])
+        }
+        try expect(port().webURL?.absoluteString=="http://127.0.0.1:8765","Screenshot mapping must open the host address and port")
+        try expect(port("0.0.0.0").webURL?.absoluteString=="http://127.0.0.1:8765","IPv4 wildcard must open loopback")
+        try expect(port("::").webURL?.absoluteString=="http://[::1]:8765","IPv6 wildcard must open loopback")
+        try expect(port("0:0:0:0:0:0:0:0").webURL?.absoluteString=="http://[::1]:8765","Expanded IPv6 wildcard must open loopback")
+        try expect(port("::1").webURL?.absoluteString=="http://[::1]:8765","IPv6 URLs must have brackets")
+        try expect(port("192.168.1.10",9443,443).webURL?.absoluteString=="https://192.168.1.10:9443","TLS container port must use HTTPS and mapped host port")
+        try expect(port("127.0.0.1",443,8080).webURL?.scheme=="http","Published port must not override container protocol hint")
+        try expect(port("localhost").webURL?.absoluteString=="http://localhost:8765","Localhost mapping must open")
+        try expect(port("127.0.0.1",53,53,"udp").webURL==nil,"UDP must not create a browser link")
+        try expect(port("127.0.0.1",0).webURL==nil && port("127.0.0.1",65536).webURL==nil,"Invalid published ports must not create links")
+        try expect(port("127.0.0.1",8080,0).webURL==nil,"Invalid container port must not create a link")
+        try expect(port("127.0.0.1/path").webURL==nil && port("user@example.com").webURL==nil,"Malformed hosts must not create links")
+        try expect(PublishedPort([:]).webURL==nil,"Missing metadata must not fabricate a browser endpoint")
         var req=CreateRequest();req.name="test";req.image="local:test";req.environment="VALUE=$(touch /tmp/should-not-exist)";req.hostPort="8080";req.containerPort="80"
         let args=try req.arguments()
         try expect(args.contains("127.0.0.1:8080:80"),"Ports must default to loopback")

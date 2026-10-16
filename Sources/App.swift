@@ -156,7 +156,7 @@ struct InspectorView:View {
                 ScrollView {
                     VStack(alignment:.leading,spacing:20){
                         info("image",item.image)
-                        info("ports",item.ports.isEmpty ? s.t("none"):item.ports.joined(separator:"\n"))
+                        PublishedPortsView(ports:item.ports)
                         info("network",item.networks.joined(separator:", "))
                         Divider()
                         info("cpuAllocation","\(item.cpus) "+s.t("cores"))

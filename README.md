@@ -61,6 +61,8 @@ The official signed package was expanded into the workspace without installation
 
 ## Included
 
+Current source adds clickable TCP port mappings in the container inspector, opening the published host address in the default browser, plus a Copy URL context action. HTTP is the default; container port 443 uses HTTPS. Wildcard bind addresses open through loopback; UDP mappings stay as text. The service must actually serve HTTP/HTTPS. This addition is not in the existing `v0.1.2-preview` download.
+
 - Native sidebar, container table, inspector, searchable status filters, grouped forms, toolbar and system appearance.
 - Actual local container status, create/start/stop/delete, logs, CPU delta samples and memory usage. Published ports default to loopback. New containers start stopped.
 - Actual Mac specifications: model, chip, CPU cores, physical memory, macOS/build, architecture and home volume capacity/free space. Unknown values remain unavailable. No hardware serial number or UUID is retained.
