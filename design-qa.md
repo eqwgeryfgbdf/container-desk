@@ -60,3 +60,11 @@ Visual result for the captured light/Traditional Chinese dashboard: passed. Full
 - Verified double-click still opens expanded details at 125%. The final expanded layout was inspected via a local window capture. Native accessibility automation again lost its pipe when entering details, so logs/chart interaction coverage remains incomplete; this is not a public-release gate pass.
 - Build/ad hoc signature verification passed; existing 48 core checks, 13 simulated installer checks and all 203 localization keys passed. The new layout does not change engine operations.
 - Local app updated with a backup. Existing v0.1.2-preview Release downloads are unchanged.
+
+## 2026-10-17 — Purposeful transitions
+
+- Added page/detail/tab fades and smooth interruptible zoom and split-layout changes. Timing and rationale are documented in `docs/MOTION.md` against Apple HIG Motion; these are not Apple-prescribed durations.
+- Custom motion reads macOS Reduce Motion and disables animated transactions when reduction is requested. No polling-based chart, metric or log animation was added.
+- Graphical smoke test uses production SwiftUI components in an isolated native window: normal zoom produced 18 observed intermediate layout frames; suppressed motion produced zero. Both passed interrupted-zoom settlement, navigation transaction and nonanimated live-value checks. This does not change the user's system settings.
+- Existing 48 core checks, 13 simulated installer checks and 203 three-language keys passed. This is not completion of the public release gate; existing detailed-page accessibility automation limitations remain.
+- Final installed app: image inventory → networks → containers navigation, Command-0, and inspector Info → Logs → Info interactions passed. Build and ad hoc signature verification passed. Application replacement retained a local backup; release downloads were not changed.

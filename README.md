@@ -61,6 +61,8 @@ The official signed package was expanded into the workspace without installation
 
 ## Included
 
+Navigation and Info/Logs tabs use brief fades; opening details and changing zoom use smooth, interruptible transitions. Custom motion follows macOS Reduce Motion, and periodic metrics/log updates do not trigger animations. These source changes are not in the existing `v0.1.2-preview` download.
+
 The current source supports content zoom from 80% to 150%: **⌘+** (also **⌘=**) zooms in, **⌘−** zooms out, and **⌘0** resets to 100%. Use the View menu or the percentage menu at the bottom right. The app remembers the selected scale; narrow windows allow horizontal scrolling. The native sidebar, toolbar and dialogs keep their standard size. This addition is not in the existing `v0.1.2-preview` download.
 
 The expanded detail view in current source includes live CPU/memory/process/network summaries, per-container CPU and memory charts (latest 120 actual samples in this app session), grouped connection/configuration/mount details, and a full-width log viewer. Missing samples remain unavailable; network values are cumulative traffic, not bandwidth. This dashboard is not in the existing `v0.1.2-preview` download.

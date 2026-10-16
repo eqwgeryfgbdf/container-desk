@@ -16,31 +16,33 @@ struct ContainerDetailView: View {
         VStack(alignment: .leading, spacing: 0) {
             header.padding(24)
             Divider()
-            if tab == "info" {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 20) {
-                        metrics
-                        HStack {
-                            Label(s.t("resourceTrends"), systemImage: "waveform.path.ecg").font(.headline)
-                            Spacer()
-                            Text(s.t("historyWindow")).font(.caption).foregroundStyle(.secondary)
-                        }
-                        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 16), count: 2), spacing: 16) {
-                            ContainerTrendCard(title: s.t("cpuUsage"), unit: "%", samples: samples, memory: false,
-                                               waiting: s.t("collecting"), note: s.t("cpuExplanation"))
-                            ContainerTrendCard(title: s.t("memoryUsed"), unit: "MiB", samples: samples, memory: true,
-                                               waiting: s.t("collecting"), note: s.t("actualMemorySamples"))
-                        }
-                        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 16), count: 2), alignment: .leading, spacing: 16) {
-                            connections
-                            configuration
-                        }
-                        mounts
-                    }.padding(24)
+            Group {
+                if tab == "info" {
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 20) {
+                            metrics
+                            HStack {
+                                Label(s.t("resourceTrends"), systemImage: "waveform.path.ecg").font(.headline)
+                                Spacer()
+                                Text(s.t("historyWindow")).font(.caption).foregroundStyle(.secondary)
+                            }
+                            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 16), count: 2), spacing: 16) {
+                                ContainerTrendCard(title: s.t("cpuUsage"), unit: "%", samples: samples, memory: false,
+                                                   waiting: s.t("collecting"), note: s.t("cpuExplanation"))
+                                ContainerTrendCard(title: s.t("memoryUsed"), unit: "MiB", samples: samples, memory: true,
+                                                   waiting: s.t("collecting"), note: s.t("actualMemorySamples"))
+                            }
+                            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 16), count: 2), alignment: .leading, spacing: 16) {
+                                connections
+                                configuration
+                            }
+                            mounts
+                        }.padding(24)
+                    }
+                } else {
+                    ContainerDetailLogs(containerID: item.id).padding(24)
                 }
-            } else {
-                ContainerDetailLogs(containerID: item.id).padding(24)
-            }
+            }.modifier(InterfaceFade(value:tab))
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(Color(nsColor: .windowBackgroundColor))

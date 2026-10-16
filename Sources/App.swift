@@ -41,6 +41,7 @@ import AppKit
     }
 }
 struct MainView:View {
+    @ReducedInterfaceMotion private var reduceMotion
     @EnvironmentObject var zoom:ContentZoom
     @EnvironmentObject var s:Store
     @EnvironmentObject var core:CoreManager
@@ -72,15 +73,17 @@ struct MainView:View {
             VStack(spacing:0) {
                 if let error=s.error {HStack(alignment:.top){Image(systemName:"exclamationmark.triangle");Text(s.t(error)).font(.callout).textSelection(.enabled).lineLimit(3);Spacer();Button{ s.error=nil }label:{Image(systemName:"xmark")}.buttonStyle(.plain)}.padding(12).background(Color.red.opacity(0.08))}
                 ZoomableContent(minimumWidth: expandedContainerID == nil ? 860 : 720) {
-                    switch s.section {
-                    case "overview": OverviewView()
-                    case "containers": containerContent
-                    case "images": ResourceView(title:"images",icon:"square.stack.3d.up",items:s.images)
-                    case "networks": ResourceView(title:"networks",icon:"network",items:s.networks)
-                    case "volumes": ResourceView(title:"volumes",icon:"externaldrive",items:s.volumes)
-                    case "core": CoreView()
-                    default: PreferencesView()
-                    }
+                    Group {
+                        switch s.section {
+                        case "overview": OverviewView()
+                        case "containers": containerContent
+                        case "images": ResourceView(title:"images",icon:"square.stack.3d.up",items:s.images)
+                        case "networks": ResourceView(title:"networks",icon:"network",items:s.networks)
+                        case "volumes": ResourceView(title:"volumes",icon:"externaldrive",items:s.volumes)
+                        case "core": CoreView()
+                        default: PreferencesView()
+                        }
+                    }.modifier(InterfaceFade(value:s.section))
                 }.frame(maxWidth:.infinity,maxHeight:.infinity)
                 Divider()
                 HStack(spacing:8){
@@ -122,6 +125,9 @@ struct MainView:View {
                 }
             }
         }
+        .transaction { transaction in
+            if reduceMotion { transaction.animation=nil; transaction.disablesAnimations=true }
+        }
         .onChange(of:s.section) { _,_ in closeContainerDetails() }
         .onChange(of:s.selected) { _,selection in
             if let expandedContainerID,selection != expandedContainerID {closeContainerDetails()}
@@ -140,15 +146,22 @@ struct MainView:View {
         guard ids.count==1,let id=ids.first,s.containers.contains(where:{$0.id==id}) else{return}
         s.selected=id
         previousColumnVisibility=columnVisibility
-        expandedContainerID=id
-        columnVisibility = .detailOnly
+        withAnimation(InterfaceMotion.layout(reduceMotion:reduceMotion)) {
+            expandedContainerID=id
+            columnVisibility = .detailOnly
+        }
     }
     func closeContainerDetails() {
         guard expandedContainerID != nil else{return}
-        expandedContainerID=nil
-        columnVisibility=previousColumnVisibility
+        withAnimation(InterfaceMotion.layout(reduceMotion:reduceMotion)) {
+            expandedContainerID=nil
+            columnVisibility=previousColumnVisibility
+        }
     }
-    @ViewBuilder var containerContent:some View {
+    var containerContent:some View {
+        containerBody.modifier(InterfaceFade(value:expandedContainerID))
+    }
+    @ViewBuilder private var containerBody:some View {
         if s.cli==nil {
             ContentUnavailableView{Label(s.t("coreMissing"),systemImage:"shippingbox")}description:{Text(s.t("dependency"))}actions:{Button(s.t("setupCore")){s.section="core"}.buttonStyle(.borderedProminent)}
         } else if let id=expandedContainerID,let c=s.containers.first(where:{$0.id==id}) {
@@ -209,28 +222,31 @@ struct InspectorView:View {
                 Menu{Button(s.t("copyName")){NSPasteboard.general.clearContents();NSPasteboard.general.setString(item.id,forType:.string)};Button(s.t("delete"),role:.destructive,action:onDelete).disabled(item.running || !s.canMutate)}label:{Image(systemName:"ellipsis")}.menuStyle(.borderlessButton).frame(width:24)
             }
             Divider()
-            if tab=="info" {
-                ScrollView {
-                    VStack(alignment:.leading,spacing:20){
-                        info("image",item.image)
-                        PublishedPortsView(ports:item.ports)
-                        info("network",item.networks.joined(separator:", "))
-                        Divider()
-                        info("cpuAllocation","\(item.cpus) "+s.t("cores"))
-                        info("memoryLimit",bytes(item.memory))
-                        if let usage=s.usage[item.id] {info("processes",String(usage.processes));info("networkIO",bytes(usage.rx)+" ↓   "+bytes(usage.tx)+" ↑")}
-                        Divider();info("mounts",item.mounts.isEmpty ? s.t("none"):item.mounts.joined(separator:"\n\n"))
-                    }.frame(maxWidth:.infinity,alignment:.leading)
-                }
-            }else{
-                HStack{Toggle(s.t("autoRefresh"),isOn:$follow).toggleStyle(.checkbox);Spacer();Button{NSPasteboard.general.clearContents();NSPasteboard.general.setString(s.logs,forType:.string)}label:{Image(systemName:"doc.on.doc")}.help(s.t("copyLogs"))}
-                ScrollView([.vertical,.horizontal]){Text(s.logError ?? (s.logs.isEmpty ? s.t("noLogs"):s.logs)).font(.system(.caption,design:.monospaced)).textSelection(.enabled).frame(maxWidth:.infinity,alignment:.topLeading)}
-                    .task(id:item.id+tab){
-                        guard tab=="logs" else{return}
-                        await s.loadLogs(item.id)
-                        while !Task.isCancelled {try? await Task.sleep(nanoseconds:3_000_000_000);if follow && !Task.isCancelled{await s.loadLogs(item.id)}}
+            VStack(alignment:.leading,spacing:20) {
+                if tab=="info" {
+                    ScrollView {
+                        VStack(alignment:.leading,spacing:20){
+                            info("image",item.image)
+                            PublishedPortsView(ports:item.ports)
+                            info("network",item.networks.joined(separator:", "))
+                            Divider()
+                            info("cpuAllocation","\(item.cpus) "+s.t("cores"))
+                            info("memoryLimit",bytes(item.memory))
+                            if let usage=s.usage[item.id] {info("processes",String(usage.processes));info("networkIO",bytes(usage.rx)+" ↓   "+bytes(usage.tx)+" ↑")}
+                            Divider();info("mounts",item.mounts.isEmpty ? s.t("none"):item.mounts.joined(separator:"\n\n"))
+                        }.frame(maxWidth:.infinity,alignment:.leading)
                     }
-            }
+                }else{
+                    HStack{Toggle(s.t("autoRefresh"),isOn:$follow).toggleStyle(.checkbox);Spacer();Button{NSPasteboard.general.clearContents();NSPasteboard.general.setString(s.logs,forType:.string)}label:{Image(systemName:"doc.on.doc")}.help(s.t("copyLogs"))}
+                    ScrollView([.vertical,.horizontal]){Text(s.logError ?? (s.logs.isEmpty ? s.t("noLogs"):s.logs)).font(.system(.caption,design:.monospaced)).textSelection(.enabled).frame(maxWidth:.infinity,alignment:.topLeading)}
+                        .task(id:item.id+tab){
+                            guard tab=="logs" else{return}
+                            await s.loadLogs(item.id)
+                            while !Task.isCancelled {try? await Task.sleep(nanoseconds:3_000_000_000);if follow && !Task.isCancelled{await s.loadLogs(item.id)}}
+                        }
+                }
+            }.frame(maxHeight:.infinity,alignment:.top)
+                .modifier(InterfaceFade(value:tab))
             Spacer(minLength:0)
         }.padding(22).frame(maxHeight:.infinity,alignment:.top).background(.background)
     }

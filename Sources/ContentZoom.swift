@@ -43,21 +43,43 @@ import AppKit
 /// Lay out at the unscaled size, then reserve the transformed size. Keeping the
 /// same view tree preserves selection, logs and scroll state while zooming.
 struct ZoomableContent<Content: View>: View {
+    @ReducedInterfaceMotion private var reduceMotion
     @EnvironmentObject private var zoom: ContentZoom
     var minimumWidth: CGFloat = 860
     @ViewBuilder var content: Content
 
     var body: some View {
+        ZoomViewport(scale:zoom.scale, minimumWidth:minimumWidth, content:content)
+            .animation(InterfaceMotion.layout(reduceMotion:reduceMotion), value:zoom.percent)
+            .transaction { transaction in
+                if reduceMotion { transaction.animation=nil; transaction.disablesAnimations=true }
+            }
+    }
+}
+
+/// Interpolate the scale once and derive both frames from it on every frame.
+/// Animating inverse layout widths and scale independently would cause drift.
+private struct ZoomViewport<Content: View>: View, Animatable {
+    var scale: CGFloat
+    let minimumWidth: CGFloat
+    let content: Content
+    var animatableData: CGFloat {
+        get { scale }
+        set { scale = newValue }
+    }
+
+    var body: some View {
         GeometryReader { geometry in
-            let width = max(minimumWidth, geometry.size.width / zoom.scale)
+            let width = max(minimumWidth, geometry.size.width / scale)
             let viewportHeight = max(1, geometry.size.height - geometry.safeAreaInsets.top)
-            let height = viewportHeight / zoom.scale
+            let height = viewportHeight / scale
             ScrollView(.horizontal) {
                 content
+                    .transaction { $0.animation=nil }
                     .ignoresSafeArea(.container, edges: .top)
                     .frame(width: width, height: height, alignment: .topLeading)
-                    .scaleEffect(zoom.scale, anchor: .topLeading)
-                    .frame(width: width * zoom.scale, height: viewportHeight, alignment: .topLeading)
+                    .scaleEffect(scale, anchor: .topLeading)
+                    .frame(width: width * scale, height: viewportHeight, alignment: .topLeading)
             }
             .contentMargins(.top, geometry.safeAreaInsets.top, for: .scrollContent)
             .scrollBounceBehavior(.basedOnSize, axes: .horizontal)
