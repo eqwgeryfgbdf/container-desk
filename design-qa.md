@@ -2,6 +2,10 @@
 
 Status: **partial; final visual acceptance pending**.
 
+## Latest capture update — 2026-10-16
+
+The separate 0.1.2 QA bundle became accessible long enough to switch Settings to English, hide the native sidebar and capture its actual window. See [README media](docs/MEDIA.md). Subsequent creation-sheet capture again failed with no available window/timeout. This is one observed Settings view, not a full visual pass and not a verification of the downloadable DMG. Earlier capture failures below remain historical evidence. The required release gates and result format now live in [PUBLIC_RELEASE_GATE.md](docs/PUBLIC_RELEASE_GATE.md) and [TEST_REPORT.md](docs/TEST_REPORT.md).
+
 ## Visual contract
 
 The chosen design direction is the previously generated Finder-like container table and right inspector, with the grouped-settings reference and restrained Activity Monitor treatment for metrics. The explicit SwiftUI/macOS 26 request takes precedence over matching generated, non-native window chrome pixel for pixel.
