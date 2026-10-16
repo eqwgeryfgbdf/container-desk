@@ -51,3 +51,12 @@ The expanded detail view now has four live metric cards, two per-container CPU/m
 Verified: optimized build and signature; 48 core checks including bounded/isolated history and missing-sample behavior; 198 three-language keys; 13 isolated installer checks. A local native-window CLI capture at 1564×860 confirms the real running-container dashboard, data cards, charts, link and configuration layout. Card heights, configuration alignment and time-label truncation were corrected and recaptured. Eight existing container states remained unchanged.
 
 Visual result for the captured light/Traditional Chinese dashboard: passed. Full interaction/accessibility and dark/minimum-size review: pending. The native automation connection closes while reading this chart view; resetting it did not restore chart-view inspection. CLI window capture succeeds; CLI accessibility is not authorized. Double-click reached the dashboard, but the new logs-tab interaction and return flow were not re-certified during this iteration. Do not infer a new overall release-readiness pass or resolution of UI-001.
+
+## 2026-10-17 — Content zoom
+
+- Main content supports 80%, 90%, 100%, 110%, 125% and 150%; the native sidebar, toolbar, status bar and dialogs retain their standard size.
+- Verified native Command-Shift-= (plus), Command-=, Command-minus and Command-0; footer percentage selection also changes the scale. Restart restored the saved scale. Isolated smoke checks passed for limits, reset, persistence and invalid saved values.
+- Checked the container table at 80% and 150%, resized the window down to its minimum, and verified horizontal scrolling reaches the inspector. Fixed the toolbar safe-area offset and constrained scaled content to prevent drawing over the status bar.
+- Verified double-click still opens expanded details at 125%. The final expanded layout was inspected via a local window capture. Native accessibility automation again lost its pipe when entering details, so logs/chart interaction coverage remains incomplete; this is not a public-release gate pass.
+- Build/ad hoc signature verification passed; existing 48 core checks, 13 simulated installer checks and all 203 localization keys passed. The new layout does not change engine operations.
+- Local app updated with a backup. Existing v0.1.2-preview Release downloads are unchanged.

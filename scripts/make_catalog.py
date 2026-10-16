@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 # Canonical English source with independently authored Simplified / Traditional Chinese.
 rows = {
+'zoomIn':('Zoom In','放大','放大'), 'zoomOut':('Zoom Out','缩小','縮小'), 'actualSize':('Actual Size','实际大小','實際大小'), 'contentZoom':('Content Zoom','内容缩放','內容縮放'), 'zoomHelp':('Zoom content: ⌘+ / ⌘−. Reset: ⌘0.','缩放内容：⌘+ / ⌘−。还原：⌘0。','縮放內容：⌘+ / ⌘−。還原：⌘0。'),
 'overview':('Overview','概览','總覽'), 'containers':('Containers','容器','容器'), 'images':('Images','镜像','映像檔'), 'networks':('Networks','网络','網路'), 'volumes':('Volumes','存储卷','儲存卷'), 'settings':('Settings','设置','設定'), 'core':('Container Engine','容器引擎','容器引擎'),
 'manage':('Manage','管理','管理'), 'system':('System','系统','系統'), 'connected':('Connected','已连接','已連線'), 'disconnected':('Disconnected','未连接','未連線'), 
 'createContainer':('Create Container','创建容器','建立容器'), 'refresh':('Refresh','刷新','重新整理'), 'coreUpdates':('Check Engine Updates','检查引擎更新','檢查引擎更新'), 'total':('total','个容器','個容器'), 'running':('Running','运行中','運行中'), 'stopped':('Stopped','已停止','已停止'), 'unknown':('Unknown','未知','未知'),

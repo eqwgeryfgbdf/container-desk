@@ -4,9 +4,10 @@ import AppKit
 @main struct ContainerDeskApp: App {
     @StateObject private var store=Store()
     @StateObject private var core=CoreManager()
+    @StateObject private var zoom=ContentZoom()
     var body: some Scene {
         WindowGroup("Container Desk") {
-            MainView().environmentObject(store).environmentObject(core)
+            MainView().environmentObject(store).environmentObject(core).environmentObject(zoom)
                 .environment(\.locale,Locale(identifier:store.localeID))
                 .preferredColorScheme(store.colorScheme)
                 .frame(minWidth:1100,minHeight:640)
@@ -21,6 +22,12 @@ import AppKit
         }
         .defaultSize(width:1320,height:860)
         .commands {
+            CommandGroup(after:.sidebar) {
+                Divider()
+                Button(store.t("zoomIn"),action:zoom.increase).keyboardShortcut("+",modifiers:.command).disabled(!zoom.canIncrease)
+                Button(store.t("zoomOut"),action:zoom.decrease).keyboardShortcut("-",modifiers:.command).disabled(!zoom.canDecrease)
+                Button(store.t("actualSize"),action:zoom.reset).keyboardShortcut("0",modifiers:.command).disabled(zoom.percent==100)
+            }
             CommandGroup(after:.newItem) {
                 Button(store.t("refresh")){Task{await store.refresh()}}.keyboardShortcut("r",modifiers:.command)
                 Button(store.t("coreUpdates")){store.section="core"}.keyboardShortcut("u",modifiers:[.command,.shift])
@@ -34,6 +41,7 @@ import AppKit
     }
 }
 struct MainView:View {
+    @EnvironmentObject var zoom:ContentZoom
     @EnvironmentObject var s:Store
     @EnvironmentObject var core:CoreManager
     @State private var create=false
@@ -63,7 +71,7 @@ struct MainView:View {
         } detail: {
             VStack(spacing:0) {
                 if let error=s.error {HStack(alignment:.top){Image(systemName:"exclamationmark.triangle");Text(s.t(error)).font(.callout).textSelection(.enabled).lineLimit(3);Spacer();Button{ s.error=nil }label:{Image(systemName:"xmark")}.buttonStyle(.plain)}.padding(12).background(Color.red.opacity(0.08))}
-                Group {
+                ZoomableContent(minimumWidth: expandedContainerID == nil ? 860 : 720) {
                     switch s.section {
                     case "overview": OverviewView()
                     case "containers": containerContent
@@ -80,6 +88,18 @@ struct MainView:View {
                     Text(s.t(s.busy ? "working" : s.connected ? "liveData":"disconnected")).font(.caption)
                     if let notice=s.notice {Text("· "+notice).font(.caption).lineLimit(1)}
                     Spacer()
+                    Menu {
+                        Picker(s.t("contentZoom"),selection:Binding(get:{zoom.percent},set:zoom.set)) {
+                            ForEach(ContentZoom.levels,id:\.self){ Text("\($0)%").tag($0) }
+                        }
+                        Divider()
+                        Button(s.t("actualSize"),action:zoom.reset)
+                    } label: {
+                        Text("\(zoom.percent)%").monospacedDigit()
+                    }
+                    .menuStyle(.borderlessButton).fixedSize()
+                    .accessibilityLabel(s.t("contentZoom"))
+                    .help(s.t("zoomHelp"))
                     if let d=s.lastRefresh {Text(s.t("updated")+" "+d.formatted(date:.omitted,time:.standard)).font(.caption).monospacedDigit()}
                 }.foregroundStyle(.secondary).padding(.horizontal,20).padding(.vertical,10)
             }
