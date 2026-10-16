@@ -1,10 +1,12 @@
 # Container Desk 0.1.2 — Developer Preview
 
+**English** · [中文（繁體）](README.zh-Hant.md) · [中文（简体）](README.zh-Hans.md)
+
 Native SwiftUI manager for **local Apple Container**, built with the macOS 26 SDK. Requires an Apple Silicon Mac running macOS 26 or later. This is an independent application, not an Apple product.
 
 [Download developer preview](https://github.com/eqwgeryfgbdf/container-desk/releases/tag/v0.1.2-preview) · [Public release criteria](docs/PUBLIC_RELEASE_GATE.md) · [Test report template](docs/TEST_REPORT.md)
 
-**Release readiness: NOT READY for public visibility.** The repository stays private until all 14 required acceptance gates pass with evidence and no critical/major defects remain. Automated and smoke-test results below cover only part of that contract. 私人測試中；所有必要驗收項目通過後才符合公開條件。
+**Release readiness: NOT READY for public visibility.** The repository stays private until all 14 required acceptance gates pass with evidence and no critical/major defects remain. Automated and smoke-test results below cover only part of that contract.
 
 ## Screenshots
 
