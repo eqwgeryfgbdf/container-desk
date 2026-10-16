@@ -28,85 +28,6 @@ struct OverviewView:View {
     }
     func metric(_ title:String,_ value:String,_ color:Color)->some View{VStack(alignment:.leading,spacing:8){Text(value).font(.system(size:30,weight:.semibold,design:.rounded)).monospacedDigit().foregroundStyle(color);Text(s.t(title)).font(.callout).foregroundStyle(.secondary)}.frame(maxWidth:.infinity,alignment:.leading).padding(.leading,16)}
 }
-struct ResourceView:View {
-    @EnvironmentObject var s:Store
-    let title:String
-    let icon:String
-    let items:[ResourceItem]
-    var body:some View {
-        VStack(alignment:.leading,spacing:24){
-            Text(s.t(title)).font(.largeTitle).fontWeight(.semibold)
-            Text(s.t("resourceReadOnly")).foregroundStyle(.secondary)
-            if items.isEmpty {ContentUnavailableView{Label(s.t("noResources"),systemImage:icon)}description:{Text(s.t("resourceEmpty"))}.frame(maxWidth:.infinity,maxHeight:.infinity)} else {
-                Table(items){TableColumn(s.t("name")){item in Label(item.id,systemImage:icon).textSelection(.enabled)};TableColumn(s.t("details"),value:\.detail);TableColumn(s.t(title=="images" ? "size":"type"),value:\.extra)}
-            }
-        }.padding(28)
-    }
-}
-struct CreateView:View {
-    @EnvironmentObject var s:Store
-    @Environment(\.dismiss) var dismiss
-    @State private var request=CreateRequest()
-    @State private var submitting=false
-    @State private var validation:String?
-    @State private var memoryText="512"
-    private var maxCPUs:Int {max(1,s.host.logicalCores ?? ProcessInfo.processInfo.activeProcessorCount)}
-    private var maxMemory:Int {max(200,Int(s.host.memory/1048576))}
-    private var validMemory:Bool {Int(memoryText).map{(200...maxMemory).contains($0)} ?? false}
-    private var memorySlider:Binding<Double> {
-        Binding(get:{Double(min(maxMemory,max(200,request.memoryMB)))},set:{request.memoryMB=Int($0.rounded());memoryText=String(request.memoryMB)})
-    }
-    var body:some View {
-        VStack(alignment:.leading,spacing:0){
-            VStack(alignment:.leading,spacing:8){Text(s.t("createContainer")).font(.title2).fontWeight(.semibold);Text(s.t("createSubtitle")).font(.callout).foregroundStyle(.secondary)}.padding(24)
-            Form{
-                Section(s.t("general")){
-                    TextField(s.t("name"),text:$request.name,prompt:Text("my-service"))
-                    Picker(s.t("image"),selection:$request.image){
-                        Text(s.t("selectImage")).tag("")
-                        ForEach(s.images){image in Text(image.id).tag(image.id)}
-                    }.pickerStyle(.menu).disabled(s.imagesLoading || s.images.isEmpty)
-                    HStack {
-                        Text(s.t("localImagesOnly")).font(.caption).foregroundStyle(.secondary)
-                        Spacer()
-                        if s.imagesLoading{ProgressView().controlSize(.small)}
-                        Button(s.t("refresh")){Task{await s.refreshImages()}}.disabled(s.imagesLoading)
-                    }
-                    if let error=s.imageError {Text(error).font(.caption).foregroundStyle(.red)}
-                    else if !s.imagesLoading && s.images.isEmpty{Text(s.t("noLocalImages")).font(.caption).foregroundStyle(.secondary)}
-                }
-                Section(s.t("resources")){
-                    Picker(s.t("cpuAllocation"),selection:$request.cpus){ForEach(1...maxCPUs,id:\.self){Text(String($0)).tag($0)}}.pickerStyle(.menu)
-                    VStack(alignment:.leading,spacing:12){
-                        HStack{
-                            Text(s.t("memoryLimit"))
-                            Spacer()
-                            TextField(s.t("memoryLimit"),text:$memoryText).multilineTextAlignment(.trailing).textFieldStyle(.roundedBorder).frame(width:100)
-                                .accessibilityLabel(s.t("memoryLimit")+" (MiB)")
-                                .onChange(of:memoryText){_,text in if let value=Int(text){request.memoryMB=value}}
-                            Text("MiB").foregroundStyle(.secondary)
-                        }
-                        Slider(value:memorySlider,in:200...Double(maxMemory),step:1){Text(s.t("memoryLimit"))}.labelsHidden()
-                        HStack{Text("200 MiB");Spacer();Text(bytes(Int64(maxMemory)*1048576))}.font(.caption).foregroundStyle(.secondary)
-                        if !validMemory{Text(s.t("allocationOutOfRange")).font(.caption).foregroundStyle(.red)}
-                    }.padding(.vertical,4)
-                }
-                Section{TextField(s.t("hostPort"),text:$request.hostPort,prompt:Text("8080"));TextField(s.t("containerPort"),text:$request.containerPort,prompt:Text("80"))}header:{Text(s.t("ports"))}footer:{Text(s.t("loopbackPort"))}
-                Section(s.t("environment")){TextEditor(text:$request.environment).font(.system(.caption,design:.monospaced)).frame(height:70);Text("KEY=value").font(.caption).foregroundStyle(.secondary)}
-                Section(s.t("mounts")){
-                    HStack{Text(request.mountSource.isEmpty ? s.t("noFolder"):request.mountSource).lineLimit(1).truncationMode(.middle);Spacer();Button(s.t("chooseFolder")){let panel=NSOpenPanel();panel.canChooseDirectories=true;panel.canChooseFiles=false;if panel.runModal() == .OK{request.mountSource=panel.url?.path ?? ""}};if !request.mountSource.isEmpty{Button(s.t("clear")){request.mountSource=""}}}
-                    if !request.mountSource.isEmpty {TextField(s.t("containerPath"),text:$request.mountTarget);Toggle(s.t("readOnly"),isOn:$request.readOnly)}
-                }
-            }.formStyle(.grouped).disabled(submitting)
-            if let validation {Text(s.t(validation)).foregroundStyle(.red).font(.callout).padding(.horizontal,24)}
-            HStack{if submitting{ProgressView().controlSize(.small);Text(s.t("creating"))};Spacer();Button(s.t("cancel")){dismiss()}.keyboardShortcut(.cancelAction).disabled(submitting);Button(s.t("create")){
-                do{guard let memory=Int(memoryText),validMemory else{throw DeskError.message("allocationOutOfRange")};request.memoryMB=memory;_=try request.arguments();validation=nil;submitting=true;Task{if await s.create(request){dismiss()}else{validation=s.error};submitting=false}}catch{validation=error.localizedDescription}
-            }.buttonStyle(.borderedProminent).keyboardShortcut(.defaultAction).disabled(submitting || !validMemory || s.imagesLoading || request.name.isEmpty || !s.images.contains(where:{$0.id==request.image}))}.padding(20)
-        }.frame(width:620,height:780)
-        .task{request.cpus=min(request.cpus,maxCPUs);await s.refreshImages()}
-        .onChange(of:s.images.map(\.id)){_,ids in if !ids.contains(request.image){request.image=""}}
-    }
-}
 struct CoreView:View {
     @EnvironmentObject var s:Store
     @EnvironmentObject var c:CoreManager
@@ -125,10 +46,10 @@ struct CoreView:View {
                         LabeledContent(s.t("source"),value:"github.com/apple/container")
                         if !c.managed(s){
                             Label(s.t("externalInstall"),systemImage:"info.circle").foregroundStyle(.secondary)
-                            Button(s.t("migrateCore")){confirmMigration=true}.disabled(!c.canMigrate(s) || s.active>0 || s.busy || c.installing)
+                            Button(s.t("migrateCore")){confirmMigration=true}.disabled(!c.canMigrate(s) || s.active>0 || s.busy || s.operationRunning || c.installing)
                             Text(s.t(s.active>0 ? "updateDeferred":"migrationPolicy")).font(.caption).foregroundStyle(.secondary)
                         }
-                        if s.cli != nil && !s.connected {Button(s.t("startCore")){Task{await s.startService()}}.disabled(s.busy)}
+                        if s.cli != nil && !s.connected {Button(s.t("startCore")){Task{await s.startService()}}.disabled(s.busy || s.operationRunning)}
                     }
                     Section(s.t("updates")){
                         LabeledContent(s.t("latestVersion"),value:c.release?.tag_name ?? "—")
@@ -145,7 +66,7 @@ struct CoreView:View {
                     Button{Task{await c.check()}}label:{Label(s.t("checkUpdates"),systemImage:"arrow.clockwise")}.disabled(c.checking || c.installing)
                     if c.checking{ProgressView().controlSize(.small)}
                     Spacer()
-                    Button(s.t(s.cli==nil ? "installCore":"updateCore")){confirmInstall=true}.buttonStyle(.borderedProminent).disabled(c.release==nil || !(c.release?.tested ?? false) || !c.managed(s) || c.installing || s.busy || (s.cli != nil && !c.updateAvailable(s)))
+                    Button(s.t(s.cli==nil ? "installCore":"updateCore")){confirmInstall=true}.buttonStyle(.borderedProminent).disabled(c.release==nil || !(c.release?.tested ?? false) || !c.managed(s) || c.installing || s.busy || s.operationRunning || (s.cli != nil && !c.updateAvailable(s)))
                 }
                 if c.installing {HStack{ProgressView().controlSize(.small);Text(s.t(c.phase))}}
                 if let e=c.failure{Label(s.t(e),systemImage:"exclamationmark.triangle").foregroundStyle(.red).textSelection(.enabled)}

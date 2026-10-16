@@ -46,7 +46,7 @@ final class OfficialDownloads: NSObject, URLSessionTaskDelegate, @unchecked Send
         }catch{failure=error.localizedDescription}
     }
     func periodic(_ store:Store) async {
-        guard autoCheck,!store.busy,!installing else{return}
+        guard autoCheck,!store.busy,!store.operationRunning,!installing else{return}
         if let lastAttempt,Date().timeIntervalSince(lastAttempt)<86400{return}
         await check()
         if autoInstall,let r=release,r.tested,managed(store),store.connected,store.active==0,updateAvailable(store) {await install(store,automatic:true)}
@@ -75,7 +75,7 @@ final class OfficialDownloads: NSObject, URLSessionTaskDelegate, @unchecked Send
         return state
     }
     func install(_ store:Store,automatic:Bool=false,migrate:Bool=false) async {
-        guard !installing,!store.busy,!store.refreshing else{return}
+        guard !installing,!store.busy,!store.operationRunning,!store.refreshing else{return}
         guard managed(store) || (migrate && !automatic && canMigrate(store)) else{failure="externalInstall";return}
         guard let r=release,r.tested else{failure="compatibilityPending";return}
         if let current=installedVersion(store),r.tag_name.compare(current,options:.numeric) == .orderedAscending{failure="downgradeBlocked";return}

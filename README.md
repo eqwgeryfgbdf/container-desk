@@ -61,6 +61,8 @@ The official signed package was expanded into the workspace without installation
 
 ## Included
 
+Current source adds image pull/build/tag/delete and OCI archive import/export, network/volume creation and protected deletion, container restart, inspect JSON and an external Terminal action. Creation now offers network/volume selection and advanced command settings. Long operations show live output and can continue in the background or be cancelled. The memory-slider layout hang has been fixed. See the [feature status and remaining baseline](docs/FEATURE_ROADMAP.md). These changes are **not included in the existing `v0.1.2-preview` assets**.
+
 Navigation and Info/Logs tabs use brief fades; opening details and changing zoom use smooth, interruptible transitions. Custom motion follows macOS Reduce Motion, and periodic metrics/log updates do not trigger animations. These source changes are not in the existing `v0.1.2-preview` download.
 
 The current source supports content zoom from 80% to 150%: **⌘+** (also **⌘=**) zooms in, **⌘−** zooms out, and **⌘0** resets to 100%. Use the View menu or the percentage menu at the bottom right. The app remembers the selected scale; narrow windows allow horizontal scrolling. The native sidebar, toolbar and dialogs keep their standard size. This addition is not in the existing `v0.1.2-preview` download.
@@ -74,7 +76,7 @@ Current source adds clickable TCP port mappings in the container inspector, open
 - Native sidebar, container table, inspector, searchable status filters, grouped forms, toolbar and system appearance.
 - Actual local container status, create/start/stop/delete, logs, CPU delta samples and memory usage. Published ports default to loopback. New containers start stopped.
 - Actual Mac specifications: model, chip, CPU cores, physical memory, macOS/build, architecture and home volume capacity/free space. Unknown values remain unavailable. No hardware serial number or UUID is retained.
-- Images, networks and volumes: read-only inventory.
+- Images, networks and volumes: searchable management with configuration inspection and reference checks before deletion (current source).
 - English base, Simplified Chinese and Traditional Chinese, with immediate app-content language switching. System-owned menus follow macOS settings.
 - All displayed container and host data is live; demo mode and sample data have been removed.
 - Official stable release checks. Signed package URL, size, SHA-256 digest, Apple Containerization installer identity and macOS package assessment are checked before installation.
@@ -82,9 +84,9 @@ Current source adds clickable TCP port mappings in the container inspector, open
 
 ## Preview limits
 
-Only Container **1.5.0** is currently marked compatible. Newer releases are displayed but installation is deferred until tested; automatic mode does not imply unconditional future-version support. Custom files are not overwritten. The recognized `~/.local/bin/container` wrapper can explicitly migrate to the same official version when idle; the original installation is preserved. Other custom layouts still use their original installation method. There is no privileged background helper, closed-app scheduler, remote host management, interactive terminal, full resource editor, skip-version preference or separate guest-kernel updater yet.
+Only Container **1.5.0** is currently marked compatible. Newer releases are displayed but installation is deferred until tested; automatic mode does not imply unconditional future-version support. Custom files are not overwritten. The recognized `~/.local/bin/container` wrapper can explicitly migrate to the same official version when idle; the original installation is preserved. Other custom layouts still use their original installation method. There is no privileged background helper, closed-app scheduler, remote host management, embedded terminal, full resource editor, skip-version preference or separate guest-kernel updater yet.
 
-Live create/start/logs/stats/stop/delete smoke testing passed using one disposable container, with all 8 existing container states unchanged. 29 automated policy/parser/process/hardware checks and 179 × 3 localization entries passed. The official 1.5.0 package's digest and Apple signature were verified. Fresh installation and upgrade were **not** executed end to end on this working host. Actual Overview and container-management screenshots are available. Creation-form acceptance is blocked by suspected major defect UI-001: opening the QA creation sheet left the main thread in SwiftUI layout. Dark-mode, multi-size and accessibility review remain pending. Do not treat this preview as a signed production release or full acceptance of every design-spec item.
+Current-source validation: 48 core checks, 35 management checks, 13 simulated installer scenarios and 262 three-language keys passed. Real resource creation/deletion protection, container restart with volume persistence, image build/pull/archive round trip, and native image-tag/creation flows passed; the original 8 container states were preserved. UI-001 was traced to macOS 26 discrete-slider marks and fixed; native layout checks cover 16 GiB and 1 TiB host ranges. Full form/accessibility/multi-size and second-Mac acceptance remain pending. Clean engine installation and genuine upgrade are still **not** verified end to end. Existing release assets retain their earlier limitations; see the [test report](docs/TEST_REPORT.md).
 
 ## Build and test
 

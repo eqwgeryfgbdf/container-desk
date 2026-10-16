@@ -65,7 +65,7 @@ struct ContainerItem: Identifiable, Hashable {
             let image = (c["image"] as? [String:Any])?["reference"] as? String ?? "—"
             let ports = (c["publishedPorts"] as? [[String:Any]] ?? []).map(PublishedPort.init)
             let mounts = (c["mounts"] as? [[String:Any]] ?? []).map { m in
-                let source=m["source"] as? String ?? ""
+                let source=((m["type"] as? [String:Any])?["volume"] as? [String:Any])?["name"] as? String ?? m["source"] as? String ?? ""
                 return "\(source.isEmpty ? (m["type"] as? String ?? "—") : source) → \(m["destination"] ?? "—")"
             }
             let networks = (c["networks"] as? [[String:Any]] ?? []).compactMap { $0["network"] as? String }
@@ -104,6 +104,16 @@ struct ResourceItem: Identifiable {
     let id: String
     let detail: String
     let extra: String
+    static func parseResources(_ data:Data) throws -> [ResourceItem] {
+        guard let rows=try JSONSerialization.jsonObject(with:data) as? [[String:Any]] else {throw DeskError.message("resourcesUnavailable")}
+        return rows.compactMap { row in
+            let c=row["configuration"] as? [String:Any] ?? row
+            let status=row["status"] as? [String:Any] ?? [:]
+            guard let id=c["name"] as? String ?? row["id"] as? String else {return nil}
+            let size=(c["sizeInBytes"] as? NSNumber)?.int64Value ?? (row["sizeInBytes"] as? NSNumber)?.int64Value
+            return ResourceItem(id:id,detail:status["ipv4Subnet"] as? String ?? c["driver"] as? String ?? c["source"] as? String ?? "—",extra:size.map(bytes) ?? c["mode"] as? String ?? "")
+        }.sorted{$0.id.localizedStandardCompare($1.id) == .orderedAscending}
+    }
     static func parseImages(_ data:Data) throws -> [ResourceItem] {
         guard let rows=try JSONSerialization.jsonObject(with:data) as? [[String:Any]] else{throw DeskError.message("imagesUnavailable")}
         var seen=Set<String>()
@@ -144,6 +154,15 @@ struct CreateRequest {
     var mountSource = ""
     var mountTarget = "/data"
     var readOnly = false
+    var network = ""
+    var namedVolume = ""
+    var volumeTarget = "/data"
+    var volumeReadOnly = false
+    var architecture = "arm64"
+    var rosetta = false
+    var entrypoint = ""
+    var workingDirectory = ""
+    var commandArguments = ""
     func validateAllocation(maxCPUs:Int,maxMemoryMiB:Int) throws {
         guard (1...max(1,maxCPUs)).contains(cpus),memoryMB>=200,memoryMB<=maxMemoryMiB else {throw DeskError.message("allocationOutOfRange")}
     }
@@ -161,10 +180,33 @@ struct CreateRequest {
             a += ["--env",line]
         }
         if !mountSource.isEmpty {
-            guard mountSource.hasPrefix("/"),mountTarget.hasPrefix("/"),!mountSource.contains(":"),!mountTarget.contains(":"),!mountSource.contains("\n") else { throw DeskError.message("invalidMount") }
+            guard mountSource.hasPrefix("/"),mountTarget.hasPrefix("/"),!mountSource.contains(":"),!mountTarget.contains(":"),!mountSource.contains("\n"),!mountTarget.contains("\n"),!mountSource.contains("\0"),!mountTarget.contains("\0") else { throw DeskError.message("invalidMount") }
             a += ["--volume",mountSource+":"+mountTarget+(readOnly ? ":ro" : "")]
         }
-        a += [image]
+        guard ["arm64","amd64"].contains(architecture) else {throw DeskError.message("invalidArchitecture")}
+        a += ["--arch",architecture]
+        if rosetta && architecture == "amd64" {a += ["--rosetta"]}
+        if !network.isEmpty {
+            guard network.range(of:"^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,62}$",options:.regularExpression) != nil else {throw DeskError.message("invalidName")}
+            a += ["--network",network]
+        }
+        if !namedVolume.isEmpty {
+            guard namedVolume.range(of:"^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,62}$",options:.regularExpression) != nil,
+                  volumeTarget.hasPrefix("/"),!volumeTarget.contains(":"),!volumeTarget.contains("\n"),!volumeTarget.contains("\0"),
+                  mountSource.isEmpty || volumeTarget != mountTarget else {throw DeskError.message("invalidMount")}
+            a += ["--volume",namedVolume+":"+volumeTarget+(volumeReadOnly ? ":ro" : "")]
+        }
+        if !entrypoint.isEmpty {
+            guard !entrypoint.contains("\n"),!entrypoint.contains("\0") else {throw DeskError.message("invalidEntrypoint")}
+            a += ["--entrypoint",entrypoint]
+        }
+        if !workingDirectory.isEmpty {
+            guard workingDirectory.hasPrefix("/"),!workingDirectory.contains("\n"),!workingDirectory.contains("\0") else {throw DeskError.message("invalidWorkingDirectory")}
+            a += ["--workdir",workingDirectory]
+        }
+        guard !commandArguments.contains("\0") else {throw DeskError.message("invalidArguments")}
+        a += ["--",image]
+        a += commandArguments.split(separator:"\n",omittingEmptySubsequences:true).map(String.init)
         return a
     }
 }

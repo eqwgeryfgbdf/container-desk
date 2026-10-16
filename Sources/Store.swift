@@ -27,6 +27,14 @@ import AppKit
     @Published var cli:String?
     @Published var imagesLoading=false
     @Published var imageError:String?
+    @Published var operationRunning=false
+    @Published var operationPresented=false
+    @Published var operationTitle=""
+    @Published var operationOutput=""
+    @Published var operationResult:String?
+    @Published var inspection:InspectionTarget?
+    @Published var restartCandidate:ContainerItem?
+    private var operationTask:Task<Void,Never>?
     @Published var language:String=UserDefaults.standard.string(forKey:"language") ?? "system" {
         didSet { UserDefaults.standard.set(language,forKey:"language") }
     }
@@ -35,7 +43,7 @@ import AppKit
     }
     private var previous:[String:(Double,Date)]=[:]
     private var refreshCount=0
-    var canMutate:Bool { connected && !busy }
+    var canMutate:Bool { connected && !busy && !operationRunning }
     var active:Int { containers.filter(\.running).count }
     var chosen:ContainerItem? { containers.first{$0.id==selected} }
     var totalMemory:Int64 { usage.values.reduce(0){$0+$1.memory} }
@@ -120,12 +128,7 @@ import AppKit
         for kind in ["network","volume"] {
             do {
                 let r=try await ProcessRunner.checked(cli,[kind,"list","--format","json"])
-                let rows=try JSONSerialization.jsonObject(with:r.data) as? [[String:Any]] ?? []
-                let items=rows.map { row -> ResourceItem in
-                    let c=row["configuration"] as? [String:Any] ?? [:],status=row["status"] as? [String:Any] ?? [:]
-                    let id=c["name"] as? String ?? row["id"] as? String ?? "—"
-                    return ResourceItem(id:id,detail:status["ipv4Subnet"] as? String ?? c["driver"] as? String ?? "—",extra:c["mode"] as? String ?? "")
-                }
+                let items=try ResourceItem.parseResources(r.data)
                 if kind=="network"{networks=items}else{volumes=items}
             } catch { notice=t("resourcesUnavailable") }
         }
@@ -138,14 +141,19 @@ import AppKit
         }catch{images=[];imageError=t("imagesUnavailable")}
     }
     func action(_ verb:String,_ item:ContainerItem) async {
-        guard canMutate,let cli,["start","stop","delete"].contains(verb) else{return}
+        guard canMutate,let cli,["start","stop","delete","restart"].contains(verb) else{return}
         busy=true;defer{busy=false;Task{await refresh()}}
         do {
             if verb=="delete" {
                 let fresh=try ContainerItem.parse((try await ProcessRunner.checked(cli,["list","--all","--format","json"])).data)
                 guard fresh.first(where:{$0.id==item.id})?.running == false else {throw DeskError.message(t("stopBeforeDelete"))}
             }
-            _=try await ProcessRunner.checked(cli,[verb,"--",item.id],timeout:120)
+            if verb=="restart" {
+                _=try await ProcessRunner.checked(cli,["stop","--",item.id],timeout:120)
+                _=try await ProcessRunner.checked(cli,["start","--",item.id],timeout:120)
+            } else {
+                _=try await ProcessRunner.checked(cli,[verb,"--",item.id],timeout:120)
+            }
             notice=t("operationComplete");error=nil
         }catch{self.error=error.localizedDescription}
     }
@@ -156,6 +164,10 @@ import AppKit
             try request.validateAllocation(maxCPUs:host.logicalCores ?? ProcessInfo.processInfo.activeProcessorCount,maxMemoryMiB:Int(host.memory/1048576))
             let localImages=try ResourceItem.parseImages((try await ProcessRunner.checked(cli,["image","list","--format","json"])).data)
             guard localImages.contains(where:{$0.id==request.image}) else{throw DeskError.message("selectLocalImage")}
+            for (kind,id) in [("network",request.network),("volume",request.namedVolume)] where !id.isEmpty {
+                let resources=try ResourceItem.parseResources((try await ProcessRunner.checked(cli,[kind,"list","--format","json"])).data)
+                guard resources.contains(where:{$0.id==id}) else {throw DeskError.message("resourceDisappeared")}
+            }
             _=try await ProcessRunner.checked(cli,try request.arguments(),timeout:600)
             selected=request.name;notice=t("createdStopped");error=nil;return true
         }catch{self.error=t(error.localizedDescription);return false}
@@ -167,8 +179,24 @@ import AppKit
         do {let r=try await ProcessRunner.checked(cli,["logs","-n","150","--",id]);if selected==id{logs=r.text}}catch{if selected==id{logError=error.localizedDescription}}
     }
     func startService() async {
-        guard let cli,!busy else{return}
+        guard let cli,!busy,!operationRunning else{return}
         busy=true;defer{busy=false;Task{await refresh()}}
         do{_=try await ProcessRunner.checked(cli,["system","start","--disable-kernel-install"],timeout:90)}catch{self.error=error.localizedDescription}
     }
+    func cancelOperation() {operationTask?.cancel()}
+    func startOperation(_ title:String, work:@escaping @MainActor () async throws -> Int32) {
+        guard canMutate else{return}
+        operationTitle=title;operationOutput="";operationResult=nil;operationRunning=true;operationPresented=true
+        operationTask=Task {
+            do {
+                let code=try await work()
+                operationResult=code==0 ? "operationComplete" : "operationFailed"
+            } catch is CancellationError {operationResult="operationCancelled"}
+              catch {operationResult=error.localizedDescription}
+            operationRunning=false;operationTask=nil
+            await refreshResources()
+            await refresh()
+        }
+    }
+
 }

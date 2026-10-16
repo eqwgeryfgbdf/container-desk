@@ -80,6 +80,8 @@ struct ContainerDetailView: View {
                     Label(s.t(item.running ? "stop" : "start"), systemImage: item.running ? "stop.fill" : "play.fill")
                 }.disabled(!s.canMutate)
                 Menu {
+                    ContainerUtilityActions(item:item)
+                    Divider()
                     Button(s.t("copyName")) { copy(item.id) }
                     Button(s.t("copyImageReference")) { copy(item.image) }
                     Divider()

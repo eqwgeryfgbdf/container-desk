@@ -77,9 +77,9 @@ struct MainView:View {
                         switch s.section {
                         case "overview": OverviewView()
                         case "containers": containerContent
-                        case "images": ResourceView(title:"images",icon:"square.stack.3d.up",items:s.images)
-                        case "networks": ResourceView(title:"networks",icon:"network",items:s.networks)
-                        case "volumes": ResourceView(title:"volumes",icon:"externaldrive",items:s.volumes)
+                        case "images": ResourceManagementView(kind:.image)
+                        case "networks": ResourceManagementView(kind:.network)
+                        case "volumes": ResourceManagementView(kind:.volume)
                         case "core": CoreView()
                         default: PreferencesView()
                         }
@@ -87,10 +87,13 @@ struct MainView:View {
                 }.frame(maxWidth:.infinity,maxHeight:.infinity)
                 Divider()
                 HStack(spacing:8){
-                    if s.busy || s.refreshing {ProgressView().controlSize(.small)}
+                    if s.busy || s.refreshing || s.operationRunning {ProgressView().controlSize(.small)}
                     Text(s.t(s.busy ? "working" : s.connected ? "liveData":"disconnected")).font(.caption)
                     if let notice=s.notice {Text("· "+notice).font(.caption).lineLimit(1)}
                     Spacer()
+                    if !s.operationTitle.isEmpty {
+                        Button(s.t(s.operationRunning ? "working":"lastOperation")){s.operationPresented=true}.buttonStyle(.link)
+                    }
                     Menu {
                         Picker(s.t("contentZoom"),selection:Binding(get:{zoom.percent},set:zoom.set)) {
                             ForEach(ContentZoom.levels,id:\.self){ Text("\($0)%").tag($0) }
@@ -136,6 +139,12 @@ struct MainView:View {
             if let expandedContainerID,!ids.contains(expandedContainerID) {closeContainerDetails()}
         }
         .sheet(isPresented:$create){CreateView().environmentObject(s)}
+        .sheet(isPresented:$s.operationPresented){OperationProgressView().environmentObject(s)}
+        .sheet(item:$s.inspection){InspectionView(target:$0).environmentObject(s)}
+        .confirmationDialog(s.t("restartConfirm"),isPresented:Binding(get:{s.restartCandidate != nil},set:{if !$0{s.restartCandidate=nil}}),titleVisibility:.visible) {
+            Button(s.t("restart"),role:.destructive){if let item=s.restartCandidate{Task{await s.action("restart",item)}};s.restartCandidate=nil}
+            Button(s.t("cancel"),role:.cancel){s.restartCandidate=nil}
+        } message:{Text((s.restartCandidate?.id ?? "")+"\n"+s.t("restartImpact"))}
         .confirmationDialog(s.t(verb=="delete" ? "deleteConfirm":"stopConfirm"),isPresented:Binding(get:{pending != nil},set:{if !$0{pending=nil}}),titleVisibility:.visible) {
             if let c=pending {Button(s.t(verb),role:.destructive){Task{await s.action(verb,c)};pending=nil}}
             Button(s.t("cancel"),role:.cancel){pending=nil}
@@ -185,6 +194,7 @@ struct MainView:View {
                     .contextMenu(forSelectionType:String.self){ids in
                         if ids.count==1,let id=ids.first,let c=s.containers.first(where:{$0.id==id}){
                             Button(s.t("expandContainerDetails")){openContainerDetails(ids)}
+                            ContainerUtilityActions(item:c)
                             Divider()
                             Button(s.t(c.running ? "stop":"start")){if c.running{verb="stop";pending=c}else{Task{await s.action("start",c)}}}.disabled(!s.canMutate)
                             Button(s.t("delete"),role:.destructive){verb="delete";pending=c}.disabled(c.running || !s.canMutate)
@@ -219,7 +229,7 @@ struct InspectorView:View {
             HStack{
                 Button{if item.running{onStop()}else{Task{await s.action("start",item)}}}label:{Label(s.t(item.running ? "stop":"start"),systemImage:item.running ? "stop.fill":"play.fill")}.disabled(!s.canMutate)
                 Spacer()
-                Menu{Button(s.t("copyName")){NSPasteboard.general.clearContents();NSPasteboard.general.setString(item.id,forType:.string)};Button(s.t("delete"),role:.destructive,action:onDelete).disabled(item.running || !s.canMutate)}label:{Image(systemName:"ellipsis")}.menuStyle(.borderlessButton).frame(width:24)
+                Menu{ContainerUtilityActions(item:item);Divider();Button(s.t("copyName")){NSPasteboard.general.clearContents();NSPasteboard.general.setString(item.id,forType:.string)};Button(s.t("delete"),role:.destructive,action:onDelete).disabled(item.running || !s.canMutate)}label:{Image(systemName:"ellipsis")}.menuStyle(.borderlessButton).frame(width:24)
             }
             Divider()
             VStack(alignment:.leading,spacing:20) {
