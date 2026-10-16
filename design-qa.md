@@ -4,7 +4,7 @@ Status: **partial; final visual acceptance pending**.
 
 ## Latest capture update — 2026-10-16
 
-The separate 0.1.2 QA bundle became accessible long enough to switch Settings to English, hide the native sidebar and capture its actual window. See [README media](docs/MEDIA.md). Subsequent creation-sheet capture again failed with no available window/timeout. This is one observed Settings view, not a full visual pass and not a verification of the downloadable DMG. Earlier capture failures below remain historical evidence. The required release gates and result format now live in [PUBLIC_RELEASE_GATE.md](docs/PUBLIC_RELEASE_GATE.md) and [TEST_REPORT.md](docs/TEST_REPORT.md).
+The 0.1.2 QA bundle yielded actual English Overview, container-management and Settings screenshots. Overview and management are now the README's primary images; only the overview's computer name is visibly redacted. See [capture provenance](docs/MEDIA.md). After the creation-sheet failure, a fresh process sample showed the main thread in SwiftUI sheet layout throughout the sample; this is tracked as suspected major defect UI-001. Restarting only the QA app restored management access. These captures are not full visual acceptance or verification of the downloadable DMG. Earlier entries below are historical evidence. Acceptance criteria and results live in [PUBLIC_RELEASE_GATE.md](docs/PUBLIC_RELEASE_GATE.md) and [TEST_REPORT.md](docs/TEST_REPORT.md).
 
 ## Visual contract
 

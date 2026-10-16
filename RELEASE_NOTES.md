@@ -29,7 +29,7 @@ Mark this GitHub release as **pre-release**, not a verified stable release. This
 - `Container-Desk-0.1.2-arm64-preview.dmg`
 - `SHA256SUMS.txt`
 
-GitHub supplies source archives for the source tag. The repository license, if any, determines reuse permissions; source visibility alone does not grant an open-source license.
+GitHub supplies source archives for the source tag. Current source is licensed under Apache-2.0. Newly packaged versions also include a matching source ZIP, source-commit manifest and checksums; older uploaded assets are not silently replaced.
 
 ## 中文摘要
 

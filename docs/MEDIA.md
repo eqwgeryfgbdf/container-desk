@@ -6,17 +6,18 @@ Use actual app captures. No AI-generated mockups or fabricated runtime data as p
 
 | File | Provenance | What it proves / does not prove |
 | --- | --- | --- |
+| `images/overview-en.png` | 0.1.2 QA bundle, macOS 26.7.1, 2026-10-16; native window capture using the macOS CLI. | Actual hardware and live totals. Computer name covered by an explicit redaction; all other displayed values retained. |
+| `images/containers-en.jpg` | Same QA bundle/date; native screenshot, sidebar hidden and search filter applied. | Actual stopped `cd-qa-readme-01933495` container created through the official CLI with 2 CPUs/768 MiB and a locally downloaded Python image. No mounts/ports/secrets. Removed after capture; all 8 pre-existing container states verified unchanged. |
 | `images/settings-en.jpg` | Container Desk 0.1.2 QA bundle (`local.containerdesk.qa`), macOS 26.7.1, captured 2026-10-16; native sidebar hidden before capture. | Real English Settings rendering and preview disclosure. QA build capture, not a certification of the downloadable DMG or complete UI acceptance. |
 
-The image is an unmodified native-window screenshot. The sidebar was hidden through the normal app control to omit the local hostname. No hardware values were replaced with sample data.
+The Settings and management images are unmodified native-window screenshots. The overview has only its computer-name value visibly covered for privacy. Sidebar visibility and management search use normal app controls. No runtime values were replaced with sample data. Overview and management are the README's primary images; Settings remains a secondary reference.
 
 ## Remaining captures
 
-1. Creation form: downloaded-image menu, CPU menu, memory slider and editable number. Use only harmless test names and a public image reference. Do not submit a container merely to stage a screenshot.
-2. Overview/container list: use a dedicated test Mac with shareable machine/workload names; show real hardware and real status.
-3. Dark appearance and one Chinese-language view, following the same privacy and provenance rules.
+1. Creation form after the layout hang is fixed: downloaded-image menu, CPU menu, memory slider and editable number.
+2. Dark appearance and one Chinese-language view, following the same privacy and provenance rules.
 
-The original app's window capture is intermittent. The QA Settings view was captured successfully, but the subsequent creation-sheet interaction returned no available window. Missing captures remain pending; no replacement mockup is published.
+The original app's window capture is intermittent. A process sample after the QA creation-sheet failure showed the main thread in SwiftUI sheet layout throughout the sample. This is tracked as a suspected major app defect, not dismissed as an automation problem. Restarting only the QA app restored management access; the overview was captured through the CLI. Creation-form acceptance remains blocked; no replacement mockup is published.
 
 ## Optional 30–45 second walkthrough
 

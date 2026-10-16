@@ -16,6 +16,12 @@ if ! security find-identity -v -p codesigning | grep -F -- "$SIGNING_IDENTITY" |
 fi
 OUT="$ROOT/../outputs"
 BUILD="$ROOT/../work/release"
+if [[ -n "$(git -C "$ROOT" status --porcelain)" ]]; then
+  echo 'Commit source changes before packaging so the DMG and source archive match.' >&2
+  exit 1
+fi
+COMMIT="$(git -C "$ROOT" rev-parse HEAD)"
+mkdir -p "$OUT" "$BUILD"
 CONTAINERDESK_DISTRIBUTION=release CONTAINERDESK_BUNDLE_ID=local.containerdesk.app bash "$ROOT/scripts/build.sh" "$BUILD"
 APP="$BUILD/Container Desk.app"
 codesign --force --sign "$SIGNING_IDENTITY" --options runtime --timestamp "$APP"
@@ -25,6 +31,7 @@ trap 'rm -rf "$STAGE"' EXIT
 ditto "$APP" "$STAGE/Container Desk.app"
 ln -s /Applications "$STAGE/Applications"
 cp "$ROOT/README.md" "$STAGE/Read Me.md"
+if [[ -f "$ROOT/LICENSE" ]]; then cp "$ROOT/LICENSE" "$STAGE/LICENSE.txt"; fi
 VERSION="$(/usr/libexec/PlistBuddy -c 'Print CFBundleShortVersionString' "$APP/Contents/Info.plist")"
 DMG="$OUT/Container-Desk-$VERSION-arm64.dmg"
 hdiutil create -volname 'Container Desk' -srcfolder "$STAGE" -ov -format UDZO "$DMG"
@@ -46,4 +53,5 @@ hdiutil attach "$DMG" -readonly -nobrowse -mountpoint "$MOUNT"
 trap 'hdiutil detach "$MOUNT" >/dev/null 2>&1 || true; rm -rf "$STAGE"' EXIT
 spctl --assess --type execute --verbose=2 "$MOUNT/Container Desk.app"
 hdiutil detach "$MOUNT"
+python3 "$ROOT/scripts/source-artifacts.py" "$DMG" "$COMMIT"
 echo "Signed and notarized DMG: $DMG"

@@ -42,7 +42,7 @@ Copy this template for each release candidate. Use PASS / FAIL / PENDING / BLOCK
 
 | ID | Severity | Steps to reproduce | Expected / actual | Fix commit | Retest evidence |
 | --- | --- | --- | --- | --- | --- |
-| — | — | No completed candidate report yet | — | — | — |
+| UI-001 | Major (suspected) | In 0.1.2 QA, open Create Container after filtering the container table and hiding the sidebar. | Window becomes unavailable; process sample stays in SwiftUI sheet layout. Restarting QA restores management. Reproduce on final candidate and fix before public release. | Pending | Pending |
 
 ## Decision record
 

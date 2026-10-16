@@ -8,15 +8,34 @@ Native SwiftUI manager for **local Apple Container**, built with the macOS 26 SD
 
 ## Screenshots
 
-![English Settings in the actual Container Desk 0.1.2 QA app](docs/images/settings-en.jpg)
+### Overview
 
-Actual macOS 26.7.1 QA-app capture, with the sidebar hidden to omit the local hostname. This shows the current Settings design, not proof that every view or the downloadable DMG has passed acceptance. Creation-form and overview captures are still pending. [Capture provenance and planned walkthrough](docs/MEDIA.md).
+![Overview with actual Mac specifications and live container totals](docs/images/overview-en.png)
+
+### Container management
+
+![Container management with search, status and CPU and memory allocation](docs/images/containers-en.jpg)
+
+Actual macOS 26.7.1 captures from the 0.1.2 QA app. The overview's computer name is visibly redacted; the management page is filtered to a real disposable test container, removed after capture. Hardware and container values are not simulated. Screenshots do not certify the downloadable DMG or complete acceptance. [Capture provenance](docs/MEDIA.md).
 
 ## GitHub distribution
 
 The repository contains source, localized resources, build scripts and tests. Downloadable DMGs belong in GitHub Releases, not Git history. Version 0.1.2 should be marked **pre-release** because clean-install/upgrade and final interactive UI acceptance are still pending. Publishing on GitHub does not imply Apple endorsement or notarization.
 
-For a GitHub preview release, run `bash scripts/test.sh` and `bash scripts/package.sh`, then attach the resulting DMG and a SHA-256 checksum file to the corresponding source tag. No Apple Developer account or signing secret is required for this preview workflow. See `RELEASE_NOTES.md` for the release description.
+For a GitHub preview release, run `bash scripts/test.sh` and `bash scripts/package.sh`, then attach the resulting DMG, matching source ZIP, manifest and SHA-256 checksums to the corresponding source tag. No Apple Developer account or signing secret is required for this preview workflow. See `RELEASE_NOTES.md` for the release description.
+
+Every package now includes a matching source ZIP, a source-commit manifest and SHA-256 checksums. Packaging requires a clean Git checkout and refuses source changes made during the build. Upload the complete set together; keep the release tag on the manifest's source commit. The source ZIP includes Apache-2.0 licensing, sources, resources, build scripts and tests; it excludes Git internals and ignored build output.
+
+| Distribution | App | Matching source |
+| --- | --- | --- |
+| Developer preview | `Container-Desk-VERSION-arm64-preview.dmg` | `Container-Desk-VERSION-preview-source.zip` |
+| Signed/notarized release pipeline | `Container-Desk-VERSION-arm64.dmg` | `Container-Desk-VERSION-source.zip` |
+
+The signed pipeline is prepared but has not produced a release: Developer ID credentials are unavailable, and the acceptance gates are incomplete. A filename or successful package build alone does not make a version stable. Existing 0.1.2 release assets remain unchanged; this paired-artifact workflow applies to newly built packages.
+
+## License
+
+Container Desk is licensed under [Apache-2.0](LICENSE). Apple Container is a separate dependency with its own license; its official installer is downloaded when needed and is not bundled here.
 
 ## Install
 
@@ -53,7 +72,7 @@ The official signed package was expanded into the workspace without installation
 
 Only Container **1.5.0** is currently marked compatible. Newer releases are displayed but installation is deferred until tested; automatic mode does not imply unconditional future-version support. Custom files are not overwritten. The recognized `~/.local/bin/container` wrapper can explicitly migrate to the same official version when idle; the original installation is preserved. Other custom layouts still use their original installation method. There is no privileged background helper, closed-app scheduler, remote host management, interactive terminal, full resource editor, skip-version preference or separate guest-kernel updater yet.
 
-Live create/start/logs/stats/stop/delete smoke testing passed using one disposable container, with all 8 existing container states unchanged. 29 automated policy/parser/process/hardware checks and 179 × 3 localization entries passed. The official 1.5.0 package's digest and Apple signature were verified. Fresh installation and upgrade were **not** executed end to end on this working host. Final hardware-page/form/dark-mode/multi-size visual review remains blocked: UI automation cannot retrieve the app window, including a separate QA bundle. Do not treat this preview as a signed production release or full acceptance of every design-spec item.
+Live create/start/logs/stats/stop/delete smoke testing passed using one disposable container, with all 8 existing container states unchanged. 29 automated policy/parser/process/hardware checks and 179 × 3 localization entries passed. The official 1.5.0 package's digest and Apple signature were verified. Fresh installation and upgrade were **not** executed end to end on this working host. Actual Overview and container-management screenshots are available. Creation-form acceptance is blocked by suspected major defect UI-001: opening the QA creation sheet left the main thread in SwiftUI layout. Dark-mode, multi-size and accessibility review remain pending. Do not treat this preview as a signed production release or full acceptance of every design-spec item.
 
 ## Build and test
 
@@ -71,10 +90,6 @@ To rerun the opt-in integration smoke test, compile `Sources/Models.swift`, `Sou
 
 For an optional Developer ID signed and notarized release, set `SIGNING_IDENTITY` to an installed Developer ID Application identity and `NOTARY_PROFILE` to an existing notarytool Keychain profile, then run `bash scripts/release.sh`. Do not put passwords, private keys or API secrets in source files. The script only reports success after notarization acceptance, stapling, DMG verification and Gatekeeper assessment. Complete the pending clean-install, update, accessibility and visual acceptance checks before distributing.
 
-## Official references
+## Reference
 
-- Apple Container: https://github.com/apple/container
-- Releases: https://github.com/apple/container/releases
-- macOS design: https://developer.apple.com/design/human-interface-guidelines/designing-for-macos
-- New design: https://developer.apple.com/documentation/TechnologyOverviews/adopting-liquid-glass
-- Distribution: https://developer.apple.com/documentation/security/notarizing-macos-software-before-distribution
+- [Apple Container](https://github.com/apple/container)
