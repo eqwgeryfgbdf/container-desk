@@ -62,6 +62,8 @@ rows['migrationPolicy']=('Only the recognized per-user Apple Container layout ca
 rows['releaseBuild']=('Developer ID distribution build.','Developer ID 分发构建。','Developer ID 散佈版本。')
 rows['openPortInBrowser']=('Open in default browser','在默认浏览器中打开','在預設瀏覽器中開啟')
 rows['copyPortURL']=('Copy URL','复制网址','複製網址')
+rows['expandContainerDetails']=('Expand Container Details','展开容器详情','展開容器詳細資訊')
+rows['backToContainers']=('Back to Containers','返回容器列表','返回容器清單')
 root=Path(__file__).resolve().parents[1]
 strings={k:{'localizations':{lang:{'stringUnit':{'state':'translated','value':value}} for lang,value in zip(['en','zh-Hans','zh-Hant'],values)}} for k,values in rows.items()}
 (root/'Resources/Localizable.xcstrings').write_text(json.dumps({'sourceLanguage':'en','strings':strings,'version':'1.0'},ensure_ascii=False,indent=2)+'\n')

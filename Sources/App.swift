@@ -39,9 +39,12 @@ struct MainView:View {
     @State private var create=false
     @State private var pending:ContainerItem?
     @State private var verb=""
+    @State private var expandedContainerID:String?
+    @State private var columnVisibility:NavigationSplitViewVisibility = .all
+    @State private var previousColumnVisibility:NavigationSplitViewVisibility = .all
     private let sections=[("overview","chart.bar.xaxis"),("containers","shippingbox"),("images","square.stack.3d.up"),("networks","network"),("volumes","externaldrive")]
     var body:some View {
-        NavigationSplitView {
+        NavigationSplitView(columnVisibility:$columnVisibility) {
             VStack(alignment:.leading,spacing:0) {
                 HStack(spacing:10){Image(systemName:"shippingbox").font(.title2);Text("Container Desk").font(.headline)}.padding(.horizontal,18).padding(.top,16).padding(.bottom,22)
                 HStack(spacing:9){Image(systemName:s.host.icon).foregroundStyle(.secondary);VStack(alignment:.leading,spacing:3){Text(s.host.name).font(.subheadline).lineLimit(1);Label(s.t(s.connected ? "connected":"disconnected"),systemImage:s.connected ? "checkmark.circle.fill":"circle").font(.caption).foregroundStyle(s.connected ? Color.green:Color.secondary)}}.padding(.horizontal,18).padding(.bottom,18)
@@ -80,8 +83,17 @@ struct MainView:View {
                     if let d=s.lastRefresh {Text(s.t("updated")+" "+d.formatted(date:.omitted,time:.standard)).font(.caption).monospacedDigit()}
                 }.foregroundStyle(.secondary).padding(.horizontal,20).padding(.vertical,10)
             }
-            .navigationTitle(s.t(s.section))
+            .navigationTitle(expandedContainerID ?? s.t(s.section))
             .toolbar {
+                if expandedContainerID != nil {
+                    ToolbarItem(placement:.navigation) {
+                        Button(action:closeContainerDetails) {
+                            Label(s.t("backToContainers"),systemImage:"arrow.left")
+                        }
+                        .keyboardShortcut(.escape,modifiers:[])
+                        .help(s.t("backToContainers"))
+                    }
+                }
                 ToolbarItemGroup(placement:.primaryAction) {
                     Button{Task{await s.refresh()}}label:{Label(s.t("refresh"),systemImage:"arrow.clockwise")}.disabled(s.busy || s.refreshing)
                     if s.section=="containers" || s.section=="overview" {
@@ -90,6 +102,13 @@ struct MainView:View {
                 }
             }
         }
+        .onChange(of:s.section) { _,_ in closeContainerDetails() }
+        .onChange(of:s.selected) { _,selection in
+            if let expandedContainerID,selection != expandedContainerID {closeContainerDetails()}
+        }
+        .onChange(of:s.containers.map(\.id)) { _,ids in
+            if let expandedContainerID,!ids.contains(expandedContainerID) {closeContainerDetails()}
+        }
         .sheet(isPresented:$create){CreateView().environmentObject(s)}
         .confirmationDialog(s.t(verb=="delete" ? "deleteConfirm":"stopConfirm"),isPresented:Binding(get:{pending != nil},set:{if !$0{pending=nil}}),titleVisibility:.visible) {
             if let c=pending {Button(s.t(verb),role:.destructive){Task{await s.action(verb,c)};pending=nil}}
@@ -97,9 +116,25 @@ struct MainView:View {
         } message:{Text((pending?.id ?? "")+"\n"+s.t(verb=="delete" ? "deleteImpact":"stopImpact"))}
     }
     func banner(_ title:String,symbol:String,color:Color)->some View {Label(title,systemImage:symbol).font(.callout).frame(maxWidth:.infinity,alignment:.leading).padding(12).background(color.opacity(0.08))}
+    func openContainerDetails(_ ids:Set<String>) {
+        guard ids.count==1,let id=ids.first,s.containers.contains(where:{$0.id==id}) else{return}
+        s.selected=id
+        previousColumnVisibility=columnVisibility
+        expandedContainerID=id
+        columnVisibility = .detailOnly
+    }
+    func closeContainerDetails() {
+        guard expandedContainerID != nil else{return}
+        expandedContainerID=nil
+        columnVisibility=previousColumnVisibility
+    }
     @ViewBuilder var containerContent:some View {
         if s.cli==nil {
             ContentUnavailableView{Label(s.t("coreMissing"),systemImage:"shippingbox")}description:{Text(s.t("dependency"))}actions:{Button(s.t("setupCore")){s.section="core"}.buttonStyle(.borderedProminent)}
+        } else if let id=expandedContainerID,let c=s.containers.first(where:{$0.id==id}) {
+            InspectorView(item:c,onStop:{verb="stop";pending=c},onDelete:{verb="delete";pending=c})
+                .id(c.id)
+                .frame(maxWidth:.infinity,maxHeight:.infinity,alignment:.topLeading)
         } else {
             HSplitView {
                 VStack(spacing:0) {
@@ -116,10 +151,12 @@ struct MainView:View {
                     .tableStyle(.inset(alternatesRowBackgrounds:false))
                     .contextMenu(forSelectionType:String.self){ids in
                         if ids.count==1,let id=ids.first,let c=s.containers.first(where:{$0.id==id}){
+                            Button(s.t("expandContainerDetails")){openContainerDetails(ids)}
+                            Divider()
                             Button(s.t(c.running ? "stop":"start")){if c.running{verb="stop";pending=c}else{Task{await s.action("start",c)}}}.disabled(!s.canMutate)
                             Button(s.t("delete"),role:.destructive){verb="delete";pending=c}.disabled(c.running || !s.canMutate)
                         }
-                    }
+                    } primaryAction: { ids in openContainerDetails(ids) }
                     .overlay{if s.filtered.isEmpty{ContentUnavailableView.search(text:s.query)}}
                 }.frame(minWidth:560,maxWidth:.infinity,maxHeight:.infinity)
                 if let c=s.chosen {

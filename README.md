@@ -61,6 +61,8 @@ The official signed package was expanded into the workspace without installation
 
 ## Included
 
+In current source, double-click a container row (or choose Expand Container Details from its context menu) to show its information and logs across the window content area. Back to Containers or Esc restores the list, selection and previous sidebar visibility. This addition is not in the existing `v0.1.2-preview` download.
+
 Current source adds clickable TCP port mappings in the container inspector, opening the published host address in the default browser, plus a Copy URL context action. HTTP is the default; container port 443 uses HTTPS. Wildcard bind addresses open through loopback; UDP mappings stay as text. The service must actually serve HTTP/HTTPS. This addition is not in the existing `v0.1.2-preview` download.
 
 - Native sidebar, container table, inspector, searchable status filters, grouped forms, toolbar and system appearance.
