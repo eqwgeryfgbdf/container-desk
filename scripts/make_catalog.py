@@ -64,6 +64,23 @@ rows['openPortInBrowser']=('Open in default browser','在默认浏览器中打�
 rows['copyPortURL']=('Copy URL','复制网址','複製網址')
 rows['expandContainerDetails']=('Expand Container Details','展开容器详情','展開容器詳細資訊')
 rows['backToContainers']=('Back to Containers','返回容器列表','返回容器清單')
+rows.update({
+'cpuUsage':('CPU usage','CPU 使用率','CPU 使用率'),
+'resourceTrends':('Resource trends','资源趋势','資源趨勢'),
+'historyWindow':('Latest 120 samples · this app session','最近 120 次采样 · 本次应用会话','最近 120 次取樣 · 本次應用程式工作階段'),
+'actualMemorySamples':('Actual memory usage sampled from this container.','从此容器采集的实际内存用量。','從此容器擷取的實際記憶體用量。'),
+'openService':('Open in Browser','在浏览器中打开','在瀏覽器中開啟'),
+'copyImageReference':('Copy Image Reference','复制镜像引用','複製映像檔參照'),
+'moreActions':('More Actions','更多操作','更多操作'),
+'networkCumulative':('Cumulative traffic','累计流量','累計流量'),
+'connections':('Ports & Networks','端口与网络','連接埠與網路'),
+'runtimeEngine':('Container engine','容器引擎','容器引擎'),
+'lastObservation':('Last observed','最近观测','最近觀測'),
+'configuration':('Configuration','配置','配置'),
+'mountDirection':('Host source → container destination','主机来源 → 容器目标','主機來源 → 容器目標'),
+'noMounts':('No mounts configured','未配置挂载','未設定掛載'),
+'recentLogs':('Recent logs · up to 150 lines','最近日志 · 最多 150 行','最近日誌 · 最多 150 行'),
+})
 root=Path(__file__).resolve().parents[1]
 strings={k:{'localizations':{lang:{'stringUnit':{'state':'translated','value':value}} for lang,value in zip(['en','zh-Hans','zh-Hant'],values)}} for k,values in rows.items()}
 (root/'Resources/Localizable.xcstrings').write_text(json.dumps({'sourceLanguage':'en','strings':strings,'version':'1.0'},ensure_ascii=False,indent=2)+'\n')

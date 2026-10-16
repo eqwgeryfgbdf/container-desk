@@ -9,6 +9,7 @@ import AppKit
     @Published var networks:[ResourceItem]=[]
     @Published var volumes:[ResourceItem]=[]
     @Published var history:[Sample]=[]
+    @Published var containerHistory=ContainerMetricHistory()
     @Published var selected:String?
     @Published var section="containers"
     @Published var query=""
@@ -71,12 +72,15 @@ import AppKit
     func refresh() async {
         host.refreshDisk()
         guard !refreshing,!busy else { return }
-        detect();guard let cli else { connected=false;return }
+        detect();guard let cli else { connected=false;usage=[:];previous=[:];return }
         refreshing=true;defer{refreshing=false}
         do {
             if version=="—" {let v=try await ProcessRunner.checked(cli,["--version"]);version=v.text.trimmingCharacters(in:.whitespacesAndNewlines)}
             let r=try await ProcessRunner.checked(cli,["list","--all","--format","json"])
             containers=try ContainerItem.parse(r.data);connected=true;error=nil;lastRefresh=Date()
+            let existingIDs=Set(containers.map(\.id))
+            containerHistory.record([:],at:Date(),existingIDs:existingIDs)
+            previous=previous.filter { id,_ in containers.contains(where:{$0.id==id && $0.running}) }
             if chosen==nil { selected=containers.first?.id }
             if version=="—" { let v=try await ProcessRunner.checked(cli,["--version"]);version=v.text.trimmingCharacters(in:.whitespacesAndNewlines) }
             if active>0 {
@@ -85,19 +89,30 @@ import AppKit
                     let rows=try JSONSerialization.jsonObject(with:stats.data) as? [[String:Any]] ?? []
                     let now=Date();var next:[String:Usage]=[:]
                     for row in rows {
-                        guard let id=row["id"] as? String else { continue }
-                        let use=(row["cpuUsageUsec"] as? NSNumber)?.doubleValue ?? 0
+                        guard let id=row["id"] as? String,
+                              let memory=(row["memoryUsageBytes"] as? NSNumber)?.int64Value,
+                              let processes=row["numProcesses"] as? Int,
+                              let rx=(row["networkRxBytes"] as? NSNumber)?.int64Value,
+                              let tx=(row["networkTxBytes"] as? NSNumber)?.int64Value,
+                              memory>=0,processes>=0,rx>=0,tx>=0 else { continue }
                         var cpu:Double?
-                        if let old=previous[id],now.timeIntervalSince(old.1)>0,use>=old.0 { cpu=(use-old.0)/(now.timeIntervalSince(old.1)*1_000_000)*100 }
-                        previous[id]=(use,now)
-                        next[id]=Usage(id:id,cpu:cpu,memory:(row["memoryUsageBytes"] as? NSNumber)?.int64Value ?? 0,processes:row["numProcesses"] as? Int ?? 0,rx:(row["networkRxBytes"] as? NSNumber)?.int64Value ?? 0,tx:(row["networkTxBytes"] as? NSNumber)?.int64Value ?? 0)
+                        if let use=(row["cpuUsageUsec"] as? NSNumber)?.doubleValue,use.isFinite,use>=0 {
+                            if let old=previous[id],now.timeIntervalSince(old.1)>0,use>=old.0 {
+                                let percent=(use-old.0)/(now.timeIntervalSince(old.1)*1_000_000)*100
+                                if percent.isFinite {cpu=percent}
+                            }
+                            previous[id]=(use,now)
+                        } else {previous[id]=nil}
+                        next[id]=Usage(id:id,cpu:cpu,memory:memory,processes:processes,rx:rx,tx:tx)
                     }
                     usage=next
+                    previous=previous.filter {next[$0.key] != nil}
+                    containerHistory.record(next,at:now,existingIDs:existingIDs)
                     if next.values.contains(where:{$0.cpu != nil}) { history.append(Sample(date:now,cpu:next.values.compactMap(\.cpu).reduce(0,+)));history=Array(history.suffix(120)) }
-                } catch { usage=[:];notice=t("statsUnavailable") }
+                } catch { usage=[:];previous=[:];notice=t("statsUnavailable") }
             } else { usage=[:];previous=[:] }
             if refreshCount % 6 == 0 { await refreshResources() };refreshCount+=1
-        } catch { connected=false;self.error=error.localizedDescription;usage=[:] }
+        } catch { connected=false;self.error=error.localizedDescription;usage=[:];previous=[:] }
     }
     func refreshResources() async {
         guard let cli else{return}

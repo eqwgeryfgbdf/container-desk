@@ -29,6 +29,21 @@ import Foundation
         try expect(port("127.0.0.1",8080,0).webURL==nil,"Invalid container port must not create a link")
         try expect(port("127.0.0.1/path").webURL==nil && port("user@example.com").webURL==nil,"Malformed hosts must not create links")
         try expect(PublishedPort([:]).webURL==nil,"Missing metadata must not fabricate a browser endpoint")
+        var metricHistory=ContainerMetricHistory()
+        let metricDate=Date(timeIntervalSince1970:1_000)
+        let firstUsage=Usage(id:"alpha",cpu:nil,memory:100,processes:1,rx:0,tx:0)
+        metricHistory.record(["alpha":firstUsage],at:metricDate,existingIDs:["alpha","beta"])
+        try expect(metricHistory.samples["alpha"]?.first?.cpu==nil && metricHistory.samples["alpha"]?.first?.memory==100,"Initial sample must preserve missing CPU and actual memory")
+        for i in 1...125 {
+            let value=Usage(id:"alpha",cpu:Double(i),memory:Int64(i),processes:1,rx:0,tx:0)
+            metricHistory.record(["alpha":value],at:metricDate.addingTimeInterval(Double(i)),existingIDs:["alpha","beta"])
+        }
+        try expect(metricHistory.samples["alpha"]?.count==120 && metricHistory.samples["alpha"]?.first?.memory==6,"History must retain only the latest 120 actual samples")
+        try expect(metricHistory.samples["beta"]==nil,"A different container must not inherit another container's history")
+        metricHistory.record([:],at:metricDate.addingTimeInterval(130),existingIDs:["alpha"])
+        try expect(metricHistory.samples["alpha"]?.last?.date==metricDate.addingTimeInterval(125),"Missing stats must not fabricate samples")
+        metricHistory.record(["alpha":firstUsage],at:metricDate,existingIDs:["beta"])
+        try expect(metricHistory.samples.isEmpty,"Deleted containers must be pruned and stale snapshots ignored")
         var req=CreateRequest();req.name="test";req.image="local:test";req.environment="VALUE=$(touch /tmp/should-not-exist)";req.hostPort="8080";req.containerPort="80"
         let args=try req.arguments()
         try expect(args.contains("127.0.0.1:8080:80"),"Ports must default to loopback")

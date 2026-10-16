@@ -82,6 +82,24 @@ struct Usage: Identifiable {
     var rx: Int64
     var tx: Int64
 }
+struct ContainerMetricSample: Identifiable {
+    let id = UUID()
+    let date: Date
+    let cpu: Double?
+    let memory: Int64
+}
+
+struct ContainerMetricHistory {
+    private(set) var samples: [String: [ContainerMetricSample]] = [:]
+    mutating func record(_ usage: [String: Usage], at date: Date, existingIDs: Set<String>) {
+        samples = samples.filter { existingIDs.contains($0.key) }
+        for (id, value) in usage where existingIDs.contains(id) {
+            var points = samples[id] ?? []
+            points.append(ContainerMetricSample(date: date, cpu: value.cpu, memory: value.memory))
+            samples[id] = Array(points.suffix(120))
+        }
+    }
+}
 struct ResourceItem: Identifiable {
     let id: String
     let detail: String

@@ -132,7 +132,7 @@ struct MainView:View {
         if s.cli==nil {
             ContentUnavailableView{Label(s.t("coreMissing"),systemImage:"shippingbox")}description:{Text(s.t("dependency"))}actions:{Button(s.t("setupCore")){s.section="core"}.buttonStyle(.borderedProminent)}
         } else if let id=expandedContainerID,let c=s.containers.first(where:{$0.id==id}) {
-            InspectorView(item:c,onStop:{verb="stop";pending=c},onDelete:{verb="delete";pending=c})
+            ContainerDetailView(item:c,onStop:{verb="stop";pending=c},onDelete:{verb="delete";pending=c})
                 .id(c.id)
                 .frame(maxWidth:.infinity,maxHeight:.infinity,alignment:.topLeading)
         } else {
