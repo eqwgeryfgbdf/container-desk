@@ -30,3 +30,33 @@ extension PlatformTests {
         catch is CancellationError {} // subprocess is reaped before the call returns
     }
 }
+
+extension PlatformTests {
+    func testArchiveBudgets()async throws {
+        let directory=FileManager.default.temporaryDirectory.appendingPathComponent("cd-archive-budget-"+UUID().uuidString)
+        try FileManager.default.createDirectory(at:directory,withIntermediateDirectories:false)
+        defer{try? FileManager.default.removeItem(at:directory)}
+        let script="""
+        import io,sys,tarfile,pathlib
+        root=pathlib.Path(sys.argv[1])
+        for mode,name,count,size,kind in [('w','ordinary.tar',1,4096,'file'),('w:gz','compressed.tar',1,65536,'file'),('w','entries.tar',20,0,'dir'),('w','sparse.tar',1,0,'sparse'),('w','pax.tar',1,1,'pax'),('w','long.tar',1,4,'long')]:
+            with tarfile.open(root/name,mode,format=tarfile.PAX_FORMAT) as tar:
+                for i in range(count):
+                    entry=tarfile.TarInfo(('long/'+'a'*180 if kind=='long' else 'item'+str(i)))
+                    entry.size=size
+                    if kind=='dir': entry.type=tarfile.DIRTYPE
+                    if kind=='sparse': entry.type=tarfile.GNUTYPE_SPARSE
+                    if kind=='pax': entry.pax_headers={'size':'999999999'}
+                    tar.addfile(entry,io.BytesIO(b'x'*size))
+        """
+        _=try await ProcessRunner.checked("/usr/bin/python3",["-c",script,directory.path])
+        for name in ["ordinary.tar","long.tar"] {try SafeTar.validate(directory.appendingPathComponent(name),maximumBytes:1024*1024)}
+        for name in ["compressed.tar","entries.tar","sparse.tar","pax.tar"] {
+            try XCTAssertThrowsError(try SafeTar.validate(directory.appendingPathComponent(name),maximumBytes:1024*1024,maximumEntries:10),name)
+        }
+        let corrupt=directory.appendingPathComponent("corrupt.tar")
+        try Data(repeating:65,count:1024).write(to:corrupt)
+        try XCTAssertThrowsError(try SafeTar.validate(corrupt,maximumBytes:1024*1024))
+        print("PASS: plain tar / long PAX paths accepted; compression, excessive entries, sparse metadata, size overrides and invalid headers rejected before extraction")
+    }
+}

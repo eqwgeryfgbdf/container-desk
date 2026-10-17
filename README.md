@@ -100,13 +100,13 @@ Current source adds clickable TCP port mappings in the container inspector, open
 
 Only Container **1.5.0** is currently marked compatible. Newer releases are displayed but installation is deferred until tested; automatic mode does not imply unconditional future-version support. Custom files are not overwritten. The recognized `~/.local/bin/container` wrapper can explicitly migrate to the same official version when idle; the original installation is preserved. Other custom layouts still use their original installation method. There is no privileged background helper, closed-app scheduler, remote host management, embedded terminal, full resource editor, skip-version preference or separate guest-kernel updater yet.
 
-Current-source validation: 48 core checks, 35 management checks, 34 workflow checks, 13 simulated installer scenarios and 483 three-language keys passed. Real resource creation/deletion protection, container restart with volume persistence, image build/pull/archive round trip, and native image-tag/creation flows passed; the original 8 container states were preserved. UI-001 was traced to macOS 26 discrete-slider marks and fixed; native layout checks cover 16 GiB and 1 TiB host ranges. Full form/accessibility/multi-size and second-Mac acceptance remain pending. Clean engine installation and genuine upgrade are still **not** verified end to end. Existing release assets retain their earlier limitations; see the [test report](docs/TEST_REPORT.md).
+Automation now has one entry point: `python3 scripts/qa.py --live --ui`. It produces JSON, JUnit, logs and inventory comparisons for disposable real-engine tests plus native UI regression. See the [automation guide](docs/AUTOMATED_QA.md) and [current QA results](docs/QA_RESULTS.md). Clean-Mac installation, genuine upgrade, private-registry success, complete accessibility/visual acceptance and the 60-minute stability gate remain pending. AI model deployment is deferred; the next trial will use a lightweight local model. Existing release downloads retain their earlier limitations.
 
 ## Build and test
 
 Builds now use Swift Package Manager with pinned Yams 6.2.2; the first build downloads this dependency. Its required license notices are bundled in the app and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
-Install Apple's Xcode 26 or Command Line Tools 26 with a macOS 26 SDK, plus Python 3. There are no third-party Swift package dependencies.
+Install Apple's Xcode 26 or Command Line Tools 26 with a macOS 26 SDK, plus Python 3. Yams is the pinned Swift package dependency.
 
 ```sh
 bash scripts/test.sh

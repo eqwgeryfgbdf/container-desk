@@ -2,7 +2,7 @@ import Foundation
 @main @MainActor struct StoreSmoke {
     static func main() async throws {
         let store=Store();await store.start()
-        guard store.connected,let cli=store.cli,let image=store.images.first(where:{$0.id.contains("python@")}) else{throw DeskError.message("Need a connected engine and existing Python image")}
+        guard store.connected,let cli=store.cli,let image=store.images.first(where:{$0.id.contains("python") && $0.detail.contains("arm64")}) else{throw DeskError.message("Need a connected engine and existing Python image")}
         let before=store.containers
         let name="containerdesk-form-"+UUID().uuidString.prefix(8).lowercased()
         var req=CreateRequest();req.name=name;req.image=image.id;req.cpus=2;req.memoryMB=768

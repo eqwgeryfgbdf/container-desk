@@ -28,19 +28,19 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Transfer archive exceeds 4 GiB or diagnostic output exceeds 1 MiB."
+            "value": "Transfer exceeds its safety limits or uses an unsupported archive format. Use a plain tar archive under 4 GiB with at most 10,000 entries."
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "传输归档超过 4 GiB，或诊断输出超过 1 MiB。"
+            "value": "传输超过安全限制或使用了不支持的归档格式。请使用小于 4 GiB、最多 10,000 个条目的普通 tar 归档。"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "傳輸封存檔超過 4 GiB，或診斷輸出超過 1 MiB。"
+            "value": "傳輸超過安全限制或使用不支援的封存格式。請使用小於 4 GiB、最多 10,000 個項目的普通 tar 封存檔。"
           }
         }
       }

@@ -113,6 +113,7 @@ enum FileOperations {
                 defer{try? FileManager.default.removeItem(at:stage)}
                 // BSD tar rejects traversal and extraction through symlinks by
                 // default. Do not add -P; safe-writes avoids hardlink overwrites.
+                try SafeTar.validate(archive,maximumBytes:FileTransferProcess.maximumBytes)
                 try await execute("/usr/bin/tar",FileTransferProcess.extractionArguments(archive:archive,directory:stage),output:output)
                 let payload=stage.appendingPathComponent(remoteURL.lastPathComponent)
                 guard try payload.resourceValues(forKeys:[.isSymbolicLinkKey]).isSymbolicLink != true else{throw DeskError.message("fileSymlinkUpload")}
@@ -169,5 +170,72 @@ enum FileOperations {
             }
             throw error
         }
+    }
+}
+
+/// Accept only bounded, uncompressed tar streams before invoking BSD tar. Never
+/// infer the producer's format from the arguments sent to an untrusted guest.
+enum SafeTar {
+    static func validate(_ archive:URL,maximumBytes:Int64,maximumEntries:Int=10000)throws {
+        let handle=try FileHandle(forReadingFrom:archive);defer{try? handle.close()}
+        let length=try handle.seekToEnd();try handle.seek(toOffset:0)
+        guard length<=UInt64(maximumBytes),length%512==0 else{throw DeskError.message("fileTransferLimit")}
+        var offset:UInt64=0,expanded:Int64=0,entries=0
+        func fail()throws->Never{throw DeskError.message("fileTransferLimit")}
+        func number(_ bytes:ArraySlice<UInt8>)throws->UInt64 {
+            // Refuse base-256 and signed values rather than disagree with tar.
+            let text=String(decoding:bytes,as:UTF8.self).trimmingCharacters(in:CharacterSet(charactersIn:"\0 "))
+            guard !text.isEmpty,text.allSatisfy({("0"..."7").contains(String($0))}),let n=UInt64(text,radix:8) else{try fail()}
+            return n
+        }
+        while offset+512<=length {
+            try Task.checkCancellation()
+            guard let data=try handle.read(upToCount:512),data.count==512 else{try fail()}
+            let header=Array(data);offset+=512
+            if header.allSatisfy({$0==0}) {
+                // End-of-archive padding must be all zero; reject concatenated formats.
+                while let tail=try handle.read(upToCount:32768),!tail.isEmpty {
+                    try Task.checkCancellation();guard tail.allSatisfy({$0==0}) else{try fail()}
+                }
+                return
+            }
+            entries+=1;guard entries<=maximumEntries else{try fail()}
+            let expected=try number(header[148..<156])
+            let checksum=header.enumerated().reduce(UInt64(0)){sum,pair in sum+UInt64((148..<156).contains(pair.offset) ? 32:pair.element)}
+            guard expected==checksum else{try fail()}
+            let magic=String(decoding:header[257..<263],as:UTF8.self)
+            guard magic=="ustar\0" || magic=="ustar " else{try fail()}
+            let size=try number(header[124..<136]),type=header[156]
+            guard size<=UInt64(maximumBytes),size<=length-offset else{try fail()}
+            let padded=((size+511)/512)*512
+            guard padded<=length-offset else{try fail()}
+            switch type {
+            case 0,48: // regular files; count allocation rounding too
+                expanded+=Int64(((size+4095)/4096)*4096)
+            case 49,50,53: // hard link, symlink, directory; never device/FIFO/sparse
+                guard size==0 else{try fail()};expanded+=4096
+            case 120,103: // PAX local/global metadata
+                guard size<=1024*1024,let payload=try handle.read(upToCount:Int(size)),payload.count==Int(size) else{try fail()}
+                var cursor=0;let b=Array(payload)
+                while cursor<b.count {
+                    guard let space=b[cursor...].firstIndex(of:32),space-cursor<=12,
+                          let n=Int(String(decoding:b[cursor..<space],as:UTF8.self)),n>space-cursor+2,n<=b.count-cursor,
+                          b[cursor+n-1]==10 else{try fail()}
+                    let record=String(decoding:b[(space+1)..<(cursor+n-1)],as:UTF8.self)
+                    guard let equals=record.firstIndex(of:"=") else{try fail()}
+                    let key=String(record[..<equals])
+                    // No size/sparse overrides or unknown format extensions.
+                    guard ["path","linkpath","mtime","atime","ctime","uid","gid","uname","gname","charset","comment"].contains(key) else{try fail()}
+                    cursor+=n
+                }
+                expanded+=Int64(padded)
+            case 76,75: // GNU long name/link records; ordinary plain tar only
+                guard size<=16384 else{try fail()};expanded+=Int64(padded)
+            default:try fail()
+            }
+            guard expanded<=maximumBytes else{try fail()}
+            offset+=padded;try handle.seek(toOffset:offset)
+        }
+        try fail() // require the normal end marker
     }
 }

@@ -50,3 +50,7 @@ This is the acceptance contract for the first public Container Desk preview. Pas
 4. Complete the report and check every evidence link. **All PASS + zero critical/major defects = ELIGIBLE FOR PUBLIC PREVIEW.** Until then, keep private and keep the release marked pre-release.
 
 The eligibility decision is separate from the actual visibility change. Do not represent the repository as public until GitHub confirms it. This document does not schedule background monitoring or make the repository public automatically.
+
+## Current-source automated QA update — 2026-10-17
+
+See [QA_RESULTS.md](QA_RESULTS.md) for the unified live/UI run, bounded-output/archive security changes and actual recording evidence. These source-level results do not fill the blank candidate acceptance table or certify the older release assets. The repository remains private until every required public-release gate is verified.

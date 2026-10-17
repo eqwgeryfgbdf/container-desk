@@ -33,7 +33,8 @@ func XCTUnwrap<T>(_ value:T?)throws->T{guard let value else{throw DeskError.mess
         try unit.testRegistryValidationAndMetadata()
         try await unit.testCredentialPipeAndSuppressedOutput()
         try await unit.testArchiveTraversalAndCancellation()
-        print("PASS: 13 platform suites (Hub search, Compose semantics and rejection cases, env interpolation, file safety, registry validation, credential pipe)")
+        try await unit.testArchiveBudgets()
+        print("PASS: 14 platform suites (Hub search, Compose semantics and rejection cases, env interpolation, file safety, registry validation, credential pipe)")
         if CommandLine.arguments.contains("--resource-batch"){try await unit.testResourceBatchLive()}
         if CommandLine.arguments.contains("--snapshot"){try await unit.testContainerSnapshotLive()}
         if CommandLine.arguments.contains("--hub-search"){try await unit.testHubSearchLive()}

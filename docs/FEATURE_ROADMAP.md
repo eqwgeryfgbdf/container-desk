@@ -71,3 +71,7 @@ bash scripts/test-platform.sh --run --registry --push  # disposable projects, fi
 Live tests mutate only named disposable resources. The management test requires an existing arm64 Python image. The image test requires the existing builder to be stopped; it temporarily starts that builder for a tiny scratch build, restores it to stopped, downloads a small BusyBox image if absent, and cleans up its own images. It does not stop unrelated running containers. Run these on a suitable test host, never concurrently with another build.
 
 Current source and local development build include Baseline A. Existing `v0.1.2-preview` GitHub assets have not been replaced. Keep the repository private until [the public-release gates](PUBLIC_RELEASE_GATE.md) pass.
+
+## AI scheduling decision — 2026-10-17
+
+AI model deployment is deferred while the core management workflows, automated QA and release acceptance are completed. The first future experiment should use one lightweight local model, with measured memory usage and response latency; no model is installed by the current QA or recording scripts.

@@ -199,9 +199,15 @@ import AppKit
                 operationResult=code==0 ? "operationComplete" : "operationFailed"
             } catch is CancellationError {operationResult="operationCancelled"}
               catch {operationResult=error.localizedDescription}
+            // Publish completion only after a fresh inventory. Otherwise the next
+            // sheet can observe stale images, or a second operation can race cleanup.
+            // Reconciliation must still run when the operation was cancelled.
+            await Task { @MainActor in
+                while imagesLoading || refreshing {try? await Task.sleep(for:.milliseconds(50))}
+                await refreshResources()
+                await refresh()
+            }.value
             operationRunning=false;operationTask=nil
-            await refreshResources()
-            await refresh()
         }
     }
 

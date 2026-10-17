@@ -48,9 +48,11 @@ import Foundation
             try await settledRefresh()
             guard let stopped=s.containers.first(where:{$0.id==id}),!stopped.running else {throw DeskError.message("Creation did not remain stopped")}
             for (kind,name) in [(ResourceKind.network,net),(.volume,vol),(.image,tagged)] {
-                s.deleteResource(kind,id:name);try await waitOperation("resourceInUse")
+                s.deleteResource(kind,id:name);try await waitOperation("operationFailed")
+                guard s.operationOutput.contains("resourceInUse") else{throw DeskError.message("Missing in-use refusal")}
             }
-            s.deleteResource(.network,id:"default");try await waitOperation("protectedResource")
+            s.deleteResource(.network,id:"default");try await waitOperation("operationFailed")
+            guard s.operationOutput.contains("protectedResource") else{throw DeskError.message("Missing built-in refusal")}
             await s.action("start",stopped);try await settledRefresh()
             guard let running=s.containers.first(where:{$0.id==id}),running.running else {throw DeskError.message(s.error ?? "Start failed")}
             let marker=try await command(["exec","--",id,"/bin/sh","-c","test -f /qa/marker && printf persistent"])

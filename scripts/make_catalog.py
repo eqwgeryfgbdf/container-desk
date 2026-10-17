@@ -5,7 +5,7 @@ from pathlib import Path
 # Canonical English source with independently authored Simplified / Traditional Chinese.
 rows = {
 'fileTransferProgress':('Transferring files', '正在传输文件', '正在傳輸檔案'),
-'fileTransferLimit':('Transfer archive exceeds 4 GiB or diagnostic output exceeds 1 MiB.', '传输归档超过 4 GiB，或诊断输出超过 1 MiB。', '傳輸封存檔超過 4 GiB，或診斷輸出超過 1 MiB。'),
+'fileTransferLimit':('Transfer exceeds its safety limits or uses an unsupported archive format. Use a plain tar archive under 4 GiB with at most 10,000 entries.', '传输超过安全限制或使用了不支持的归档格式。请使用小于 4 GiB、最多 10,000 个条目的普通 tar 归档。', '傳輸超過安全限制或使用不支援的封存格式。請使用小於 4 GiB、最多 10,000 個項目的普通 tar 封存檔。'),
 'composeHostsFailed':('Could not update project service-name mappings.','无法更新项目服务名称映射。','無法更新專案服務名稱映射。'),
 'composeDiscoveryNote':('Service names use a managed read-only /etc/hosts file, refreshed by project start. After restarting a service outside this app, run Create & Start to refresh peer addresses.','服务名称使用托管的只读 /etc/hosts 文件，在项目启动时更新。在此应用之外重启服务后，请运行“创建并启动”以更新其他服务的地址。','服務名稱使用受管理的唯讀 /etc/hosts 檔案，在專案啟動時更新。在此應用程式之外重啟服務後，請執行「建立並啟動」以更新其他服務的位址。'),
 'files':('Files', '文件', '檔案'),

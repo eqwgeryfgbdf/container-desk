@@ -157,3 +157,7 @@ Current source only, on Apple Container 1.5.0 / macOS 26.7.1 / M4 Mac mini. The 
 - Initial UI testing found a crash when removed table cells reevaluated an EnvironmentObject-backed checkbox. The checkbox now receives its localized label as a value instead. Final release compilation/signature verification and the search/filter/remove-row UI regressions passed, with no new crash report during the repaired run.
 - An initially chosen historical local image was no longer installed. UI fixtures instead pulled official BusyBox, created three stopped containers without starting services, and cleaned up only the test containers/image/networks. Final CLI inventory: zero containers, zero images and only the builtin default network, matching the inventory before this fixture. The previous user-owned resources were not recreated.
 - Updated the locally installed development app and source. Existing GitHub Release DMG/source archives remain unchanged; second-Mac/public-release acceptance remains separate.
+
+## Current-source automated QA update — 2026-10-17
+
+See [QA_RESULTS.md](QA_RESULTS.md) for the unified live/UI run, bounded-output/archive security changes and actual recording evidence. These source-level results do not fill the blank candidate acceptance table or certify the older release assets. The repository remains private until every required public-release gate is verified.

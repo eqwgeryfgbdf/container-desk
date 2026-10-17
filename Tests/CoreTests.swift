@@ -90,6 +90,16 @@ import Foundation
         try expect(echo.text.contains("$(touch /tmp/nope)"),"Arguments evaluated unexpectedly")
         let large=try await ProcessRunner.checked("/usr/bin/awk",["BEGIN { for(i=0;i<10000;i++) print \"a long line for pipe buffer checking\" }"])
         try expect(large.data.count>65536,"Large output handling failed")
+        for stream in ["stdout","stderr"] {
+            do {
+                _=try await ProcessRunner.checked("/usr/bin/python3",["-c","import sys; sys."+stream+".buffer.write(b'x' * (5*1024*1024))"],timeout:5)
+                throw DeskError.message("Output budget not enforced")
+            } catch {try expect(error.localizedDescription=="responseTooLarge","Both streams must be bounded")}
+        }
+        let cancellation=Task{try await ProcessRunner.run("/bin/sleep",["30"])}
+        try await Task.sleep(for:.milliseconds(100));let cancelledAt=Date();cancellation.cancel()
+        do{_=try await cancellation.value;throw DeskError.message("Cancellation ignored")}
+        catch is CancellationError {try expect(Date().timeIntervalSince(cancelledAt)<2,"Cancellation did not promptly reap child")}
         print("PASS: \(count) policy, parser, quoting and process checks")
     }
 }
