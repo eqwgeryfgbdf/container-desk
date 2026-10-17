@@ -8,11 +8,13 @@ def command(*parts):return subprocess.check_output([engine,*parts],text=True,tim
 def rows():return json.loads(command('list','--all','--format','json'))
 base={r['id']:r['status']['state'] for r in rows()}
 images=json.loads(command('image','list','--format','json'));image='docker.io/library/python:3.13-slim'
-if not any(r.get('configuration',{}).get('name')==image for r in images):raise SystemExit('BLOCKED: run qa.py --live first, or pull official python:3.13-slim for the UI fixture.')
+base_images={r.get('configuration',{}).get('name') for r in images}
+created_image=image not in base_images
 name='cd-ui-'+uuid.uuid4().hex[:8];web=name+'-web';worker=name+'-worker'
 with socket.socket() as s:s.bind(('127.0.0.1',0));port=s.getsockname()[1]
 recording=None
 try:
+    if created_image:command('image','pull','--arch','arm64','--progress','plain',image)
     command('create','--name',web,'--cpus','1','--memory','256M','--publish',f'127.0.0.1:{port}:8000',image,'python3','-u','-m','http.server','8000')
     command('start','--',web)
     command('create','--name',worker,'--cpus','1','--memory','256M',image,'sleep','600')
@@ -57,4 +59,8 @@ finally:
     after={r['id']:r['status']['state'] for r in rows()}
     if after!=base:raise RuntimeError('Container baseline changed; inspect unrelated activity/leftovers')
 
+    current_images={r.get('configuration',{}).get('name') for r in json.loads(command('image','list','--format','json'))}
+    if created_image and image in current_images:command('image','delete','--',image)
+    after_images={r.get('configuration',{}).get('name') for r in json.loads(command('image','list','--format','json'))}
+    if after_images!=base_images:raise RuntimeError('Image baseline changed; inspect unrelated activity/leftovers')
     if recording and (recording.returncode != 0 or not (a.out/'raw.mov').exists()):raise RuntimeError('Recording did not produce a movie')

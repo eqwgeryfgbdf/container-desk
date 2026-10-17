@@ -5,7 +5,7 @@ import xml.etree.ElementTree as ET
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--live', action='store_true', help='Download official test images and exercise the local engine')
-parser.add_argument('--ui', action='store_true', help='Run foreground native UI checks (Accessibility required)')
+parser.add_argument('--ui', action='store_true', help='Run foreground native UI checks with disposable Python fixtures (Accessibility required)')
 parser.add_argument('--report-dir', type=pathlib.Path)
 args = parser.parse_args()
 stamp = datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ')

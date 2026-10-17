@@ -60,7 +60,7 @@ An initial UI automation failure was caused by AX text assignment not delivering
 
 The successful recording repeats all **56 UI steps** and exports a **58.5-second, 1280×800 MP4** with Traditional Chinese captions, host-name masks and a development-preview footer. Only trailing idle footage is trimmed. Four full-resolution review frames and a five-second contact sheet were inspected; 58 one-second samples decoded successfully and OCR flagged no host name or `/Users/` path. OCR is supplementary and is not a privacy guarantee. Full manual playback remains required before public publication.
 
-The first recording attempt was discarded by macOS when interrupted; the recorder now waits for its bounded 90-second capture to finish normally and verifies that a movie was saved. The successful rerun and annotation checks are recorded separately from the unified QA run.
+The first recording attempt was discarded by macOS when interrupted; the recorder now waits for its bounded 90-second capture to finish normally and verifies that a movie was saved. The successful rerun and annotation checks are recorded separately from the unified QA run. Standalone UI testing was then repeated from an empty container/image inventory: the helper downloaded its official Python fixture, all 56 steps passed, and exact empty inventory was restored afterward. A two-minute soak-helper smoke finished as `INCOMPLETE`, as designed; it does not pass the 60-minute gate.
 
 Local deliverable: `outputs/qa-20261017/Container-Desk-Overview-zh-Hant.mp4` beside the checkout. SHA-256: `2fcb8e30e15a1e7ad815c70f64a9328cf682af416c234bd7316e82af87f40106`. Raw footage stays in the private local work directory; neither video nor existing GitHub Release assets was automatically published.
 
