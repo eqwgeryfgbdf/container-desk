@@ -161,10 +161,11 @@ import AppKit
         guard canMutate,let cli else{return false}
         busy=true;defer{busy=false;Task{await refresh()}}
         do {
+            _=try request.arguments()
             try request.validateAllocation(maxCPUs:host.logicalCores ?? ProcessInfo.processInfo.activeProcessorCount,maxMemoryMiB:Int(host.memory/1048576))
             let localImages=try ResourceItem.parseImages((try await ProcessRunner.checked(cli,["image","list","--format","json"])).data)
             guard localImages.contains(where:{$0.id==request.image}) else{throw DeskError.message("selectLocalImage")}
-            for (kind,id) in [("network",request.network),("volume",request.namedVolume)] where !id.isEmpty {
+            for (kind,id) in [("network",request.network)] + request.allMounts.filter({$0.kind == .volume}).map({("volume",$0.source)}) where !id.isEmpty {
                 let resources=try ResourceItem.parseResources((try await ProcessRunner.checked(cli,[kind,"list","--format","json"])).data)
                 guard resources.contains(where:{$0.id==id}) else {throw DeskError.message("resourceDisappeared")}
             }

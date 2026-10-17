@@ -143,6 +143,21 @@ func shellQuote(_ value: String) -> String { "'" + value.replacingOccurrences(of
 func appleScriptQuote(_ value: String) -> String {
     "\"" + value.replacingOccurrences(of:"\\",with:"\\\\").replacingOccurrences(of:"\"",with:"\\\"").replacingOccurrences(of:"\n",with:"\\n") + "\""
 }
+struct PortMapping: Identifiable {
+    let id = UUID()
+    var host = ""
+    var container = ""
+    var transport = "tcp"
+}
+struct MountMapping: Identifiable {
+    enum Kind: String, CaseIterable { case folder, volume }
+    let id = UUID()
+    var kind: Kind = .folder
+    var source = ""
+    var target = "/data"
+    var readOnly = false
+}
+
 struct CreateRequest {
     var name = ""
     var image = ""
@@ -150,6 +165,9 @@ struct CreateRequest {
     var memoryMB = 512
     var hostPort = ""
     var containerPort = ""
+    var portTransport = "tcp"
+    var additionalPorts: [PortMapping] = []
+    var additionalMounts: [MountMapping] = []
     var environment = ""
     var mountSource = ""
     var mountTarget = "/data"
@@ -163,6 +181,12 @@ struct CreateRequest {
     var entrypoint = ""
     var workingDirectory = ""
     var commandArguments = ""
+    var allMounts:[MountMapping] {
+        var mounts=additionalMounts
+        if !mountSource.isEmpty {mounts.insert(MountMapping(source:mountSource,target:mountTarget,readOnly:readOnly),at:0)}
+        if !namedVolume.isEmpty {mounts.append(MountMapping(kind:.volume,source:namedVolume,target:volumeTarget,readOnly:volumeReadOnly))}
+        return mounts
+    }
     func validateAllocation(maxCPUs:Int,maxMemoryMiB:Int) throws {
         guard (1...max(1,maxCPUs)).contains(cpus),memoryMB>=200,memoryMB<=maxMemoryMiB else {throw DeskError.message("allocationOutOfRange")}
     }
@@ -171,17 +195,31 @@ struct CreateRequest {
         guard !image.isEmpty, !image.hasPrefix("-"), !image.contains(where:{$0.isWhitespace}) else { throw DeskError.message("invalidImage") }
         guard cpus > 0, memoryMB >= 200 else { throw DeskError.message("invalidResources") }
         var a = ["create","--name",name,"--cpus",String(cpus),"--memory","\(memoryMB)M"]
-        if !hostPort.isEmpty || !containerPort.isEmpty {
-            guard let h=Int(hostPort),let c=Int(containerPort),(1...65535).contains(h),(1...65535).contains(c) else { throw DeskError.message("invalidPort") }
-            a += ["--publish","127.0.0.1:\(h):\(c)"]
+        var usedPorts=Set<String>()
+        let primaryPorts = hostPort.isEmpty && containerPort.isEmpty ? [] : [PortMapping(host:hostPort,container:containerPort,transport:portTransport)]
+        for port in primaryPorts + additionalPorts {
+            guard let h=Int(port.host),let c=Int(port.container),(1...65535).contains(h),(1...65535).contains(c),["tcp","udp"].contains(port.transport) else {throw DeskError.message("invalidPort")}
+            guard usedPorts.insert("\(h)/\(port.transport)").inserted else {throw DeskError.message("duplicatePort")}
+            // TCP's omitted suffix preserves compatibility with saved command previews.
+            a += ["--publish","127.0.0.1:\(h):\(c)"+(port.transport == "udp" ? "/udp":"")]
         }
         for line in environment.split(separator:"\n").map(String.init).filter({!$0.isEmpty}) {
             guard let eq=line.firstIndex(of:"="),String(line[..<eq]).range(of:"^[A-Za-z_][A-Za-z0-9_]*$",options:.regularExpression) != nil else { throw DeskError.message("invalidEnvironment") }
             a += ["--env",line]
         }
-        if !mountSource.isEmpty {
-            guard mountSource.hasPrefix("/"),mountTarget.hasPrefix("/"),!mountSource.contains(":"),!mountTarget.contains(":"),!mountSource.contains("\n"),!mountTarget.contains("\n"),!mountSource.contains("\0"),!mountTarget.contains("\0") else { throw DeskError.message("invalidMount") }
-            a += ["--volume",mountSource+":"+mountTarget+(readOnly ? ":ro" : "")]
+        var targets=Set<String>()
+        for mount in allMounts {
+            let target=mount.target
+            guard target.hasPrefix("/"),!target.contains(":"),!target.contains(where:{$0.isNewline || $0 == "\0"}),
+                  !target.split(separator:"/").contains("..") else {throw DeskError.message("invalidMount")}
+            let canonical="/"+target.split(separator:"/").filter{$0 != "."}.joined(separator:"/")
+            guard targets.insert(canonical).inserted else {throw DeskError.message("duplicateMount")}
+            if mount.kind == .folder {
+                guard mount.source.hasPrefix("/"),!mount.source.contains(":"),!mount.source.contains(where:{$0.isNewline || $0 == "\0"}) else {throw DeskError.message("invalidMount")}
+            } else {
+                guard mount.source.range(of:"^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,62}$",options:.regularExpression) != nil else {throw DeskError.message("invalidMount")}
+            }
+            a += ["--volume",mount.source+":"+canonical+(mount.readOnly ? ":ro":"")]
         }
         guard ["arm64","amd64"].contains(architecture) else {throw DeskError.message("invalidArchitecture")}
         a += ["--arch",architecture]
@@ -189,12 +227,6 @@ struct CreateRequest {
         if !network.isEmpty {
             guard network.range(of:"^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,62}$",options:.regularExpression) != nil else {throw DeskError.message("invalidName")}
             a += ["--network",network]
-        }
-        if !namedVolume.isEmpty {
-            guard namedVolume.range(of:"^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,62}$",options:.regularExpression) != nil,
-                  volumeTarget.hasPrefix("/"),!volumeTarget.contains(":"),!volumeTarget.contains("\n"),!volumeTarget.contains("\0"),
-                  mountSource.isEmpty || volumeTarget != mountTarget else {throw DeskError.message("invalidMount")}
-            a += ["--volume",namedVolume+":"+volumeTarget+(volumeReadOnly ? ":ro" : "")]
         }
         if !entrypoint.isEmpty {
             guard !entrypoint.contains("\n"),!entrypoint.contains("\0") else {throw DeskError.message("invalidEntrypoint")}
@@ -208,5 +240,38 @@ struct CreateRequest {
         a += ["--",image]
         a += commandArguments.split(separator:"\n",omittingEmptySubsequences:true).map(String.init)
         return a
+    }
+}
+
+// The confirmation captures names and states. Re-read each target immediately
+// before mutation; a state change requires a new review rather than a force flag.
+enum BatchVerb:String,CaseIterable {
+    case start,stop,restart,delete
+    func commands(for reviewed:ContainerItem,current:ContainerItem?) throws -> [[String]] {
+        guard let current,current.id==reviewed.id else {throw DeskError.message("resourceDisappeared")}
+        guard current.state==reviewed.state else {throw DeskError.message("batchStateChanged")}
+        let eligible = self == .start || self == .delete ? current.state=="stopped" : current.state=="running"
+        guard eligible else {throw DeskError.message("batchIneligible")}
+        if self == .restart {return [["stop","--",current.id],["start","--",current.id]]}
+        return [[rawValue,"--",current.id]]
+    }
+    func completed(_ current:ContainerItem?) -> Bool {
+        switch self {
+        case .delete:return current==nil
+        case .start,.restart:return current?.state=="running"
+        case .stop:return current?.state=="stopped"
+        }
+    }
+}
+struct BatchRequest:Identifiable {
+    let id=UUID()
+    let verb:BatchVerb
+    let items:[ContainerItem]
+}
+
+enum LogSnapshot {
+    static func filtered(_ text:String,query:String)->String {
+        guard !query.isEmpty else{return text}
+        return text.components(separatedBy:"\n").filter{$0.localizedCaseInsensitiveContains(query)}.joined(separator:"\n")
     }
 }

@@ -48,3 +48,44 @@ extension Store {
         } catch {self.error=t(error.localizedDescription)}
     }
 }
+
+extension Store {
+    func batchOperation(_ request:BatchRequest) {
+        guard canMutate,let cli,!request.items.isEmpty else{return}
+        // Deduplicate the fixed confirmation snapshot; selection/filter changes
+        // while the task is running cannot add more targets.
+        var seen=Set<String>()
+        let items=request.items.filter{seen.insert($0.id).inserted}
+        startOperation("batchOperations") {
+            var report="",failed=0
+            for (index,item) in items.enumerated() {
+                let heading="[\(index+1)/\(items.count)] \(self.t(request.verb.rawValue)) · \(item.id)\n"
+                do {
+                    try Task.checkCancellation()
+                    let fresh=try ContainerItem.parse((try await ProcessRunner.checked(cli,["list","--all","--format","json"])).data)
+                    let commands=try request.verb.commands(for:item,current:fresh.first{$0.id==item.id})
+                    self.operationOutput=report+heading
+                    for command in commands {
+                        try Task.checkCancellation()
+                        let code=try await StreamingProcess.run(cli,command,timeout:120) { self.operationOutput=report+heading+$0 }
+                        guard code==0 else {throw DeskError.message(String(self.operationOutput.suffix(4000)))}
+                    }
+                    let after=try ContainerItem.parse((try await ProcessRunner.checked(cli,["list","--all","--format","json"])).data)
+                    guard request.verb.completed(after.first{$0.id==item.id}) else {throw DeskError.message("batchUnconfirmed")}
+                    report+=heading+self.t("operationComplete")+"\n\n"
+                } catch is CancellationError {
+                    let remaining=items[index...].map(\.id).joined(separator:", ")
+                    self.operationOutput=report+heading+self.t("batchCancelledNote")+"\n"+remaining
+                    throw CancellationError()
+                } catch {
+                    failed+=1
+                    report+=heading+self.t("operationFailed")+": "+self.t(error.localizedDescription)+"\n\n"
+                }
+                // Bound UI history without ever altering which targets execute.
+                report=String(report.suffix(60000));self.operationOutput=report
+            }
+            self.operationOutput=report+self.t("batchSummary")+": \(items.count-failed)/\(items.count)\n"
+            return failed==0 ? 0:1
+        }
+    }
+}

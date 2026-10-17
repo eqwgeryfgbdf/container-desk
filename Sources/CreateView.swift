@@ -96,6 +96,17 @@ struct CreateView:View {
             }.pickerStyle(.menu)
             LabeledContent(s.t("hostPort")){TextField("8080",text:$request.hostPort).textFieldStyle(.roundedBorder).accessibilityLabel(s.t("hostPort"))}
             LabeledContent(s.t("containerPort")){TextField("80",text:$request.containerPort).textFieldStyle(.roundedBorder).accessibilityLabel(s.t("containerPort"))}
+            Picker(s.t("transport"),selection:$request.portTransport){Text("TCP").tag("tcp");Text("UDP").tag("udp")}.pickerStyle(.menu)
+            ForEach($request.additionalPorts) { $port in
+                HStack {
+                    TextField(s.t("hostPort"),text:$port.host).textFieldStyle(.roundedBorder)
+                    Image(systemName:"arrow.right").foregroundStyle(.secondary)
+                    TextField(s.t("containerPort"),text:$port.container).textFieldStyle(.roundedBorder)
+                    Picker(s.t("transport"),selection:$port.transport){Text("TCP").tag("tcp");Text("UDP").tag("udp")}.labelsHidden().frame(width:90)
+                    Button {request.additionalPorts.removeAll{$0.id==port.id}} label:{Image(systemName:"minus.circle")}.help(s.t("removeMapping")).accessibilityLabel(s.t("removeMapping"))
+                }
+            }
+            Button(s.t("addPort")){request.additionalPorts.append(PortMapping())}
             Text(s.t("loopbackPort")).font(.caption).foregroundStyle(.secondary)
         }
     }
@@ -119,6 +130,41 @@ struct CreateView:View {
             if !request.mountSource.isEmpty {
                 LabeledContent(s.t("containerPath")){TextField("/data",text:$request.mountTarget).textFieldStyle(.roundedBorder)}
                 Toggle(s.t("readOnly"),isOn:$request.readOnly)
+            }
+            ForEach($request.additionalMounts) { $mount in
+                Divider()
+                VStack(alignment:.leading,spacing:10) {
+                    HStack {
+                        Picker(s.t("mountType"),selection:$mount.kind) {
+                            Text(s.t("hostFolder")).tag(MountMapping.Kind.folder)
+                            Text(s.t("namedVolume")).tag(MountMapping.Kind.volume)
+                        }.onChange(of:mount.kind){_,_ in mount.source=""}
+                        Button {request.additionalMounts.removeAll{$0.id==mount.id}} label:{Image(systemName:"minus.circle")}.help(s.t("removeMapping")).accessibilityLabel(s.t("removeMapping"))
+                    }
+                    if mount.kind == .folder {
+                        HStack {
+                            Text(mount.source.isEmpty ? s.t("noFolder"):mount.source).lineLimit(2).truncationMode(.middle)
+                            Spacer()
+                            Button(s.t("chooseFolder")){chooseAdditionalFolder(mount.id)}
+                        }
+                    } else {
+                        Picker(s.t("namedVolume"),selection:$mount.source) {
+                            Text(s.t("none")).tag("")
+                            ForEach(s.volumes){Text($0.id).tag($0.id)}
+                        }
+                    }
+                    TextField(s.t("containerPath"),text:$mount.target).textFieldStyle(.roundedBorder)
+                    Toggle(s.t("readOnly"),isOn:$mount.readOnly)
+                }
+            }
+            Button(s.t("addMount")){request.additionalMounts.append(MountMapping())}
+        }
+    }
+    private func chooseAdditionalFolder(_ id:UUID) {
+        let panel=NSOpenPanel();panel.canChooseDirectories=true;panel.canChooseFiles=false
+        panel.begin {response in
+            if response == .OK,let index=request.additionalMounts.firstIndex(where:{$0.id==id}),request.additionalMounts[index].kind == .folder {
+                request.additionalMounts[index].source=panel.url?.path ?? ""
             }
         }
     }

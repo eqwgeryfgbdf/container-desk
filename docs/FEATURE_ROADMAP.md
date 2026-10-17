@@ -18,11 +18,18 @@ Updated 2026-10-17. User priority: finish the common container-management baseli
 
 The native creation hang UI-001 was traced to `Slider(step: 1)` generating thousands of macOS 26 step marks across the host's memory range. The slider now remains continuous and rounds its binding to whole MiB. The view uses a fixed-size scrollable sheet with reachable footer actions. Native layout checks cover 16 GiB and 1 TiB ranges, and native creation was read back through the CLI. Full multi-size/VoiceOver/second-Mac acceptance remains pending.
 
-## Baseline B — next, before AI
+## Baseline B — delivered increment
 
-1. Multi-port/multi-mount configuration and image-metadata defaults; safe duplicate/recreate with a visible configuration diff and retained-volume policy.
-2. Multi-selection lifecycle operations with an exact affected-container list, sequential results and clear partial failures.
-3. Log search/export, file copy/browser, and optional embedded terminal. The current Terminal action uses macOS Terminal and needs a shell inside the image.
+- Multi-select containers (Command/Shift selection), review the exact list, then start/stop/restart/delete sequentially. Fresh per-target state checks reject changed, missing or ineligible targets; failures do not stop later targets. Results show each outcome and cancellation leaves already completed work intact. Deletes never implicitly stop running containers.
+- Multiple loopback TCP/UDP ports and bind/named-volume mounts in creation; duplicate normalized destinations and duplicate host-port/protocol pairs are rejected. Added mount rows must be complete. Folder selection uses native panels; named volumes are rechecked before create.
+- A shared log viewer for inspector and expanded details: case-insensitive line search, 150/500/2,000/10,000-line snapshots, application/boot source, refresh toggle, copy and native save-panel export. Copy/export uses the visible filtered snapshot, not the entire log history.
+- Live evidence: two published HTTP endpoints, UDP configuration readback, three mounts including a read-only bind and a named volume; partial batch failure continues, changed state and running delete are refused, restart/stop/delete are read back. Both disposable containers and their volume were removed; all 8 original container states remained unchanged.
+
+## Baseline B — remaining, before AI
+
+1. Image-metadata defaults; safe duplicate/recreate with a visible configuration diff and retained-volume policy.
+2. Finish multi-selection interactive and accessibility acceptance across window sizes; expand cancellation and external-state-change coverage.
+3. File copy/browser and optional embedded terminal; finish boot-log and large-snapshot acceptance (native filtered export passed). The current Terminal action uses macOS Terminal and needs a shell inside the image.
 4. Registry login/logout and image push. Keep credentials out of command arguments, preview, logs and repo; use the official CLI's supported credential flow. Real private-registry testing waits for an account supplied through an appropriate secure flow.
 5. Compose project import and grouped lifecycle, including dependency/health ordering and explicit unsupported-key diagnostics. Do not silently ignore unsupported Compose settings.
 6. Disk-usage view and selective cleanup preview. No one-click global prune without showing precisely what will be removed.
@@ -40,6 +47,7 @@ The native creation hang UI-001 was traced to `Slider(step: 1)` generating thous
 bash scripts/test.sh
 bash scripts/test-creation-ui.sh       # isolated native layout, no engine calls
 bash scripts/test-management-live.sh --run
+bash scripts/test-workflows-live.sh --run  # two disposable containers, no image download
 bash scripts/test-images-live.sh --run
 ```
 

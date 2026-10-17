@@ -45,6 +45,9 @@ struct MainView:View {
     @EnvironmentObject var zoom:ContentZoom
     @EnvironmentObject var s:Store
     @EnvironmentObject var core:CoreManager
+    @State private var selectedIDs=Set<String>()
+    @State private var batchReview:BatchRequest?
+    @State private var submittedBatch:BatchRequest?
     @State private var create=false
     @State private var pending:ContainerItem?
     @State private var verb=""
@@ -138,6 +141,16 @@ struct MainView:View {
         .onChange(of:s.containers.map(\.id)) { _,ids in
             if let expandedContainerID,!ids.contains(expandedContainerID) {closeContainerDetails()}
         }
+        .onChange(of:selectedIDs) {_,ids in s.selected=ids.count==1 ? ids.first:nil}
+        .onChange(of:s.selected) {_,id in
+            if selectedIDs.count<=1 {selectedIDs=Set(id.flatMap{value in s.filtered.contains(where:{$0.id==value}) ? [value]:nil} ?? [])}
+        }
+        .onChange(of:s.query) {_,_ in trimSelection()}
+        .onChange(of:s.filter) {_,_ in trimSelection()}
+        .onChange(of:s.containers.map(\.id)) {_,_ in trimSelection()}
+        .sheet(item:$batchReview,onDismiss:{
+            if let request=submittedBatch {submittedBatch=nil;s.batchOperation(request)}
+        }) {request in BatchReviewView(request:request){submittedBatch=$0}.environmentObject(s)}
         .sheet(isPresented:$create){CreateView().environmentObject(s)}
         .sheet(isPresented:$s.operationPresented){OperationProgressView().environmentObject(s)}
         .sheet(item:$s.inspection){InspectionView(target:$0).environmentObject(s)}
@@ -150,10 +163,14 @@ struct MainView:View {
             Button(s.t("cancel"),role:.cancel){pending=nil}
         } message:{Text((pending?.id ?? "")+"\n"+s.t(verb=="delete" ? "deleteImpact":"stopImpact"))}
     }
+    func trimSelection() {selectedIDs.formIntersection(Set(s.filtered.map(\.id)))}
+    func reviewBatch(_ verb:BatchVerb,_ ids:Set<String>) {
+        batchReview=BatchRequest(verb:verb,items:s.containers.filter{ids.contains($0.id)})
+    }
     func banner(_ title:String,symbol:String,color:Color)->some View {Label(title,systemImage:symbol).font(.callout).frame(maxWidth:.infinity,alignment:.leading).padding(12).background(color.opacity(0.08))}
     func openContainerDetails(_ ids:Set<String>) {
         guard ids.count==1,let id=ids.first,s.containers.contains(where:{$0.id==id}) else{return}
-        s.selected=id
+        selectedIDs=[id];s.selected=id
         previousColumnVisibility=columnVisibility
         withAnimation(InterfaceMotion.layout(reduceMotion:reduceMotion)) {
             expandedContainerID=id
@@ -184,7 +201,18 @@ struct MainView:View {
                     HStack(spacing:18){TextField(s.t("searchContainers"),text:$s.query).textFieldStyle(.roundedBorder).frame(maxWidth:280)
                         Picker(s.t("filter"),selection:$s.filter){Text(s.t("all")).tag("all");Text(s.t("running")).tag("running");Text(s.t("stopped")).tag("stopped")}.pickerStyle(.segmented).labelsHidden().frame(maxWidth:260)
                     }.padding(.horizontal,20).padding(.bottom,16)
-                    Table(s.filtered,selection:$s.selected) {
+                    if !selectedIDs.isEmpty {
+                        HStack {
+                            Text(s.t("selectedCount")+": \(selectedIDs.count)").font(.caption).foregroundStyle(.secondary)
+                            Spacer()
+                            Menu(s.t("batchOperations")) {
+                                ForEach(BatchVerb.allCases,id:\.self){action in
+                                    Button(s.t(action.rawValue)){reviewBatch(action,selectedIDs)}
+                                }
+                            }.disabled(!s.canMutate)
+                        }.padding(.horizontal,20).padding(.bottom,8)
+                    }
+                    Table(s.filtered,selection:$selectedIDs) {
                         TableColumn(s.t("name")){c in Label(c.id,systemImage:"shippingbox").fontWeight(.medium).help(c.id) .frame(minHeight:38)}.width(min:170,ideal:235)
                         TableColumn(s.t("status")){c in StatusView(item:c)}.width(min:85,ideal:95)
                         TableColumn("CPU"){c in Text(s.usage[c.id]?.cpu.map{String(format:"%.1f%%",$0)} ?? "—").monospacedDigit()}.width(65)
@@ -199,10 +227,15 @@ struct MainView:View {
                             Button(s.t(c.running ? "stop":"start")){if c.running{verb="stop";pending=c}else{Task{await s.action("start",c)}}}.disabled(!s.canMutate)
                             Button(s.t("delete"),role:.destructive){verb="delete";pending=c}.disabled(c.running || !s.canMutate)
                         }
+                        if ids.count>1 {
+                            ForEach(BatchVerb.allCases,id:\.self){action in
+                                Button(s.t(action.rawValue)){reviewBatch(action,ids)}.disabled(!s.canMutate)
+                            }
+                        }
                     } primaryAction: { ids in openContainerDetails(ids) }
                     .overlay{if s.filtered.isEmpty{ContentUnavailableView.search(text:s.query)}}
                 }.frame(minWidth:560,maxWidth:.infinity,maxHeight:.infinity)
-                if let c=s.chosen {
+                if selectedIDs.count==1,let c=s.chosen {
                     InspectorView(item:c,onStop:{verb="stop";pending=c},onDelete:{verb="delete";pending=c})
                         .frame(minWidth:285,idealWidth:320,maxWidth:380,maxHeight:.infinity)
                 }
@@ -221,7 +254,6 @@ struct InspectorView:View {
     let onStop:()->Void
     let onDelete:()->Void
     @State private var tab="info"
-    @State private var follow=true
     var body:some View {
         VStack(alignment:.leading,spacing:20) {
             VStack(alignment:.leading,spacing:8){Text(item.id).font(.title2).fontWeight(.semibold).textSelection(.enabled);StatusView(item:item)}
@@ -247,13 +279,7 @@ struct InspectorView:View {
                         }.frame(maxWidth:.infinity,alignment:.leading)
                     }
                 }else{
-                    HStack{Toggle(s.t("autoRefresh"),isOn:$follow).toggleStyle(.checkbox);Spacer();Button{NSPasteboard.general.clearContents();NSPasteboard.general.setString(s.logs,forType:.string)}label:{Image(systemName:"doc.on.doc")}.help(s.t("copyLogs"))}
-                    ScrollView([.vertical,.horizontal]){Text(s.logError ?? (s.logs.isEmpty ? s.t("noLogs"):s.logs)).font(.system(.caption,design:.monospaced)).textSelection(.enabled).frame(maxWidth:.infinity,alignment:.topLeading)}
-                        .task(id:item.id+tab){
-                            guard tab=="logs" else{return}
-                            await s.loadLogs(item.id)
-                            while !Task.isCancelled {try? await Task.sleep(nanoseconds:3_000_000_000);if follow && !Task.isCancelled{await s.loadLogs(item.id)}}
-                        }
+                    ContainerLogsView(containerID:item.id).id(item.id)
                 }
             }.frame(maxHeight:.infinity,alignment:.top)
                 .modifier(InterfaceFade(value:tab))

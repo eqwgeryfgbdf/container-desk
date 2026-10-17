@@ -40,7 +40,7 @@ struct ContainerDetailView: View {
                         }.padding(24)
                     }
                 } else {
-                    ContainerDetailLogs(containerID: item.id).padding(24)
+                    ContainerLogsView(containerID: item.id).padding(24)
                 }
             }.modifier(InterfaceFade(value:tab))
         }
@@ -234,36 +234,5 @@ private struct ContainerTrendCard: View {
                 Text(note).font(.caption).foregroundStyle(.secondary).lineLimit(2).frame(height: 30, alignment: .topLeading)
             }.padding(10)
         } label: { Text(title + " · " + unit) }
-    }
-}
-
-private struct ContainerDetailLogs: View {
-    @EnvironmentObject var s: Store
-    let containerID: String
-    @State private var follow = true
-    var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack {
-                Label(s.t("recentLogs"), systemImage: "text.alignleft").font(.headline)
-                Spacer()
-                Toggle(s.t("autoRefresh"), isOn: $follow).toggleStyle(.checkbox)
-                Button { NSPasteboard.general.clearContents(); NSPasteboard.general.setString(s.logs, forType: .string) }
-                    label: { Label(s.t("copyLogs"), systemImage: "doc.on.doc") }
-            }
-            ScrollView([.vertical, .horizontal]) {
-                Text(s.logError ?? (s.logs.isEmpty ? s.t("noLogs") : s.logs))
-                    .font(.system(.callout, design: .monospaced)).textSelection(.enabled)
-                    .frame(maxWidth: .infinity, alignment: .topLeading).padding(16)
-            }.frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color(nsColor: .textBackgroundColor), in: RoundedRectangle(cornerRadius: 12))
-        }
-        .task(id: containerID) {
-            s.logs=""; s.logError=nil
-            await s.loadLogs(containerID)
-            while !Task.isCancelled {
-                try? await Task.sleep(nanoseconds: 3_000_000_000)
-                if follow && !Task.isCancelled { await s.loadLogs(containerID) }
-            }
-        }
     }
 }
