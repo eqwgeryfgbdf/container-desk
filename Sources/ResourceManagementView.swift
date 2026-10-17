@@ -11,6 +11,8 @@ struct ResourceManagementView: View {
     @State private var submitted:ResourceRequest?
     @State private var deleting:String?
     @State private var createImage:String?
+    @State private var pushSource:String?
+    @State private var pushSubmission:(String,String,Bool)?
     private var items:[ResourceItem] {kind == .image ? s.images : kind == .network ? s.networks : s.volumes}
     private var filtered:[ResourceItem] {items.filter{query.isEmpty || $0.id.localizedCaseInsensitiveContains(query) || $0.detail.localizedCaseInsensitiveContains(query)}}
     var body:some View {
@@ -52,6 +54,9 @@ struct ResourceManagementView: View {
         .sheet(item:$editor,onDismiss:{if let request=submitted{submitted=nil;s.resourceOperation(request)}}) {request in
             ResourceEditor(request:request) {submitted=$0;editor=nil}.environmentObject(s)
         }
+        .sheet(isPresented:Binding(get:{pushSource != nil},set:{if !$0{pushSource=nil}}),onDismiss:{if let (source,target,http)=pushSubmission{pushSubmission=nil;s.pushImage(source:source,target:target,localHTTP:http)}}) {
+            ImagePushView(source:pushSource ?? ""){target,http in pushSubmission=(pushSource ?? "",target,http)}.environmentObject(s)
+        }
         .sheet(isPresented:Binding(get:{createImage != nil},set:{if !$0{createImage=nil}})) {
             CreateView(initialImage:createImage ?? "").environmentObject(s)
         }
@@ -66,6 +71,7 @@ struct ResourceManagementView: View {
         if kind == .image {
             Button(s.t("createContainer")){createImage=id}.disabled(!s.canMutate)
             Button(s.t("tag")){var request=ResourceRequest(operation:.tag);request.source=id;editor=request}.disabled(!s.canMutate)
+            Button(s.t("pushImage")){pushSource=id}.disabled(!s.canMutate)
             Button(s.t("save")){chooseExport(id)}.disabled(!s.canMutate)
         }
         Button(s.t("delete"),role:.destructive){deleting=id}.disabled(!s.canMutate || (kind == .network && ["default","none"].contains(id)))
@@ -191,6 +197,7 @@ struct ContainerUtilityActions:View {
     let item:ContainerItem
     var body:some View {
         Button(s.t("inspect")){s.inspection=InspectionTarget(kind:nil,name:item.id)}
+        Button(s.t("files")){s.fileContainer=item.id}.disabled(!item.running || !s.canMutate)
         Button(s.t("openTerminal")){Task{await s.openTerminal(item)}}.disabled(!item.running || !s.canMutate)
         Button(s.t("restart")){s.restartCandidate=item}.disabled(!item.running || !s.canMutate)
     }

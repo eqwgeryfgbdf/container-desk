@@ -61,6 +61,8 @@ The official signed package was expanded into the workspace without installation
 
 ## Included
 
+Current source adds a container file browser with non-overwriting transfers, Registry login/logout and image push, and reviewed Compose project import/start/stop/removal. Compose supports a documented subset with dependency readiness, named-volume retention and managed service-name mappings. Unsupported fields are rejected. [Usage and compatibility](docs/COMPOSE_AND_FILES.md). These features are not included in the existing download.
+
 Current source adds image pull/build/tag/delete and OCI archive import/export, network/volume creation and protected deletion, container restart, inspect JSON and an external Terminal action. Creation now offers network/volume selection and advanced command settings. Long operations show live output and can continue in the background or be cancelled. The memory-slider layout hang has been fixed. See the [feature status and remaining baseline](docs/FEATURE_ROADMAP.md). These changes are **not included in the existing `v0.1.2-preview` assets**.
 
 Current source also adds reviewed multi-selection lifecycle actions, multiple TCP/UDP port and bind/volume mappings, and searchable log snapshots with application/boot selection, copy and export. Batch failures are reported per container; changed or ineligible states are refused. These additions are not in the existing download.
@@ -88,9 +90,11 @@ Current source adds clickable TCP port mappings in the container inspector, open
 
 Only Container **1.5.0** is currently marked compatible. Newer releases are displayed but installation is deferred until tested; automatic mode does not imply unconditional future-version support. Custom files are not overwritten. The recognized `~/.local/bin/container` wrapper can explicitly migrate to the same official version when idle; the original installation is preserved. Other custom layouts still use their original installation method. There is no privileged background helper, closed-app scheduler, remote host management, embedded terminal, full resource editor, skip-version preference or separate guest-kernel updater yet.
 
-Current-source validation: 48 core checks, 35 management checks, 34 workflow checks, 13 simulated installer scenarios and 288 three-language keys passed. Real resource creation/deletion protection, container restart with volume persistence, image build/pull/archive round trip, and native image-tag/creation flows passed; the original 8 container states were preserved. UI-001 was traced to macOS 26 discrete-slider marks and fixed; native layout checks cover 16 GiB and 1 TiB host ranges. Full form/accessibility/multi-size and second-Mac acceptance remain pending. Clean engine installation and genuine upgrade are still **not** verified end to end. Existing release assets retain their earlier limitations; see the [test report](docs/TEST_REPORT.md).
+Current-source validation: 48 core checks, 35 management checks, 34 workflow checks, 13 simulated installer scenarios and 425 three-language keys passed. Real resource creation/deletion protection, container restart with volume persistence, image build/pull/archive round trip, and native image-tag/creation flows passed; the original 8 container states were preserved. UI-001 was traced to macOS 26 discrete-slider marks and fixed; native layout checks cover 16 GiB and 1 TiB host ranges. Full form/accessibility/multi-size and second-Mac acceptance remain pending. Clean engine installation and genuine upgrade are still **not** verified end to end. Existing release assets retain their earlier limitations; see the [test report](docs/TEST_REPORT.md).
 
 ## Build and test
+
+Builds now use Swift Package Manager with pinned Yams 6.2.2; the first build downloads this dependency. Its required license notices are bundled in the app and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 Install Apple's Xcode 26 or Command Line Tools 26 with a macOS 26 SDK, plus Python 3. There are no third-party Swift package dependencies.
 

@@ -54,7 +54,7 @@ struct MainView:View {
     @State private var expandedContainerID:String?
     @State private var columnVisibility:NavigationSplitViewVisibility = .all
     @State private var previousColumnVisibility:NavigationSplitViewVisibility = .all
-    private let sections=[("overview","chart.bar.xaxis"),("containers","shippingbox"),("images","square.stack.3d.up"),("networks","network"),("volumes","externaldrive")]
+    private let sections=[("overview","chart.bar.xaxis"),("containers","shippingbox"),("images","square.stack.3d.up"),("networks","network"),("volumes","externaldrive"),("registries","server.rack"),("composeProjects","square.stack.3d.up.fill")]
     var body:some View {
         NavigationSplitView(columnVisibility:$columnVisibility) {
             VStack(alignment:.leading,spacing:0) {
@@ -83,6 +83,8 @@ struct MainView:View {
                         case "images": ResourceManagementView(kind:.image)
                         case "networks": ResourceManagementView(kind:.network)
                         case "volumes": ResourceManagementView(kind:.volume)
+                        case "registries": RegistryView()
+                        case "composeProjects": ComposeProjectsView()
                         case "core": CoreView()
                         default: PreferencesView()
                         }
@@ -153,6 +155,7 @@ struct MainView:View {
         }) {request in BatchReviewView(request:request){submittedBatch=$0}.environmentObject(s)}
         .sheet(isPresented:$create){CreateView().environmentObject(s)}
         .sheet(isPresented:$s.operationPresented){OperationProgressView().environmentObject(s)}
+        .sheet(isPresented:Binding(get:{s.fileContainer != nil},set:{if !$0{s.fileContainer=nil}})){ContainerFilesView(containerID:s.fileContainer ?? "").environmentObject(s)}
         .sheet(item:$s.inspection){InspectionView(target:$0).environmentObject(s)}
         .confirmationDialog(s.t("restartConfirm"),isPresented:Binding(get:{s.restartCandidate != nil},set:{if !$0{s.restartCandidate=nil}}),titleVisibility:.visible) {
             Button(s.t("restart"),role:.destructive){if let item=s.restartCandidate{Task{await s.action("restart",item)}};s.restartCandidate=nil}

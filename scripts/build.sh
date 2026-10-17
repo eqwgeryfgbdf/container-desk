@@ -9,7 +9,9 @@ if [[ "${SDK_VERSION%%.*}" -lt 26 ]]; then
 fi
 APP="$DEST/Container Desk.app"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
-xcrun swiftc -swift-version 5 -parse-as-library -target arm64-apple-macos26.0 -O -o "$APP/Contents/MacOS/ContainerDesk" "$ROOT"/Sources/*.swift
+swift build --package-path "$ROOT" --configuration release --arch arm64
+BIN_DIR="$(swift build --package-path "$ROOT" --configuration release --arch arm64 --show-bin-path)"
+cp "$BIN_DIR/ContainerDesk" "$APP/Contents/MacOS/ContainerDesk"
 python3 "$ROOT/scripts/bundle_resources.py" "$APP"
 if [[ -f "$ROOT/Resources/AppIcon.icns" ]]; then cp "$ROOT/Resources/AppIcon.icns" "$APP/Contents/Resources/"; fi
 codesign --force --sign - "$APP"

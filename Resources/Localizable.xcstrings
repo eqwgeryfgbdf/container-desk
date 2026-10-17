@@ -1,6 +1,1568 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "fileTransferProgress": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transferring files"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在传输文件"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在傳輸檔案"
+          }
+        }
+      }
+    },
+    "fileTransferLimit": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transfer archive exceeds 4 GiB or diagnostic output exceeds 1 MiB."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "传输归档超过 4 GiB，或诊断输出超过 1 MiB。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "傳輸封存檔超過 4 GiB，或診斷輸出超過 1 MiB。"
+          }
+        }
+      }
+    },
+    "composeHostsFailed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not update project service-name mappings."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法更新项目服务名称映射。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "無法更新專案服務名稱映射。"
+          }
+        }
+      }
+    },
+    "composeDiscoveryNote": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Service names use a managed read-only /etc/hosts file, refreshed by project start. After restarting a service outside this app, run Create & Start to refresh peer addresses."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "服务名称使用托管的只读 /etc/hosts 文件，在项目启动时更新。在此应用之外重启服务后，请运行“创建并启动”以更新其他服务的地址。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "服務名稱使用受管理的唯讀 /etc/hosts 檔案，在專案啟動時更新。在此應用程式之外重啟服務後，請執行「建立並啟動」以更新其他服務的位址。"
+          }
+        }
+      }
+    },
+    "files": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Files"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "文件"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "檔案"
+          }
+        }
+      }
+    },
+    "filesNote": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Requires /bin/sh and tar. Transfers up to 4 GiB use temporary disk space and never overwrite destinations. Selected symlinks are not followed."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要 /bin/sh 和 tar。传输最多 4 GiB，使用临时磁盘空间且不覆盖目标。不会跟随所选符号链接。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要 /bin/sh 和 tar。傳輸最多 4 GiB，使用暫存磁碟空間且不覆寫目標。不會跟隨所選符號連結。"
+          }
+        }
+      }
+    },
+    "parentFolder": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Parent Folder"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "上一级文件夹"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "上一層資料夾"
+          }
+        }
+      }
+    },
+    "go": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Go"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "前往"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "前往"
+          }
+        }
+      }
+    },
+    "searchFiles": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search files"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "搜索文件"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "搜尋檔案"
+          }
+        }
+      }
+    },
+    "newFolder": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New Folder"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "新建文件夹"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "新增資料夾"
+          }
+        }
+      }
+    },
+    "uploadFile": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Upload…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "上传…"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "上傳…"
+          }
+        }
+      }
+    },
+    "downloadFile": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下载…"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下載…"
+          }
+        }
+      }
+    },
+    "renameFile": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rename…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "重命名…"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "重新命名…"
+          }
+        }
+      }
+    },
+    "copyPath": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copy Path"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "复制路径"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "複製路徑"
+          }
+        }
+      }
+    },
+    "folder": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Folder"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "文件夹"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "資料夾"
+          }
+        }
+      }
+    },
+    "file": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "文件"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "檔案"
+          }
+        }
+      }
+    },
+    "symbolicLink": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Symbolic Link"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "符号链接"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "符號連結"
+          }
+        }
+      }
+    },
+    "otherFile": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Other"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "其他"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "其他"
+          }
+        }
+      }
+    },
+    "deleteFileConfirm": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete this item?"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "删除此项目？"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "刪除此項目？"
+          }
+        }
+      }
+    },
+    "deleteFileNote": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deletion is permanent. Only files, symlinks and empty folders can be removed; mounted data may be affected."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "删除不可撤销。仅可移除文件、符号链接及空文件夹；可能影响挂载的数据。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "刪除無法復原。僅可移除檔案、符號連結及空資料夾；可能影響掛載的資料。"
+          }
+        }
+      }
+    },
+    "fileNoOverwrite": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use a new name. Existing items will not be overwritten."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请使用新名称，不会覆盖现有项目。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請使用新名稱，不會覆寫現有項目。"
+          }
+        }
+      }
+    },
+    "invalidFilePath": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use an absolute path without a colon, NUL or parent traversal."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请使用不含冒号、NUL 或上级跳转的绝对路径。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請使用不含冒號、NUL 或上層跳轉的絕對路徑。"
+          }
+        }
+      }
+    },
+    "fileEncodingUnsupported": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This folder contains names that are not UTF-8. Use the terminal to manage them."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "此文件夹含非 UTF-8 名称，请使用终端管理。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "此資料夾含非 UTF-8 名稱，請使用終端機管理。"
+          }
+        }
+      }
+    },
+    "invalidFileListing": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not read this directory safely. Check shell availability and permissions."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法安全读取目录，请检查 shell 和权限。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "無法安全讀取目錄，請檢查 shell 與權限。"
+          }
+        }
+      }
+    },
+    "fileDestinationExists": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Destination already exists. Choose another folder or rename the item first."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "目标已存在，请选择其他文件夹或先重命名。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "目標已存在，請選擇其他資料夾或先重新命名。"
+          }
+        }
+      }
+    },
+    "fileSymlinkUpload": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select the actual file or folder instead of a symbolic link."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请选择实际文件或文件夹，而非符号链接。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請選擇實際檔案或資料夾，而非符號連結。"
+          }
+        }
+      }
+    },
+    "transferStagingNote": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Temporary upload path (a failed or cancelled transfer may leave it for inspection):"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "临时上传路径（失败或取消后可能保留，供检查）："
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "暫存上傳路徑（失敗或取消後可能保留，供檢查）："
+          }
+        }
+      }
+    },
+    "registries": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registries"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "镜像仓库"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "映像檔倉庫"
+          }
+        }
+      }
+    },
+    "registryLogin": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign In to Registry"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "登录镜像仓库"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "登入映像檔倉庫"
+          }
+        }
+      }
+    },
+    "registryLogout": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign Out"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "退出登录"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "登出"
+          }
+        }
+      }
+    },
+    "registryServer": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registry host, e.g. ghcr.io"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "仓库主机，例如 ghcr.io"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "倉庫主機，例如 ghcr.io"
+          }
+        }
+      }
+    },
+    "username": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Username"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用户名"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用者名稱"
+          }
+        }
+      }
+    },
+    "registryToken": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Access token or password"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "访问令牌或密码"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "存取權杖或密碼"
+          }
+        }
+      }
+    },
+    "registryLocalHTTP": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "HTTP for a local loopback registry only"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "仅对本机回环仓库使用 HTTP"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "僅對本機迴路倉庫使用 HTTP"
+          }
+        }
+      }
+    },
+    "registryCredentialNote": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Credentials are sent through stdin to Apple Container, which stores them in macOS Keychain. Container Desk does not save passwords."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "凭证通过标准输入传给 Apple Container，由其存入 macOS 钥匙串。Container Desk 不保存密码。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "憑證透過標準輸入傳給 Apple Container，由其存入 macOS 鑰匙圈。Container Desk 不儲存密碼。"
+          }
+        }
+      }
+    },
+    "registryLogoutNote": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Removes the saved login used by Apple Container. Running containers and local images are kept."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "移除 Apple Container 使用的已保存登录，保留运行中的容器和本地镜像。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "移除 Apple Container 使用的已儲存登入，保留運行中的容器與本機映像檔。"
+          }
+        }
+      }
+    },
+    "noRegistries": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No saved registry logins"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有已保存的仓库登录"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "沒有已儲存的倉庫登入"
+          }
+        }
+      }
+    },
+    "registryUnavailable": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registry logins could not be read."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法读取仓库登录。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "無法讀取倉庫登入。"
+          }
+        }
+      }
+    },
+    "invalidRegistry": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter a hostname with an optional port; omit the scheme and path."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请输入主机名和可选端口，不含协议或路径。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請輸入主機名稱與選填連接埠，不含協定或路徑。"
+          }
+        }
+      }
+    },
+    "registryHTTPSRequired": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remote registries require HTTPS. HTTP is limited to loopback addresses."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "远端仓库必须使用 HTTPS，HTTP 仅限本机回环地址。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "遠端倉庫必須使用 HTTPS，HTTP 僅限本機迴路位址。"
+          }
+        }
+      }
+    },
+    "registryCredentialsRequired": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter a username and a non-empty token or password (maximum 4 KiB)."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请输入用户名及非空令牌或密码（最多 4 KiB）。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請輸入使用者名稱及非空權杖或密碼（最多 4 KiB）。"
+          }
+        }
+      }
+    },
+    "registryLoginFailed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign-in failed or timed out. Check the address, credentials, connection and Keychain access. Authentication output is hidden to protect credentials."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "登录失败或超时，请检查地址、凭证、连接和钥匙串权限。认证输出已隐藏以保护凭证。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "登入失敗或逾時，請檢查位址、憑證、連線與鑰匙圈權限。認證輸出已隱藏以保護憑證。"
+          }
+        }
+      }
+    },
+    "pushImage": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Push Image…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "推送镜像…"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "推送映像檔…"
+          }
+        }
+      }
+    },
+    "pushDestination": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Destination image reference"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "目标镜像名称"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "目標映像檔名稱"
+          }
+        }
+      }
+    },
+    "pushImageNote": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Push publishes this image to the specified registry and may replace that remote tag. A new local tag is retained even if pushing fails. Sign in from Registries first when required."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "推送会将镜像发布至指定仓库，可能替换远端标签。即使失败，新增的本地标签仍会保留；如需认证，请先在镜像仓库页登录。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "推送會將映像檔發佈至指定倉庫，可能取代遠端標籤。即使失敗，新增的本機標籤仍會保留；如需認證，請先在倉庫頁登入。"
+          }
+        }
+      }
+    },
+    "registryQualifiedImage": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use a complete registry/namespace/image:tag destination."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请使用完整的 仓库/命名空间/镜像:标签 目标。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請使用完整的 倉庫/命名空間/映像檔:標籤 目標。"
+          }
+        }
+      }
+    },
+    "imageTagExists": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "That local target tag already exists. Choose a new tag or push that image directly."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "本地目标标签已存在，请使用新标签或直接推送该镜像。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "本機目標標籤已存在，請使用新標籤或直接推送該映像檔。"
+          }
+        }
+      }
+    },
+    "composeProjects": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Compose Projects"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Compose 项目"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Compose 專案"
+          }
+        }
+      }
+    },
+    "composeProject": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Project"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "项目"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "專案"
+          }
+        }
+      }
+    },
+    "composeImport": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import Compose…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "导入 Compose…"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "匯入 Compose…"
+          }
+        }
+      }
+    },
+    "composeValidate": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reload & Validate"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "重新加载并验证"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "重新載入並驗證"
+          }
+        }
+      }
+    },
+    "selectProject": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select a project"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择项目"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "選擇專案"
+          }
+        }
+      }
+    },
+    "composeService": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Service"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "服务"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "服務"
+          }
+        }
+      }
+    },
+    "notCreated": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not created"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "尚未创建"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "尚未建立"
+          }
+        }
+      }
+    },
+    "composeOrder": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start order"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "启动顺序"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "啟動順序"
+          }
+        }
+      }
+    },
+    "composeUp": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Create & Start"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "创建并启动"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "建立並啟動"
+          }
+        }
+      }
+    },
+    "composeStop": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stop Project"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "停止项目"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "停止專案"
+          }
+        }
+      }
+    },
+    "composeDown": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove Project Containers"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "移除项目容器"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "移除專案容器"
+          }
+        }
+      }
+    },
+    "composeScopeNote": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Imports a supported Compose subset into Apple Container. Unsupported properties block import with a field path. Compose files are never executed during import."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "将支持的 Compose 配置导入 Apple Container。不支持的属性会阻止导入并指出字段；导入时不会执行 Compose 文件。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "將支援的 Compose 設定匯入 Apple Container。不支援的屬性會阻止匯入並指出欄位；匯入時不會執行 Compose 檔案。"
+          }
+        }
+      }
+    },
+    "composePreviewNote": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ports use loopback only. Managed volumes default to 8 GiB. Local images are reused; missing images are built or pulled. Health checks gate startup only while this operation is running; there is no continuous health or restart controller."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "端口仅使用本机回环地址。托管卷默认为 8 GiB。复用本地镜像，仅构建或下载缺少的镜像。健康检查仅在此次启动期间生效，没有持续监控或自动重启控制器。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "連接埠僅使用本機迴路位址。受管理儲存卷預設為 8 GiB。沿用本機映像檔，僅建置或下載缺少的映像檔。健康檢查僅在此次啟動期間生效，沒有持續監控或自動重啟控制器。"
+          }
+        }
+      }
+    },
+    "composeStartNote": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Review the listed services and mounts. This starts their configured commands and may download images or build local Dockerfiles. Failure or cancellation leaves completed resources available for inspection."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请检查列出的服务及挂载。此操作会启动配置中的命令，并可能下载镜像或构建本地 Dockerfile。失败或取消后会保留已完成的资源，供检查。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請檢查列出的服務及掛載。此操作會啟動設定中的指令，並可能下載映像檔或建置本機 Dockerfile。失敗或取消後會保留已完成的資源，供檢查。"
+          }
+        }
+      }
+    },
+    "composeRetainData": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only the listed owned containers are affected. Images, networks and named volumes are retained. Removing containers deletes their writable layers; mounted volume data is retained."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "仅影响列出的本项目容器。保留镜像、网络和命名卷；移除容器会删除其可写层，挂载卷数据会保留。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "僅影響列出的本專案容器。保留映像檔、網路與命名儲存卷；移除容器會刪除其可寫層，掛載卷資料會保留。"
+          }
+        }
+      }
+    },
+    "composeLibraryFailed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not read the saved project list. Do not overwrite it; check the Application Support folder."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法读取已保存的项目列表，请检查应用支持目录，勿覆盖原文件。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "無法讀取已儲存的專案清單，請檢查應用程式支援目錄，勿覆寫原檔。"
+          }
+        }
+      }
+    },
+    "composeNameConflict": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A resource is missing or belongs to another project. No ownership is assumed from its name."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "资源不存在或属于其他项目，不会仅凭名称认定所有权。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "資源不存在或屬於其他專案，不會僅憑名稱認定所有權。"
+          }
+        }
+      }
+    },
+    "composeConfigurationChanged": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Configuration changed. Stop and remove the existing project containers before recreating them; named volumes are retained."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "配置已改变。请停止并移除现有项目容器后重新创建，命名卷会保留。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "設定已改變。請停止並移除現有專案容器後重新建立，命名儲存卷會保留。"
+          }
+        }
+      }
+    },
+    "composeExternalMissing": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A declared external network or volume is missing. Create it first."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "声明的外部网络或卷不存在，请先创建。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "宣告的外部網路或儲存卷不存在，請先建立。"
+          }
+        }
+      }
+    },
+    "composeStepFailed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A project step failed. See output and inspect retained resources before retrying."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "项目步骤失败，请查看输出并检查保留的资源后重试。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "專案步驟失敗，請查看輸出並檢查保留的資源後重試。"
+          }
+        }
+      }
+    },
+    "composeDependencyStopped": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A required service stopped. Dependent services were not started."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "必要服务已停止，尚未启动依赖它的服务。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "必要服務已停止，尚未啟動相依服務。"
+          }
+        }
+      }
+    },
+    "composeCheckingHealth": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checking startup health"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "检查启动健康状态"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "檢查啟動健康狀態"
+          }
+        }
+      }
+    },
+    "composeHealthFailed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Startup health check failed. Dependent services were not started."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "启动健康检查失败，尚未启动依赖服务。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "啟動健康檢查失敗，尚未啟動相依服務。"
+          }
+        }
+      }
+    },
+    "composeReady": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All project services are running. Configured startup health checks passed."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "所有项目服务已运行，配置的启动健康检查已通过。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "所有專案服務已運行，設定的啟動健康檢查已通過。"
+          }
+        }
+      }
+    },
     "transport": {
       "localizations": {
         "en": {
@@ -6333,6 +7895,1458 @@
           "stringUnit": {
             "state": "translated",
             "value": "指令參數包含無效的空字元。"
+          }
+        }
+      }
+    },
+    "/etc/hosts is reserved for project service discovery": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "/etc/hosts is reserved for project service discovery"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "/etc/hosts 保留用于项目服务发现"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "/etc/hosts 保留供專案服務探索使用"
+          }
+        }
+      }
+    },
+    "Automatic restart policies are not supported by this adapter": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Automatic restart policies are not supported by this adapter"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "此适配器不支持自动重启策略"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "此轉接器不支援自動重啟原則"
+          }
+        }
+      }
+    },
+    "Custom resource names require external: true": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Custom resource names require external: true"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "自定义资源名称需要 external: true"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "自訂資源名稱需要 external: true"
+          }
+        }
+      }
+    },
+    "Declare named volumes at the document root; only bind and volume mounts are supported": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Declare named volumes at the document root; only bind and volume mounts are supported"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请在文档根节点声明命名卷；仅支持 bind 和 volume 挂载"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請在文件根節點宣告命名儲存卷；僅支援 bind 和 volume 掛載"
+          }
+        }
+      }
+    },
+    "Dependency cycle": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dependency cycle"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "依赖关系存在循环"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "相依關係存在循環"
+          }
+        }
+      }
+    },
+    "Dependency needs an explicit healthcheck": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dependency needs an explicit healthcheck"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "依赖服务需要明确的 healthcheck"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "相依服務需要明確的 healthcheck"
+          }
+        }
+      }
+    },
+    "Document nesting limit exceeded": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Document nesting limit exceeded"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "文档嵌套层数超出限制"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "文件巢狀層數超出限制"
+          }
+        }
+      }
+    },
+    "Document nesting or size limit exceeded": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Document nesting or size limit exceeded"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "文档嵌套层数或大小超出限制"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "文件巢狀層數或大小超出限制"
+          }
+        }
+      }
+    },
+    "Document size limit exceeded": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Document size limit exceeded"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "文档大小超出限制"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "文件大小超出限制"
+          }
+        }
+      }
+    },
+    "Duplicate or merge key": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Duplicate or merge key"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "存在重复键或合并键"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "存在重複鍵或合併鍵"
+          }
+        }
+      }
+    },
+    "Duration must be greater than zero and at most 5 minutes": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Duration must be greater than zero and at most 5 minutes"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "时长必须大于零且不超过 5 分钟"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "時間長度必須大於零且不超過 5 分鐘"
+          }
+        }
+      }
+    },
+    "Empty command override is unsupported": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Empty command override is unsupported"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不支持空的 command 覆盖"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不支援空的 command 覆寫"
+          }
+        }
+      }
+    },
+    "Empty document": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Empty document"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "文档为空"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "文件為空"
+          }
+        }
+      }
+    },
+    "Empty entrypoint override is unsupported": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Empty entrypoint override is unsupported"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不支持空的 entrypoint 覆盖"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不支援空的 entrypoint 覆寫"
+          }
+        }
+      }
+    },
+    "Escape literal dollar signs as $$": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Escape literal dollar signs as $$"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请使用 $$ 表示字面美元符号"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請使用 $$ 表示字面錢字號"
+          }
+        }
+      }
+    },
+    "Escaped env-file values are unsupported": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Escaped env-file values are unsupported"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不支持环境文件中的转义值"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不支援環境檔案中的逸出值"
+          }
+        }
+      }
+    },
+    "Expected 1 to 32 services": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Expected 1 to 32 services"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要 1 至 32 个服务"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要 1 至 32 個服務"
+          }
+        }
+      }
+    },
+    "Expected KEY=value; implicit host values are unsupported": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Expected KEY=value; implicit host values are unsupported"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要 KEY=value；不支持隐式读取主机值"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要 KEY=value；不支援隱式讀取主機值"
+          }
+        }
+      }
+    },
+    "Expected UTF-8 YAML, at most 512 KiB": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Expected UTF-8 YAML, at most 512 KiB"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要 UTF-8 YAML，大小不超过 512 KiB"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要 UTF-8 YAML，大小不超過 512 KiB"
+          }
+        }
+      }
+    },
+    "Expected UTF-8 environment file, at most 256 KiB": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Expected UTF-8 environment file, at most 256 KiB"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要 UTF-8 环境文件，大小不超过 256 KiB"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要 UTF-8 環境檔案，大小不超過 256 KiB"
+          }
+        }
+      }
+    },
+    "Expected a list": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Expected a list"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要列表"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要清單"
+          }
+        }
+      }
+    },
+    "Expected a local path, relative to the Compose file or absolute": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Expected a local path, relative to the Compose file or absolute"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要相对于 Compose 文件的本地路径或绝对路径"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要相對於 Compose 檔案的本機路徑或絕對路徑"
+          }
+        }
+      }
+    },
+    "Expected a mapping": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Expected a mapping"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要映射结构"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要對應結構"
+          }
+        }
+      }
+    },
+    "Expected a scalar value": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Expected a scalar value"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要单一值"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要單一值"
+          }
+        }
+      }
+    },
+    "Expected string keys": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Expected string keys"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要字符串键"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要字串鍵"
+          }
+        }
+      }
+    },
+    "Expected true or false": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Expected true or false"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要 true 或 false"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要 true 或 false"
+          }
+        }
+      }
+    },
+    "Host port/protocol is used by another service": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Host port/protocol is used by another service"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "主机端口及协议已被另一个服务使用"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "主機連接埠及協定已被另一個服務使用"
+          }
+        }
+      }
+    },
+    "Image or local build is required": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Image or local build is required"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要镜像或本地构建配置"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要映像檔或本機建置設定"
+          }
+        }
+      }
+    },
+    "Invalid YAML or multiple documents; check syntax": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invalid YAML or multiple documents; check syntax"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "YAML 无效或包含多个文档；请检查语法"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "YAML 無效或包含多份文件；請檢查語法"
+          }
+        }
+      }
+    },
+    "Invalid YAML; check syntax at the reported line": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invalid YAML; check syntax at the reported line"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "YAML 无效；请检查所示行的语法"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "YAML 無效；請檢查所示行的語法"
+          }
+        }
+      }
+    },
+    "Invalid environment key": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invalid environment key"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "环境变量键无效"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "環境變數鍵無效"
+          }
+        }
+      }
+    },
+    "Invalid port protocol": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invalid port protocol"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "端口协议无效"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "連接埠協定無效"
+          }
+        }
+      }
+    },
+    "Invalid project identity or volume capacity": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invalid project identity or volume capacity"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "项目标识或卷容量无效"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "專案識別碼或儲存卷容量無效"
+          }
+        }
+      }
+    },
+    "Memory must be between 200 MiB and 1 TiB": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Memory must be between 200 MiB and 1 TiB"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "内存必须介于 200 MiB 和 1 TiB 之间"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "記憶體必須介於 200 MiB 和 1 TiB 之間"
+          }
+        }
+      }
+    },
+    "Missing variable in the adjacent .env file; host environment is not inherited": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Missing variable in the adjacent .env file; host environment is not inherited"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "同目录的 .env 文件缺少变量；不会继承主机环境"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "同目錄的 .env 檔案缺少變數；不會繼承主機環境"
+          }
+        }
+      }
+    },
+    "Multiline environment values are unsupported": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Multiline environment values are unsupported"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不支持多行环境变量值"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不支援多行環境變數值"
+          }
+        }
+      }
+    },
+    "Multiline or unmatched quotes are unsupported": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Multiline or unmatched quotes are unsupported"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不支持多行或未配对的引号"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不支援多行或未配對的引號"
+          }
+        }
+      }
+    },
+    "Multiple YAML documents are unsupported": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Multiple YAML documents are unsupported"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不支持多个 YAML 文档"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不支援多份 YAML 文件"
+          }
+        }
+      }
+    },
+    "NUL is not allowed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NUL is not allowed"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不允许 NUL 字符"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不允許 NUL 字元"
+          }
+        }
+      }
+    },
+    "Nested substitutions are unsupported": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nested substitutions are unsupported"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不支持嵌套变量替换"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不支援巢狀變數替換"
+          }
+        }
+      }
+    },
+    "Only loopback port publication is supported": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only loopback port publication is supported"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "仅支持发布到本机回环地址"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "僅支援發佈至本機迴路位址"
+          }
+        }
+      }
+    },
+    "Only service_started and service_healthy are supported": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only service_started and service_healthy are supported"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "仅支持 service_started 和 service_healthy"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "僅支援 service_started 和 service_healthy"
+          }
+        }
+      }
+    },
+    "Select exactly one declared network; aliases and per-network settings are unsupported": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select exactly one declared network; aliases and per-network settings are unsupported"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请选择一个已声明的网络；不支持别名及各网络独立设置"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請選擇一個已宣告的網路；不支援別名及各網路獨立設定"
+          }
+        }
+      }
+    },
+    "Service names must be lowercase DNS labels, at most 24 characters": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Service names must be lowercase DNS labels, at most 24 characters"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "服务名称必须为小写 DNS 标签，最多 24 个字符"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "服務名稱必須為小寫 DNS 標籤，最多 24 個字元"
+          }
+        }
+      }
+    },
+    "Specify command when overriding the entrypoint; clearing image defaults is unsupported": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Specify command when overriding the entrypoint; clearing image defaults is unsupported"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "覆盖 entrypoint 时请指定 command；不支持清除镜像默认值"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "覆寫 entrypoint 時請指定 command；不支援清除映像檔預設值"
+          }
+        }
+      }
+    },
+    "Supported substitutions: $VAR, ${VAR}, ${VAR:-default}, $$": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Supported substitutions: $VAR, ${VAR}, ${VAR:-default}, $$"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "支持的替换语法：$VAR、${VAR}、${VAR:-default}、$$"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "支援的替換語法：$VAR、${VAR}、${VAR:-default}、$$"
+          }
+        }
+      }
+    },
+    "This Compose adapter currently supports linux/arm64": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This Compose adapter currently supports linux/arm64"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "此 Compose 适配器目前支持 linux/arm64"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "此 Compose 轉接器目前支援 linux/arm64"
+          }
+        }
+      }
+    },
+    "Unclosed variable": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unclosed variable"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "变量表达式未闭合"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "變數運算式未閉合"
+          }
+        }
+      }
+    },
+    "Unknown service": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unknown service"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未知服务"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未知服務"
+          }
+        }
+      }
+    },
+    "Unmatched command quoting": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unmatched command quoting"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "命令中的引号未配对"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "指令中的引號未配對"
+          }
+        }
+      }
+    },
+    "Unsupported setting; remove or configure separately": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unsupported setting; remove or configure separately"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不支持此设置；请移除或单独配置"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不支援此設定；請移除或另外設定"
+          }
+        }
+      }
+    },
+    "Use 1 to 20 retries": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use 1 to 20 retries"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "重试次数请设为 1 至 20"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "重試次數請設為 1 至 20"
+          }
+        }
+      }
+    },
+    "Use KEY=value, not implicit host values": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use KEY=value, not implicit host values"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请使用 KEY=value，不支持隐式读取主机值"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請使用 KEY=value，不支援隱式讀取主機值"
+          }
+        }
+      }
+    },
+    "Use [CMD, executable, ...] or [CMD-SHELL, command]": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use [CMD, executable, ...] or [CMD-SHELL, command]"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请使用 [CMD, executable, ...] 或 [CMD-SHELL, command]"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請使用 [CMD, executable, ...] 或 [CMD-SHELL, command]"
+          }
+        }
+      }
+    },
+    "Use a duration in ms, s or m": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use a duration in ms, s or m"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请使用 ms、s 或 m 表示时长"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請使用 ms、s 或 m 表示時間長度"
+          }
+        }
+      }
+    },
+    "Use a name of at most 24 characters": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use a name of at most 24 characters"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "名称最多 24 个字符"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "名稱最多 24 個字元"
+          }
+        }
+      }
+    },
+    "Use an integer byte size such as 512M or 2G": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use an integer byte size such as 512M or 2G"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请使用整数容量，例如 512M 或 2G"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請使用整數容量，例如 512M 或 2G"
+          }
+        }
+      }
+    },
+    "Use host:container[/tcp|udp], without ranges": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use host:container[/tcp|udp], without ranges"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请使用 host:container[/tcp|udp]，不支持范围"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請使用 host:container[/tcp|udp]，不支援範圍"
+          }
+        }
+      }
+    },
+    "Use literal values in environment files; interpolation is supported in YAML": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use literal values in environment files; interpolation is supported in YAML"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "环境文件请使用字面值；变量替换仅支持 YAML"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "環境檔案請使用字面值；變數替換僅支援 YAML"
+          }
+        }
+      }
+    },
+    "Use source:target[:ro|rw]": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use source:target[:ro|rw]"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请使用 source:target[:ro|rw]"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請使用 source:target[:ro|rw]"
+          }
+        }
+      }
+    },
+    "Use whole CPU cores": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use whole CPU cores"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请使用整数 CPU 核心数"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請使用整數 CPU 核心數"
+          }
+        }
+      }
+    },
+    "YAML aliases are not supported": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "YAML aliases are not supported"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不支持 YAML 别名"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不支援 YAML 別名"
+          }
+        }
+      }
+    },
+    "YAML aliases are unsupported": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "YAML aliases are unsupported"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不支持 YAML 别名"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不支援 YAML 別名"
+          }
+        }
+      }
+    },
+    "YAML anchors and aliases are not supported": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "YAML anchors and aliases are not supported"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不支持 YAML 锚点和别名"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不支援 YAML 錨點和別名"
+          }
+        }
+      }
+    },
+    "YAML anchors are unsupported": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "YAML anchors are unsupported"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不支持 YAML 锚点"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不支援 YAML 錨點"
+          }
+        }
+      }
+    },
+    "YAML parser initialization failed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "YAML parser initialization failed"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "YAML 解析器初始化失败"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "YAML 剖析器初始化失敗"
           }
         }
       }

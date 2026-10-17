@@ -1,0 +1,18 @@
+# Review before starting. Pulls an arm64 Python image if absent.
+# No host directory mounts. Remove Project Containers retains the data volume.
+name: example-web
+services:
+  web:
+    image: docker.io/library/python:3.13-alpine
+    command: [python3, -m, http.server, '8000', --directory, /data]
+    ports: ['8080:8000']
+    volumes: [data:/data]
+    cpus: 1
+    mem_limit: 256M
+    healthcheck:
+      test: [CMD, python3, -c, 'import urllib.request; urllib.request.urlopen("http://127.0.0.1:8000")']
+      interval: 2s
+      timeout: 3s
+      retries: 5
+volumes:
+  data: {}

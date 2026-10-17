@@ -25,13 +25,20 @@ The native creation hang UI-001 was traced to `Slider(step: 1)` generating thous
 - A shared log viewer for inspector and expanded details: case-insensitive line search, 150/500/2,000/10,000-line snapshots, application/boot source, refresh toggle, copy and native save-panel export. Copy/export uses the visible filtered snapshot, not the entire log history.
 - Live evidence: two published HTTP endpoints, UDP configuration readback, three mounts including a read-only bind and a named volume; partial batch failure continues, changed state and running delete are refused, restart/stop/delete are read back. Both disposable containers and their volume were removed; all 8 original container states remained unchanged.
 
+## Files, Registry and Compose — current source
+
+- Container file browser with literal-path operations, staged file/folder transfers through `exec` + tar, no-overwrite behavior, rename/mkdir and confirmed file/empty-directory deletion. Mounted data is accessed in the container's actual filesystem namespace. Archive limit: 4 GiB; requires `/bin/sh`, tar and ordinary Unix file tools.
+- Official CLI Registry account list/login/logout; HTTPS credentials on stdin, CLI-managed macOS Keychain, no password in app output or settings. Image push supports explicit fully qualified targets and optional anonymous loopback HTTP for local testing.
+- Local Compose YAML import and preview, strict property-path diagnostics, dependency/health startup order, managed service-name mappings, labelled project start/stop/removal and retained named volumes. Invalid source YAML does not prevent stopping/removing previously imported project containers. This is a supported subset, not complete Docker Compose compatibility.
+- See [usage, compatibility matrix and test commands](COMPOSE_AND_FILES.md). Private-registry successful authentication needs real-account acceptance; it is deferred rather than prompting for credentials in chat.
+
 ## Baseline B — remaining, before AI
 
 1. Image-metadata defaults; safe duplicate/recreate with a visible configuration diff and retained-volume policy.
 2. Finish multi-selection interactive and accessibility acceptance across window sizes; expand cancellation and external-state-change coverage.
-3. File copy/browser and optional embedded terminal; finish boot-log and large-snapshot acceptance (native filtered export passed). The current Terminal action uses macOS Terminal and needs a shell inside the image.
-4. Registry login/logout and image push. Keep credentials out of command arguments, preview, logs and repo; use the official CLI's supported credential flow. Real private-registry testing waits for an account supplied through an appropriate secure flow.
-5. Compose project import and grouped lifecycle, including dependency/health ordering and explicit unsupported-key diagnostics. Do not silently ignore unsupported Compose settings.
+3. Finish file-browser interactive/accessibility acceptance and optional embedded terminal; finish boot-log and large-snapshot acceptance. The current Terminal action uses macOS Terminal and needs a shell inside the image.
+4. Registry catalog/tag browsing and real authenticated pull/push/login/logout acceptance. Supply accounts only through an appropriate secure flow; do not send credentials in chat.
+5. Extend Compose beyond the documented subset: continuous service discovery/restart supervision, scaling, recreate/diff, and additional Compose semantics only when their behavior is verified. Current unsupported settings are rejected.
 6. Disk-usage view and selective cleanup preview. No one-click global prune without showing precisely what will be removed.
 7. Complete UI, accessibility, clean-install, upgrade and second-Mac release gates; package app and Apache-2.0 source from the same version.
 
@@ -49,6 +56,7 @@ bash scripts/test-creation-ui.sh       # isolated native layout, no engine calls
 bash scripts/test-management-live.sh --run
 bash scripts/test-workflows-live.sh --run  # two disposable containers, no image download
 bash scripts/test-images-live.sh --run
+bash scripts/test-platform.sh --run --registry --push  # disposable projects, files and loopback registry
 ```
 
 Live tests mutate only named disposable resources. The management test requires an existing arm64 Python image. The image test requires the existing builder to be stopped; it temporarily starts that builder for a tiny scratch build, restores it to stopped, downloads a small BusyBox image if absent, and cleans up its own images. It does not stop unrelated running containers. Run these on a suitable test host, never concurrently with another build.

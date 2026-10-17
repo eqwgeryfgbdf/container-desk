@@ -32,6 +32,7 @@ import AppKit
     @Published var operationTitle=""
     @Published var operationOutput=""
     @Published var operationResult:String?
+    @Published var fileContainer:String?
     @Published var inspection:InspectionTarget?
     @Published var restartCandidate:ContainerItem?
     private var operationTask:Task<Void,Never>?
@@ -185,9 +186,9 @@ import AppKit
         do{_=try await ProcessRunner.checked(cli,["system","start","--disable-kernel-install"],timeout:90)}catch{self.error=error.localizedDescription}
     }
     func cancelOperation() {operationTask?.cancel()}
-    func startOperation(_ title:String, work:@escaping @MainActor () async throws -> Int32) {
+    func startOperation(_ title:String, present:Bool=true, work:@escaping @MainActor () async throws -> Int32) {
         guard canMutate else{return}
-        operationTitle=title;operationOutput="";operationResult=nil;operationRunning=true;operationPresented=true
+        operationTitle=title;operationOutput="";operationResult=nil;operationRunning=true;operationPresented=present
         operationTask=Task {
             do {
                 let code=try await work()

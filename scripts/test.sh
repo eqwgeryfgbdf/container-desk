@@ -12,3 +12,5 @@ xcrun swiftc -swift-version 5 -parse-as-library -target arm64-apple-macos26.0 "$
 "$BUILD/ManagementTests"
 xcrun swiftc -swift-version 5 -parse-as-library -target arm64-apple-macos26.0 "$ROOT/Sources/Models.swift" "$ROOT/Tests/WorkflowTests.swift" -o "$BUILD/WorkflowTests"
 "$BUILD/WorkflowTests"
+
+bash "$ROOT/scripts/test-platform.sh"
