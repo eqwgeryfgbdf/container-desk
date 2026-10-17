@@ -22,6 +22,7 @@ func XCTUnwrap<T>(_ value:T?)throws->T{guard let value else{throw DeskError.mess
         let unit=PlatformTests();defer{unit.clean()}
         try unit.testDockerMigration()
         try unit.testDockerCompatibility()
+        try await unit.testHubSearch()
         try unit.testComposeOrderAndLiteralArguments()
         try unit.testComposeRejectsUnsupportedAndAmbiguousConfiguration()
         try unit.testEnvFilesAndInterpolation()
@@ -31,7 +32,9 @@ func XCTUnwrap<T>(_ value:T?)throws->T{guard let value else{throw DeskError.mess
         try unit.testRegistryValidationAndMetadata()
         try await unit.testCredentialPipeAndSuppressedOutput()
         try await unit.testArchiveTraversalAndCancellation()
-        print("PASS: 11 platform suites (Compose semantics and rejection cases, env interpolation, file safety, registry validation, credential pipe)")
+        print("PASS: 12 platform suites (Hub search, Compose semantics and rejection cases, env interpolation, file safety, registry validation, credential pipe)")
+        if CommandLine.arguments.contains("--hub-search"){try await unit.testHubSearchLive()}
+        if CommandLine.arguments.contains("--hub-download"){try await unit.testHubSearchDownload()}
         if CommandLine.arguments.contains("--resolve") || CommandLine.arguments.contains("--resolved-run") {try await unit.testOfficialComposeResolution()}
         if CommandLine.arguments.contains("--registry") {
             try await RegistryLiveTests().testLocalAuthentication()
