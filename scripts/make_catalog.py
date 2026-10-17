@@ -382,6 +382,65 @@ rows.update({
 'dockerImageStore': ("Docker's local image store is separate. Publish/import local-only images or supply a build context before starting; image architecture and availability are verified when pulling/building.", 'Docker 本地镜像存储是独立的。启动前请发布／导入仅本地存在的镜像，或提供构建上下文；下载／构建时才验证镜像架构和可用性。', 'Docker 本機映像檔儲存區是獨立的。啟動前請發佈／匯入僅本機存在的映像檔，或提供建置內容；下載／建置時才驗證映像檔架構與可用性。'),
 'dockerRuntimeCheck': ('This report validates configuration, not application behavior. Build/pull, credentials, health and data must still be tested. Host environment variables are not inherited; use an adjacent .env file. No Docker daemon or existing container is changed.', '此报告验证配置，不保证应用行为。仍需测试构建／下载、凭证、健康和数据。不继承主机环境变量；请使用同目录 .env 文件。不会更改 Docker 守护进程或现有容器。', '此報告驗證設定，不保證應用行為。仍需測試建置／下載、憑證、健康與資料。不繼承主機環境變數；請使用同目錄 .env 檔案。不會更改 Docker Daemon 或現有容器。'),
 })
+rows.update({'dockerUseCompose': ('Resolve with installed Docker Compose (merges, .env and YAML templates)',
+                      '使用已安装的 Docker Compose 解析（合并、.env 和 YAML 模板）',
+                      '使用已安裝的 Docker Compose 解析（合併、.env 與 YAML 範本）'),
+ 'dockerAddOverride': ('Add Override File…', '添加覆盖文件…', '加入覆寫檔案…'),
+ 'dockerClearOverrides': ('Use Default Override', '使用默认覆盖文件', '使用預設覆寫檔案'),
+ 'dockerAmbiguousOverride': ('Multiple default override files were found. Choose the overrides explicitly in order.',
+                             '发现多个默认覆盖文件。请按顺序明确选择覆盖文件。',
+                             '發現多個預設覆寫檔案。請依序明確選擇覆寫檔案。'),
+ 'dockerComposeMissing': ('Docker Compose CLI was not found. Install it, or turn off official resolution to use the limited '
+                          'standalone parser.',
+                          '找不到 Docker Compose CLI。请安装它，或关闭官方解析以使用功能有限的独立解析器。',
+                          '找不到 Docker Compose CLI。請安裝它，或關閉官方解析以使用功能有限的獨立解析器。'),
+ 'dockerComposeResolveFailed': ('Docker Compose could not resolve this project. Check syntax, referenced files and required '
+                                'variables locally; diagnostics are hidden because they may contain secrets.',
+                                'Docker Compose 无法解析此项目。请在本地检查语法、引用文件与必需变量；诊断可能包含敏感值，因此不在此显示。',
+                                'Docker Compose 無法解析此專案。請在本機檢查語法、引用檔案與必要變數；診斷可能包含敏感值，因此不在此顯示。'),
+ 'dockerComposeVariableMissing': ('Compose reported an unset variable. Define it in the project .env and review again; blank '
+                                  'substitution is not accepted automatically.',
+                                  'Compose 报告变量未设置。请在项目 .env 定义后重新检查；不会自动接受空值替换。',
+                                  'Compose 回報變數未設定。請在專案 .env 定義後重新檢查；不會自動接受空值替換。'),
+ 'dockerComposeResolved': ('Official Compose resolved the selected files in order, including YAML templates, .env and env_file. '
+                           'The generated file contains a fixed snapshot of resolved values; changes in those inputs require '
+                           'reconversion.',
+                           '官方 Compose 已依序解析所选文件，包括 YAML 模板、.env 和 env_file。生成文件保存解析后值的固定快照；输入变化后需要重新转换。',
+                           '官方 Compose 已依序解析所選檔案，包括 YAML 範本、.env 與 env_file。產生檔案保存解析後值的固定快照；輸入變更後需要重新轉換。'),
+ 'dockerResourceNames': ('Non-external resources get project-scoped Apple Container names. Existing Docker resources and their '
+                         'data remain separate.',
+                         '非外部资源采用项目专属 Apple Container 名称。现有 Docker 资源与数据保持独立。',
+                         '非外部資源採用專案專屬 Apple Container 名稱。既有 Docker 資源與資料保持獨立。'),
+ 'dockerResolvedRuntimeCheck': ('Configuration resolution does not certify runtime compatibility or migrate data. Only project '
+                                'env files supply variables; shell values are not inherited. Save rechecks the resolved inputs. '
+                                'No Docker workload is started or stopped.',
+                                '配置解析不代表运行时兼容或数据迁移完成。仅使用项目环境文件，不继承 shell 变量。保存前会重新检查解析结果；不会启动或停止 Docker 工作负载。',
+                                '設定解析不代表執行環境相容或資料遷移完成。僅使用專案環境檔案，不繼承 shell 變數。儲存前會重新檢查解析結果；不會啟動或停止 Docker 工作負載。'),
+ 'Invalid build target': ('Invalid build target', '构建目标无效', '建置目標無效'),
+ 'Use 1 to 8 distinct declared networks': ('Use 1 to 8 distinct declared networks',
+                                           '请使用 1 到 8 个已声明且不重复的网络',
+                                           '請使用 1 到 8 個已宣告且不重複的網路'),
+ 'Invalid or reserved network alias': ('Invalid or reserved network alias', '网络别名无效或为保留名称', '網路別名無效或為保留名稱'),
+ 'Network alias is used by another service': ('Network alias is used by another service', '网络别名已被其他服务使用', '網路別名已被其他服務使用'),
+ 'Invalid or reserved label': ('Invalid or reserved label', '标签无效或为保留标签', '標籤無效或為保留標籤'),
+ 'quickDeploy': ('Quick Deploy…', '快速部署…', '快速部署…'),
+ 'quickDeployIntro': ('Paste a Docker Hub repository link or a registry image reference. Download an arm64 image, then review '
+                      'container configuration.',
+                      '粘贴 Docker Hub 仓库链接或 Registry 镜像名称。下载 arm64 镜像后，检查容器配置。',
+                      '貼上 Docker Hub 倉庫連結或 Registry 映像檔名稱。下載 arm64 映像檔後，檢查容器設定。'),
+ 'hubSource': ('Docker Hub link or image reference', 'Docker Hub 链接或镜像名称', 'Docker Hub 連結或映像檔名稱'),
+ 'hubDefaultTag': ('Tag when not specified', '未指定时使用的标签', '未指定時使用的標籤'),
+ 'hubURLInvalid': ('Use an HTTPS Docker Hub repository link or an image reference, not an arbitrary web page.',
+                   '请使用 HTTPS Docker Hub 仓库链接或镜像名称，不能使用任意网页。',
+                   '請使用 HTTPS Docker Hub 倉庫連結或映像檔名稱，不能使用任意網頁。'),
+ 'hubImageReady': ('Image verified locally; ready to configure', '已验证本地镜像，可以配置', '已驗證本機映像檔，可以設定'),
+ 'hubConfigure': ('Configure Container…', '配置容器…', '設定容器…'),
+ 'hubDownload': ('Download & Verify', '下载并验证', '下載並驗證'),
+ 'hubConfigurationNote': ('An image is not a complete deployment recipe. Review its documentation, ports, required environment '
+                          'variables and persistent volumes in the next step. Nothing starts automatically. Private registries '
+                          'use saved CLI credentials.',
+                          '镜像不是完整部署方案。请根据其文档，在下一步检查端口、必需的环境变量及持久化卷。不会自动启动；私有仓库使用已保存的 CLI 凭证。',
+                          '映像檔不是完整部署方案。請依照其文件，在下一步檢查連接埠、必要的環境變數及持久儲存卷。不會自動啟動；私人倉庫使用已保存的 CLI 憑證。')})
 root=Path(__file__).resolve().parents[1]
 strings={k:{'localizations':{lang:{'stringUnit':{'state':'translated','value':value}} for lang,value in zip(['en','zh-Hans','zh-Hant'],values)}} for k,values in rows.items()}
 (root/'Resources/Localizable.xcstrings').write_text(json.dumps({'sourceLanguage':'en','strings':strings,'version':'1.0'},ensure_ascii=False,indent=2)+'\n')

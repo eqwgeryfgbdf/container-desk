@@ -36,6 +36,11 @@ The native creation hang UI-001 was traced to `Slider(step: 1)` generating thous
 
 - Reviewed Dockerfile/Compose import with a separate, private YAML output; original files and Docker workloads remain unchanged. Common syntax/default-driver normalization, explicit manual-restart opt-in and strict compatibility blocking are implemented. Data, local-only images and application behavior still require migration/verification. See [conversion workflow and limits](DOCKER_CONVERSION.md).
 
+## Migration target — still in progress
+
+- Official Docker Compose config resolution and revalidation, multiple networks/aliases, build args/targets, and a Docker Hub/reference quick-deployment entry are implemented in current source.
+- Complete volume/data migration, local-image bridging, automatic restart supervision and verified cutover/rollback remain pending. See the explicit [migration acceptance contract](MIGRATION_ACCEPTANCE.md); configuration success is not full migration success.
+
 ## Baseline B — remaining, before AI
 
 1. Image-metadata defaults; safe duplicate/recreate with a visible configuration diff and retained-volume policy.

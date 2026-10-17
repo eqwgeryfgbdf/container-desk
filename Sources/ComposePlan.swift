@@ -31,6 +31,7 @@ struct ComposeService:Identifiable {
     let health:ComposeHealth?
     let fingerprint:String
     let hostsFile:URL
+    let networkAliases:[String:[String]]
     var id:String{name}
 }
 struct ComposePlan {
@@ -53,6 +54,7 @@ struct ComposePlanner {
     private let file:URL
     private let projectID:String
     private let scope:String
+    private let resolved:Bool
     private let variables:[String:String]
     private let capacity:Int
     private func issue(_ path:String,_ reason:String)->ComposeIssue{ComposeIssue(path:path,reason:reason)}
@@ -60,8 +62,9 @@ struct ComposePlanner {
         self.file=file;self.projectID=projectID;self.capacity=volumeGiB
         guard UUID(uuidString:projectID) != nil,(1...1024).contains(volumeGiB) else{throw ComposeIssue(path:"project",reason:"Invalid project identity or volume capacity")}
         root=try Self.parseDocument(sourceData ?? Data(contentsOf:file,options:.mappedIfSafe))
+        resolved=root["x-container-desk-resolved"]?.bool==true
         let dotenv=file.deletingLastPathComponent().appendingPathComponent(".env")
-        variables=FileManager.default.fileExists(atPath:dotenv.path) ? try Self.envFile(dotenv):[:]
+        variables = !resolved && FileManager.default.fileExists(atPath:dotenv.path) ? try Self.envFile(dotenv):[:]
         scope="cd-"+projectID.lowercased().replacingOccurrences(of:"-",with:"").prefix(12)
     }
     static func parseDocument(_ data:Data)throws->Node {
@@ -129,7 +132,8 @@ struct ComposePlanner {
     }
     private func string(_ node:Node?,_ path:String)throws->String {
         guard let scalar=node?.scalar,node?.null==nil else{throw issue(path,"Expected a scalar value")}
-        return try expand(scalar.string,path)
+        guard !scalar.string.contains("\0") else{throw issue(path,"NUL is not allowed")}
+        return resolved ? scalar.string:try expand(scalar.string,path)
     }
     private func array(_ node:Node?,_ path:String)throws->[Node] {
         guard let seq=node?.sequence else{throw issue(path,"Expected a list")};return Array(seq)
@@ -226,7 +230,8 @@ struct ComposePlanner {
     }
     func plan()throws->ComposePlan {
         let document=try map(root,"document")
-        try keys(document,["name","version","services","volumes","networks"],"document")
+        try keys(document,["name","version","services","volumes","networks","x-container-desk-resolved"],"document")
+        if let marker=document["x-container-desk-resolved"],marker.bool != true {throw issue("x-container-desk-resolved","Expected true or false")}
         let name=try document["name"].map{try string($0,"name")} ?? file.deletingLastPathComponent().lastPathComponent
         let definitions=try map(document["services"],"services")
         guard !definitions.isEmpty,definitions.count<=32 else{throw issue("services","Expected 1 to 32 services")}
@@ -238,18 +243,29 @@ struct ComposePlanner {
             let path="services."+service
             guard service.range(of:"^[a-z0-9][a-z0-9-]{0,23}$",options:.regularExpression) != nil else{throw issue(path,"Service names must be lowercase DNS labels, at most 24 characters")}
             let values=try map(definitions[service],path)
-            try keys(values,["image","build","command","entrypoint","environment","env_file","ports","volumes","networks","depends_on","healthcheck","cpus","mem_limit","working_dir","user","read_only","platform","restart"],path)
+            try keys(values,["image","build","command","entrypoint","environment","env_file","ports","volumes","networks","depends_on","healthcheck","cpus","mem_limit","working_dir","user","read_only","platform","restart","init","labels"],path)
             if let restart=values["restart"],try string(restart,path+".restart") != "no" {throw issue(path+".restart","Automatic restart policies are not supported by this adapter")}
             var request=CreateRequest();request.name=service+"."+scope;request.cpus=1;request.memoryMB=512
             request.image=try values["image"].map{try string($0,path+".image")} ?? scope+"-"+service+":compose"
             var build:[String]?
             if let node=values["build"] {
                 let opts=node.scalar != nil ? ["context":node]:try map(node,path+".build")
-                try keys(opts,["context","dockerfile"],path+".build")
+                try keys(opts,["context","dockerfile","args","target","no_cache","pull"],path+".build")
                 let context=try local(try string(opts["context"],path+".build.context"),path+".build.context")
                 let dockerfile=try opts["dockerfile"].map{try string($0,path+".build.dockerfile")} ?? "Dockerfile"
                 var resource=ResourceRequest(operation:.build);resource.name=request.image;resource.path=context.path;resource.dockerfile=dockerfile
-                build=try resource.arguments()
+                var arguments=try resource.arguments();arguments.removeLast(2)
+                if let node=opts["args"] {
+                    let values=try map(node,path+".build.args")
+                    for key in values.keys.sorted() {
+                        guard key.range(of:"^[A-Za-z_][A-Za-z0-9_]*$",options:.regularExpression) != nil else{throw issue(path+".build.args","Invalid environment key")}
+                        arguments += ["--build-arg",key+"="+(try string(values[key],path+".build.args."+key))]
+                    }
+                }
+                if let target=opts["target"] {let value=try string(target,path+".build.target");guard ResourceRequest.validName(value) else{throw issue(path+".build.target","Invalid build target")};arguments += ["--target",value]}
+                if try bool(opts["no_cache"],path+".build.no_cache"){arguments += ["--no-cache"]}
+                if try bool(opts["pull"],path+".build.pull"){arguments += ["--pull"]}
+                build=arguments+["--",context.path]
             } else if values["image"]==nil {throw issue(path+".image","Image or local build is required")}
             if let node=values["platform"] {
                 let platform=try string(node,path+".platform");guard platform=="linux/arm64" else{throw issue(path+".platform","This Compose adapter currently supports linux/arm64")}
@@ -306,12 +322,36 @@ struct ComposePlanner {
                     else{throw issue(path+".volumes","Declare named volumes at the document root; only bind and volume mounts are supported")}
                 }
             }
-            var networkNames=["default"]
-            if let node=values["networks"] {networkNames=try array(node,path+".networks").map{try string($0,path+".networks")}}
-            guard networkNames.count==1,let network=networks[networkNames[0]] else{throw issue(path+".networks","Select exactly one declared network; aliases and per-network settings are unsupported")}
-            request.network=network.name
+            var networkKeys=["default"],aliases:[String:[String]]=[:]
+            if let node=values["networks"] {
+                if node.sequence != nil {networkKeys=try array(node,path+".networks").map{try string($0,path+".networks")}}
+                else {
+                    let options=try map(node,path+".networks");networkKeys=options.keys.sorted()
+                    for key in networkKeys {
+                        let settings=try map(options[key],path+".networks."+key,empty:true)
+                        try keys(settings,["aliases"],path+".networks."+key)
+                        if let list=settings["aliases"] {aliases[key]=try array(list,path+".networks."+key).map{try string($0,path+".networks."+key+".aliases")}}
+                    }
+                }
+            }
+            guard !networkKeys.isEmpty,networkKeys.count<=8,Set(networkKeys).count==networkKeys.count,networkKeys.allSatisfy({networks[$0] != nil}) else{throw issue(path+".networks","Use 1 to 8 distinct declared networks")}
+            var networkAliases:[String:[String]]=[:]
+            for key in networkKeys {
+                let names=aliases[key] ?? []
+                guard names.count<=32,names.allSatisfy({$0.range(of:"^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,62}$",options:.regularExpression) != nil && !["localhost","ip6-localhost"].contains($0.lowercased())}) else{throw issue(path+".networks."+key,"Invalid or reserved network alias")}
+                networkAliases[networks[key]!.name]=names
+            }
+            request.network=networks[networkKeys[0]]!.name
             if let node=values["working_dir"]{request.workingDirectory=try string(node,path+".working_dir")}
             var args=try request.arguments();args.removeLast(2) // remove -- IMAGE, then append exact argument arrays below
+            for key in networkKeys.dropFirst(){args += ["--network",networks[key]!.name]}
+            if try bool(values["init"],path+".init"){args += ["--init"]}
+            if let node=values["labels"] {
+                for (key,value) in try map(node,path+".labels").sorted(by:{$0.key<$1.key}) {
+                    guard !key.isEmpty,!key.hasPrefix("app.containerdesk."),!key.contains("="),!key.contains(where:{$0.isWhitespace || $0=="\0"}) else{throw issue(path+".labels","Invalid or reserved label")}
+                    args += ["--label",key+"="+(try string(value,path+".labels."+key))]
+                }
+            }
             guard !request.allMounts.contains(where:{(try? FileOperations.path($0.target))=="/etc/hosts"}) else{throw issue(path+".volumes","/etc/hosts is reserved for project service discovery")}
             let hostsFile=FileManager.default.urls(for:.applicationSupportDirectory,in:.userDomainMask)[0].appendingPathComponent("ContainerDesk/compose-hosts/"+projectID+"/"+service+".hosts")
             args += ["--volume",hostsFile.path+":/etc/hosts:ro","--label",ComposePlan.ownerLabel+"="+projectID,"--label",ComposePlan.serviceLabel+"="+service]
@@ -344,9 +384,19 @@ struct ComposePlanner {
                 guard let attempts=Int(retries),(1...20).contains(attempts) else{throw issue(path+".healthcheck.retries","Use 1 to 20 retries")}
                 health=ComposeHealth(command:test[0]=="CMD" ? Array(test.dropFirst()):["/bin/sh","-c",test[1]],interval:try duration(h["interval"],path+".healthcheck.interval",2),timeout:try duration(h["timeout"],path+".healthcheck.timeout",5),retries:attempts,startPeriod:try duration(h["start_period"],path+".healthcheck.start_period",0))
             }
-            let fingerprint=SHA256.hash(data:try JSONSerialization.data(withJSONObject:["args":args+["--",request.image]+command,"build":build ?? [],"dependencies":dependencies,"health":health.map{["command":$0.command,"interval":$0.interval,"timeout":$0.timeout,"retries":$0.retries,"startPeriod":$0.startPeriod] as [String:Any]} ?? [:]],options:.sortedKeys)).map{String(format:"%02x",$0)}.joined()
+            let fingerprint=SHA256.hash(data:try JSONSerialization.data(withJSONObject:["args":args+["--",request.image]+command,"build":build ?? [],"dependencies":dependencies,"health":health.map{["command":$0.command,"interval":$0.interval,"timeout":$0.timeout,"retries":$0.retries,"startPeriod":$0.startPeriod] as [String:Any]} ?? [:],"aliases":networkAliases],options:.sortedKeys)).map{String(format:"%02x",$0)}.joined()
             args += ["--label",ComposePlan.configLabel+"="+fingerprint,"--",request.image]+command
-            services[service]=ComposeService(name:service,container:request.name,image:request.image,createArguments:args,buildArguments:build,dependencies:dependencies,health:health,fingerprint:fingerprint,hostsFile:hostsFile)
+            services[service]=ComposeService(name:service,container:request.name,image:request.image,createArguments:args,buildArguments:build,dependencies:dependencies,health:health,fingerprint:fingerprint,hostsFile:hostsFile,networkAliases:networkAliases)
+        }
+        var claimedAliases:[String:String]=[:]
+        for service in services.values {
+            for (network,aliases) in service.networkAliases {
+                for name in [service.name,service.container]+aliases {
+                    let key=network+"/"+name.lowercased()
+                    if let other=claimedAliases[key],other != service.name {throw issue("services."+service.name+".networks","Network alias is used by another service")}
+                    claimedAliases[key]=service.name
+                }
+            }
         }
         var order:[ComposeService]=[],active=Set<String>(),done=Set<String>()
         func visit(_ name:String)throws {

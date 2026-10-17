@@ -61,7 +61,7 @@ extension PlatformTests {
             "services: {app: {image: alpine, ports: ['80']}}",
             "services: {app: {image: alpine, ports: [{target: 80, published: 8080, protocol: {invalid: true}}]}}",
             "services: {app: {image: alpine, ports: ['192.168.0.1:80:80']}}",
-            "services: {app: {image: alpine, networks: {default: {aliases: [other]}}}}",
+            "services: {app: {image: alpine, networks: {default: {ipv4_address: 10.0.0.1}}}}",
             "services: {app: {image: alpine, env_file: [{path: optional.env, required: false}]}}"
         ] {
             try text.write(to:source,atomically:true,encoding:.utf8)

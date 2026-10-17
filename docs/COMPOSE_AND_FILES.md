@@ -22,21 +22,21 @@ Choose **Compose Projects → Import Compose…**, select a local YAML file and 
 
 | Supported | Scope |
 | --- | --- |
-| `image`, `build` | Local arm64 images reused; missing images pulled, or built from local `context`/`dockerfile`. No automatic rebuild of cached tags. |
+| `image`, `build` | Local arm64 images reused; missing images pulled, or built from local `context`/`dockerfile`, explicit build `args`/`target`, `no_cache` and `pull`. No automatic rebuild of cached tags. |
 | `command`, `entrypoint` | Literal argument lists or shell-style word splitting; no implicit host shell evaluation. Explicit shell commands still execute inside the container. |
 | `environment`, `env_file` | Explicit values; adjacent `.env` supplies YAML `$VAR`, `${VAR}`, `${VAR:-default}` and `$$`. Host environment is not inherited. Env files use literal single-line `KEY=value`. |
 | `ports` | Short form `host:container[/tcp\|udp]`, optionally prefixed with `127.0.0.1:`. Loopback only; no ranges. |
 | `volumes` | Short form or long `type/source/target/read_only`; bind mounts and declared named volumes. New managed volumes use 8 GiB each. |
-| `networks` | Exactly one declared network per service, default managed network if omitted. Existing external resources must already exist. |
+| `networks` | One to eight declared networks per service with network-scoped aliases; default managed network if omitted. Existing external resources must already exist. |
 | `depends_on` | Ordered starts, `service_started` or explicit `service_healthy`; missing services and cycles rejected. |
 | `healthcheck` | Explicit `CMD`/`CMD-SHELL`, bounded retries/timeout/interval/start period; startup readiness only. Probe output suppressed. |
-| Resource/process options | Whole `cpus`, `mem_limit`, `working_dir`, `user`, `read_only`, `platform: linux/arm64`, `restart: "no"`. |
+| Resource/process options | Whole `cpus`, `mem_limit`, `working_dir`, `user`, `read_only`, `platform: linux/arm64`, `restart: "no"`, `init` and explicit label maps. |
 
-The adapter rejects unsupported settings with their property path before mutating engine resources. Examples include `restart: always`, `deploy`, `profiles`, `secrets`, `configs`, privileged mode, network aliases, multiple networks, completed-job dependencies, YAML anchors/aliases/merge keys, duplicate keys and multi-document YAML. This is a deliberately limited Compose adapter, not full Docker Compose compatibility.
+The adapter rejects unsupported settings with their property path before mutating engine resources. Examples include `restart: always`, `deploy`, `profiles`, `secrets`, `configs`, privileged mode, static-IP network settings, completed-job dependencies, YAML anchors/aliases/merge keys, duplicate keys and multi-document YAML. This is a deliberately limited Compose adapter, not full Docker Compose compatibility.
 
 Each project has a persistent UUID and owns only resources carrying its label. Existing same-named foreign resources are refused. A changed service configuration is also refused: review, remove the old project containers, then create again. **Stop Project** and **Remove Project Containers** remain usable if the source YAML becomes invalid. Removal affects the reviewed project containers and their writable layers; named volumes, networks and images remain. Remove unused resources separately from their management pages after reviewing references.
 
-Service names resolve through per-service read-only `/etc/hosts` files managed by the app, populated only with running peers on the same network. `/etc/hosts` is reserved. Project start refreshes addresses; after restarting services through another tool or the ordinary container restart action, run **Create & Start** again to refresh peers. This is not a continuously running DNS service and does not change Mac DNS. Applications that require dynamic DNS updates or custom host-file contents need another setup.
+Service names resolve through per-service read-only `/etc/hosts` files managed by the app, populated only with running peers on a shared network. Network aliases are scoped to that network; duplicate aliases across services on the same network are rejected. `/etc/hosts` is reserved. Project start refreshes addresses; after restarting services through another tool or the ordinary container restart action, run **Create & Start** again to refresh peers. This is not a continuously running DNS service and does not change Mac DNS. Applications that require dynamic DNS updates or custom host-file contents need another setup.
 
 Startup failure/cancellation leaves already-created resources for inspection; it does not roll back data. There is no continuous restart supervisor, scaling or automatic source-file watch. Import only projects whose images, commands, build context and mounts you intend to run.
 

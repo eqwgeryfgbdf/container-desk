@@ -34,18 +34,20 @@ struct ComposeProjectRecord:Codable,Identifiable,Equatable {
 enum ComposeHosts {
     static func update(_ plan:ComposePlan,rows:[[String:Any]])throws {
         for service in plan.services {
-            guard let networkIndex=service.createArguments.firstIndex(of:"--network") else{throw DeskError.message("composeStepFailed")}
-            let network=service.createArguments[networkIndex+1]
-            var text="127.0.0.1 localhost\n::1 localhost ip6-localhost\n"
-            for peer in plan.services {
-                guard let row=rows.first(where:{($0["id"] as? String ?? ($0["configuration"] as? [String:Any])?["id"] as? String)==peer.container}),
-                      let config=row["configuration"] as? [String:Any],(config["labels"] as? [String:String])?[ComposePlan.ownerLabel]==plan.projectID,
-                      let status=row["status"] as? [String:Any],status["state"] as? String=="running",let attachments=status["networks"] as? [[String:Any]],
-                      let attachment=attachments.first(where:{$0["network"] as? String==network}),let cidr=attachment["ipv4Address"] as? String else{continue}
-                guard let first=cidr.split(separator:"/").first else{throw DeskError.message("composeStepFailed")}
-                let ip=String(first);var address=in_addr()
-                guard inet_pton(AF_INET,ip,&address)==1 else{throw DeskError.message("composeStepFailed")}
-                text+="\(ip) \(peer.name) \(peer.container)\n"
+            let networks=service.createArguments.indices.filter{service.createArguments[$0]=="--network"}.map{service.createArguments[$0+1]}
+            var text="127.0.0.1 localhost\n::1 localhost ip6-localhost\n",claimed=Set<String>()
+            for network in networks {
+                for peer in plan.services where peer.networkAliases[network] != nil {
+                    guard let row=rows.first(where:{($0["id"] as? String ?? ($0["configuration"] as? [String:Any])?["id"] as? String)==peer.container}),
+                          let config=row["configuration"] as? [String:Any],(config["labels"] as? [String:String])?[ComposePlan.ownerLabel]==plan.projectID,
+                          let status=row["status"] as? [String:Any],status["state"] as? String=="running",let attachments=status["networks"] as? [[String:Any]],
+                          let attachment=attachments.first(where:{$0["network"] as? String==network}),let cidr=attachment["ipv4Address"] as? String else{continue}
+                    guard let first=cidr.split(separator:"/").first else{throw DeskError.message("composeStepFailed")}
+                    let ip=String(first);var address=in_addr()
+                    guard inet_pton(AF_INET,ip,&address)==1 else{throw DeskError.message("composeStepFailed")}
+                    let names=([peer.name,peer.container]+(peer.networkAliases[network] ?? [])).filter{claimed.insert($0.lowercased()).inserted}
+                    if !names.isEmpty{text+="\(ip) \(names.joined(separator:" "))\n"}
+                }
             }
             let parent=service.hostsFile.deletingLastPathComponent()
             try FileManager.default.createDirectory(at:parent,withIntermediateDirectories:true,attributes:[.posixPermissions:0o700])

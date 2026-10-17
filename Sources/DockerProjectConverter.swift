@@ -14,11 +14,20 @@ struct DockerMigrationResult {
     let yaml:String
     let notices:[DockerMigrationNotice]
     let services:Int
+    var resolution:DockerComposeResolution?=nil
     var canImport:Bool{!notices.contains(where:{$0.blocking})}
 
     /// Write only beside the original so .env, env_file, build and bind paths
     /// retain their meaning. Exclusive creation never replaces an existing file.
     func save()throws->URL {
+        guard resolution==nil else{throw DeskError.message("dockerSourceChanged")}
+        return try write()
+    }
+    @MainActor func saveVerified()async throws->URL {
+        if let resolution{try await resolution.verify()}
+        return try write()
+    }
+    private func write()throws->URL {
         guard canImport else{throw DeskError.message("dockerConversionBlocked")}
         guard try Data(contentsOf:source)==original else{throw DeskError.message("dockerSourceChanged")}
         let destination=source.deletingLastPathComponent().appendingPathComponent("compose.container-desk-"+UUID().uuidString.lowercased().prefix(8)+".yaml")
@@ -55,7 +64,7 @@ enum DockerProjectConverter {
         guard var mapping=node.mapping else{return}
         mapping[key]=nil;node = .mapping(mapping)
     }
-    static func analyze(_ selection:URL,allowManualRestart:Bool=false)throws->DockerMigrationResult {
+    static func analyze(_ selection:URL,allowManualRestart:Bool=false,resolution:DockerComposeResolution?=nil)throws->DockerMigrationResult {
         let source=try source(in:selection)
         let original=try Data(contentsOf:source,options:.mappedIfSafe)
         guard original.count<=512*1024,let content=String(data:original,encoding:.utf8) else{throw DeskError.message("dockerSourceSize")}
@@ -71,20 +80,28 @@ enum DockerProjectConverter {
                 note("Dockerfile.FROM","dockerArchitectureBlocked",true)
             }
         } else {
-            document=try ComposePlanner.parseDocument(original)
-            for name in overrides where composeNames.contains(source.lastPathComponent) && FileManager.default.fileExists(atPath:source.deletingLastPathComponent().appendingPathComponent(name).path) && source.lastPathComponent != name {
+            document=try ComposePlanner.parseDocument(resolution?.data ?? original)
+            for name in overrides where resolution==nil && composeNames.contains(source.lastPathComponent) && FileManager.default.fileExists(atPath:source.deletingLastPathComponent().appendingPathComponent(name).path) && source.lastPathComponent != name {
                 note(name,"dockerOverridesBlocked",true)
             }
             if document["version"] != nil {remove("version",from:&document);note("version","dockerVersionRemoved")}
         }
+        if resolution != nil {
+            document["x-container-desk-resolved"]=Node("true",Tag(.bool))
+            // Compose has already applied these extension templates.
+            for pair in document.mapping ?? [:] {
+                if let key=pair.key.string,key.hasPrefix("x-"),key != "x-container-desk-resolved"{remove(key,from:&document)}
+            }
+            note("project","dockerComposeResolved")
+        }
         // Scan all unsupported property names so users get a useful report,
         // while the normal planner remains the final validator of values.
-        let rootKeys:Set<String>=["name","services","volumes","networks"]
+        let rootKeys:Set<String>=["name","services","volumes","networks","x-container-desk-resolved"]
         for pair in document.mapping ?? [:] {
             if let key=pair.key.string,!rootKeys.contains(key){note(key,"dockerUnsupported",true)}
         }
         var services=document["services"]
-        let serviceKeys:Set<String>=["image","build","command","entrypoint","environment","env_file","ports","volumes","networks","depends_on","healthcheck","cpus","mem_limit","working_dir","user","read_only","platform","restart","container_name","expose"]
+        let serviceKeys:Set<String>=["image","build","command","entrypoint","environment","env_file","ports","volumes","networks","depends_on","healthcheck","cpus","mem_limit","working_dir","user","read_only","platform","restart","container_name","expose","init","labels"]
         for pair in services?.mapping ?? [:] {
             guard let name=pair.key.string else{continue}
             let path="services."+name
@@ -119,10 +136,35 @@ enum DockerProjectConverter {
                     note(path+".env_file","dockerEnvFileShort");return pathNode
                 })
             }
+            if resolution != nil {
+                for key in ["command","entrypoint"] where service[key]?.null != nil{remove(key,from:&service)}
+                if var dependencies=service["depends_on"] {
+                    for item in dependencies.mapping ?? [:] {
+                        guard let key=item.key.string else{continue};var options=item.value
+                        if options["required"]?.bool==true{remove("required",from:&options)}
+                        if options["restart"]?.bool==false{remove("restart",from:&options)}
+                        dependencies[key]=options
+                    }
+                    service["depends_on"]=dependencies
+                }
+                if let mounts=service["volumes"]?.sequence {
+                    service["volumes"]=Node(mounts.map {item in
+                        var item=item
+                        if item["volume"]?.mapping?.isEmpty==true{remove("volume",from:&item)}
+                        if let bind=item["bind"],bind.mapping?.count==1,bind["create_host_path"]?.bool==true,
+                           let source=item["source"]?.scalar?.string,FileManager.default.fileExists(atPath:source) {
+                            remove("bind",from:&item)
+                        }
+                        return item
+                    })
+                }
+            }
             if let ports=service["ports"]?.sequence {
                 if !ports.isEmpty {note(path+".ports","dockerLoopback")}
                 service["ports"]=Node(ports.enumerated().map {index,node in
                     let portPath=path+".ports[\(index)]"
+                    var node=node
+                    if resolution != nil,node["mode"]?.scalar?.string=="ingress"{remove("mode",from:&node)}
                     var text=node.scalar?.string
                     if let fields=node.mapping {
                         let allowed:Set<String>=["target","published","protocol","host_ip"]
@@ -154,10 +196,15 @@ enum DockerProjectConverter {
             guard var resources=document[kind],let definitions=resources.mapping else{continue}
             for pair in definitions {
                 guard let name=pair.key.string else{continue};var options=pair.value
+                if resolution != nil,options["external"]?.bool != true,options["name"] != nil {
+                    remove("name",from:&options);note(kind+"."+name,"dockerResourceNames")
+                }
+                if resolution != nil,kind=="networks",options["ipam"]?.mapping?.isEmpty==true{remove("ipam",from:&options)}
                 let expected=kind=="networks" ? "bridge":"local"
                 if options["driver"]?.scalar?.string==expected,options["driver_opts"]==nil,options["external"]?.bool != true {
-                    remove("driver",from:&options);resources[name]=options;note(kind+"."+name+".driver","dockerDefaultDriver")
+                    remove("driver",from:&options);note(kind+"."+name+".driver","dockerDefaultDriver")
                 }
+                resources[name]=options
             }
             document[kind]=resources
             if kind=="volumes",!definitions.isEmpty{note("volumes","dockerVolumeData")}
@@ -167,7 +214,7 @@ enum DockerProjectConverter {
         catch let issue as ComposeIssue {note(issue.path,issue.reason,true)}
         catch {note("document",error.localizedDescription,true)}
         if (services?.mapping?.contains(where:{$0.value["image"] != nil}) ?? false){note("images","dockerImageStore")}
-        note("project","dockerRuntimeCheck")
-        return DockerMigrationResult(source:source,original:original,yaml:yaml,notices:notices,services:services?.mapping?.count ?? 0)
+        note("project",resolution==nil ? "dockerRuntimeCheck":"dockerResolvedRuntimeCheck")
+        return DockerMigrationResult(source:source,original:original,yaml:yaml,notices:notices,services:services?.mapping?.count ?? 0,resolution:resolution)
     }
 }

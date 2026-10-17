@@ -1,4 +1,5 @@
 import Foundation
+import Yams
 import Darwin
 
 final class PlatformLiveTests:PlatformTestCase {
@@ -10,11 +11,12 @@ final class PlatformLiveTests:PlatformTestCase {
         while s.refreshing {try await Task.sleep(for:.milliseconds(100))}
         await s.refresh()
     }
-    @MainActor func testLiveComposeAndFiles(converted:Bool=false)async throws {
+    @MainActor func testLiveComposeAndFiles(converted:Bool=false,resolved:Bool=false)async throws {
         guard ProcessInfo.processInfo.environment["CONTAINERDESK_LIVE_PLATFORM_TESTS"]=="1" else{print("SKIP: live engine tests require --run");return}
         let s=Store();await s.start();let cli=try XCTUnwrap(s.cli);try XCTAssertTrue(s.connected)
         let baseline=Dictionary(uniqueKeysWithValues:s.containers.map{($0.id,$0.state)})
         let image=try XCTUnwrap(s.images.first{$0.id.contains("python") && $0.detail.contains("arm64")})
+        if resolved {s.prepareDeployment(try DeploymentSource.image(image.id));try await wait(s);print("LIVE: quick-deploy image preparation verified without starting a container")}
         let dir=FileManager.default.temporaryDirectory.appendingPathComponent("cd-live-"+UUID().uuidString)
         try FileManager.default.createDirectory(at:dir,withIntermediateDirectories:true)
         defer{try? FileManager.default.removeItem(at:dir)}
@@ -48,9 +50,19 @@ final class PlatformLiveTests:PlatformTestCase {
                 .replacingOccurrences(of:"volumes: {data: {}}",with:"volumes: {data: {driver: local}}\nnetworks: {default: {driver: bridge}}")
             try original.write(to:file,atomically:true,encoding:.utf8)
             try XCTAssertFalse(try DockerProjectConverter.analyze(file).canImport)
-            let conversion=try DockerProjectConverter.analyze(file,allowManualRestart:true)
+            var resolution:DockerComposeResolution?
+            if resolved {
+                try """
+                services:
+                  web: {networks: {front: {aliases: [client]}, back: {}}}
+                  db: {networks: {back: {aliases: [database]}}}
+                networks: {front: {}, back: {}}
+                """.write(to:dir.appendingPathComponent("compose.override.yaml"),atomically:true,encoding:.utf8)
+                resolution=try await DockerComposeResolver.resolve([file])
+            }
+            let conversion=try DockerProjectConverter.analyze(file,allowManualRestart:true,resolution:resolution)
             try XCTAssertTrue(conversion.canImport)
-            let migrated=try conversion.save()
+            let migrated=try await conversion.saveVerified()
             try XCTAssertEqual(try String(contentsOf:file,encoding:.utf8),original)
             file=migrated
             print("LIVE: Docker configuration converted to separate validated Compose file; original preserved")
@@ -74,6 +86,11 @@ final class PlatformLiveTests:PlatformTestCase {
             let web=try XCTUnwrap(plan.services.first{$0.name=="web"}),db=try XCTUnwrap(plan.services.first{$0.name=="db"})
             let dns=try await command(["exec","--",web.container,"python3","-c","import urllib.request; print(urllib.request.urlopen('http://db:8000').status)"])
             try XCTAssertEqual(dns.text.trimmingCharacters(in:.whitespacesAndNewlines),"200","Service DNS/search-domain compatibility")
+            if resolved {
+                let alias=try await command(["exec","--",web.container,"python3","-c","import urllib.request; print(urllib.request.urlopen('http://database:8000').status)"])
+                try XCTAssertEqual(alias.text.trimmingCharacters(in:.whitespacesAndNewlines),"200","Network alias across multi-network service")
+                print("LIVE: official override resolution, multi-network attachment and database alias request passed")
+            }
             let local=dir.appendingPathComponent("quote ' file.txt")
             try Data([0,1,2,3,255,10]).write(to:local)
             s.transferFile(db.container,local:local,remote:"/data/quote ' file.txt",upload:true);try await wait(s)
@@ -106,8 +123,11 @@ final class PlatformLiveTests:PlatformTestCase {
             try XCTAssertTrue(retained.contains{$0.id==plan.volumes[0].name})
             s.composeUp(plan);try await wait(s)
             _=try await command(["exec","--",db.container,"test","-f","/data/persistent"])
-            let modified=try String(contentsOf:file,encoding:.utf8).replacingOccurrences(of:"256M",with:"300M")
-            try modified.write(to:file,atomically:true,encoding:.utf8)
+            var modified=try ComposePlanner.parseDocument(Data(contentsOf:file))
+            var modifiedServices=modified["services"]!
+            for service in plan.services {var node=modifiedServices[service.name]!;node["mem_limit"]=Node("300M");modifiedServices[service.name]=node}
+            modified["services"]=modifiedServices
+            try Yams.serialize(node:modified).write(to:file,atomically:true,encoding:.utf8)
             s.composeUp(try ComposePlanner(file:file,projectID:project,volumeGiB:1).plan());try await wait(s,expected:"composeConfigurationChanged")
             try await cleanup()
             let after=try ContainerItem.parse((try await command(["list","--all","--format","json"])).data)

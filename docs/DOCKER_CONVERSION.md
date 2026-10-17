@@ -6,11 +6,14 @@ Current source and local development build only; the existing `v0.1.2-preview` d
 
 1. Open **Compose Projects → Convert Docker Project…**.
 2. Choose a project folder, Compose YAML file or `Dockerfile` / `Dockerfile.*`. A folder must contain one canonical Compose file (`compose.yaml`, `compose.yml`, `docker-compose.yaml`, `docker-compose.yml`) or a `Dockerfile`. If multiple Compose files exist, choose one explicitly.
-3. Review each compatibility message and the generated YAML. Unsupported requirements block import. Automatic restart policies block by default; the optional manual-start/stop checkbox explicitly accepts losing crash recovery and automatic startup.
-4. Check the review box, then **Save & Import**. A uniquely named `compose.container-desk-<id>.yaml` is created beside the source with mode `0600`. Original files remain unchanged; a changed source is refused until reviewed again. Adjacent `.env`, `env_file`, build and bind paths retain their location. The new YAML can contain original environment values: review it before sharing or committing it.
-5. Review the normal Compose preview and use **Create & Start** when ready. Import alone does not pull/build images, start containers, contact Docker or copy data.
+3. Leave **Resolve with installed Docker Compose** enabled to use the official CLI for YAML templates/anchors, `.env`, `env_file` and override merging. A single adjacent default override is selected automatically; use **Add Override File…** to specify explicit overrides in order. A missing CLI shows an actionable error; turning this option off uses the limited standalone parser. Host shell variables and ambient `COMPOSE_*` settings are not inherited. Missing-variable warnings block conversion instead of silently substituting blank values.
+4. Review each compatibility message and the generated YAML. Unsupported requirements block import. Automatic restart policies block by default; the optional manual-start/stop checkbox explicitly accepts losing crash recovery and automatic startup.
+5. Check the review box, then **Save & Import**. A uniquely named `compose.container-desk-<id>.yaml` is created beside the source with mode `0600`. Original files remain unchanged; a changed source is refused until reviewed again. Adjacent `.env`, `env_file`, build and bind paths retain their location. The new YAML can contain original environment values: review it before sharing or committing it.
+6. Review the normal Compose preview and use **Create & Start** when ready. Import alone does not pull/build images, start containers, contact Docker or copy data.
 
-Folder scanning is deliberately shallow. For a canonical Compose file with an adjacent default override, conversion is blocked. Export and review a merged configuration separately (for example, select an explicitly named `compose.merged.yaml` beside the source so relative paths still work). This tool does not merge files, apply profiles, expand YAML anchors or run `docker compose config` automatically. Review any exported configuration for resolved secrets.
+Folder scanning is deliberately shallow. Multiple candidate base files require an explicit selection. Official resolution receives the selected file list and first file's project directory; it does not start Docker workloads. Save reruns resolution and refuses a changed result, including changes to overrides and environment files. The generated YAML contains resolved values marked by `x-container-desk-resolved: true`, so later `.env` edits or literal dollar signs cannot silently change its meaning. Reconvert to update the snapshot. This file can contain secrets and is created with mode `0600`.
+
+Without the official CLI, anchors/aliases, merge keys and adjacent default overrides remain blocked. The standalone path supports only the documented interpolation subset. This mode does not claim Docker's complete file-resolution behavior.
 
 ## Conversion scope
 
@@ -23,12 +26,13 @@ Folder scanning is deliberately shallow. For a canonical Compose file with an ad
 | `restart: always`, `unless-stopped`, `on-failure[:N]` | Block unless the user explicitly opts into manual start/stop, then set `restart: "no"`. |
 | Explicit long-form port mapping | Convert `target`, `published`, `protocol`, `host_ip` to supported short form. Published ports use `127.0.0.1`; LAN exposure is not preserved. Ranges, random host ports, IPv6 and other specific host addresses are rejected. |
 | `expose` | Remove valid port metadata without publishing a host port. |
-| Empty service network mappings | Convert to network-name lists; aliases and other per-network options are not discarded. |
+| Service networks and aliases | Up to 8 declared networks per service. Network-scoped aliases use managed host mappings; conflicting/reserved aliases and static-IP/network options are rejected. |
 | Required `env_file: {path, required: true}` entries | Convert to short paths. Optional/raw-format variants remain unsupported. |
 | Docker default network/volume drivers | Replace `bridge`/`local` declarations with Apple Container-managed resources. Driver options and custom drivers are rejected. This does not promise identical network or storage behavior. |
-| Missing `build.context` | Insert the source folder as the default context. |
+| Build settings | Local context/Dockerfile, explicit build args, multi-stage target, no-cache and pull. Missing context defaults to the source folder. |
+| `init`, labels | Forward init and explicit label maps; internal ownership labels are reserved. |
 
-Only the adjacent `.env` supplies interpolation; host shell variables are not inherited. Env files use the adapter's literal single-line syntax. Image availability, base-image architecture, successful build and application health still require runtime verification. A known `linux/amd64`/`linux/386` Dockerfile `FROM --platform=` is blocked, but static inspection cannot prove the architecture of every base image or executable.
+In official resolution mode, Docker Compose applies its env-file/interpolation rules using project files; host shell values are not inherited. In standalone mode, only adjacent `.env` and literal single-line env files are supported. Image availability, base-image architecture, successful build and application health still require runtime verification. A known `linux/amd64`/`linux/386` Dockerfile `FROM --platform=` is blocked, but static inspection cannot prove the architecture of every base image or executable.
 
 ## What needs separate migration
 
@@ -42,8 +46,15 @@ Only the adjacent `.env` supplies interpolation; host shell variables are not in
 ```sh
 bash scripts/test.sh
 bash scripts/test-platform.sh --convert-run
+bash scripts/test-platform.sh --resolved-run # installed Docker Compose; merged multi-network fixture
 ```
 
 The first command includes migration fixtures for explicit restart consent, preserved input/env/bind paths, private unique output, source-change refusal and unsupported settings. The live command needs an existing arm64 Python image and Apple Container 1.5.0. It converts a disposable two-service Docker-style configuration, then checks dependency/health startup, service-name access, mounted binary/directory transfer, volume retention, cleanup and original container-state preservation. Run on a suitable test host, sequentially with other live suites. This fixture does not certify arbitrary third-party Docker projects.
 
 Official references: [Apple Container](https://github.com/apple/container) and the [Docker Compose service specification](https://docs.docker.com/reference/compose-file/services/).
+
+## Quick deployment from Docker Hub
+
+Open **Images → Quick Deploy…** and paste a Docker Hub repository link (for example `https://hub.docker.com/_/nginx`) or an OCI registry reference. Choose a tag when the reference does not already include one. **Download & Verify** uses the official Apple Container CLI, checks for an arm64 variant, and prepares **Configure Container…**. Review ports, environment and persistent storage against the image documentation. This does not start an image automatically or infer a complete application recipe. Cached local images are reused; private registries use saved CLI credentials. Arbitrary webpage URLs are rejected.
+
+This is an incremental deployment workflow. The full data-preserving migration target and remaining release gates are tracked in [migration acceptance](MIGRATION_ACCEPTANCE.md).

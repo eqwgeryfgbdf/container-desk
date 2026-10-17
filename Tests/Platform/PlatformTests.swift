@@ -1,7 +1,7 @@
 import Foundation
 
 final class PlatformTests:PlatformTestCase {
-    private func fixture(_ text:String)throws->URL {
+    func fixture(_ text:String)throws->URL {
         let dir=FileManager.default.temporaryDirectory.appendingPathComponent("cd-unit-"+UUID().uuidString)
         try FileManager.default.createDirectory(at:dir,withIntermediateDirectories:true)
         addTeardownBlock{try? FileManager.default.removeItem(at:dir)}
