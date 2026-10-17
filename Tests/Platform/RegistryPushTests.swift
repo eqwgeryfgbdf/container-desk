@@ -2,11 +2,11 @@ import Foundation
 import Darwin
 
 extension RegistryLiveTests {
-    @MainActor func testLoopbackPush()async throws {
+    @MainActor func testLoopbackPush(sourceOverride:String?=nil,expectedLayers:Int=0)async throws {
         let s=Store();await s.start();let cli=try XCTUnwrap(s.cli)
         let baseline=Dictionary(uniqueKeysWithValues:s.containers.map{($0.id,$0.state)})
         let registryImage="docker.io/library/registry:3",hadRegistry=s.images.contains{$0.id==registryImage}
-        let prefix="cd-qa-registry-"+UUID().uuidString.lowercased().prefix(8),source="docker.io/library/cd-qa-"+UUID().uuidString.lowercased().prefix(8)+":empty"
+        let prefix="cd-qa-registry-"+UUID().uuidString.lowercased().prefix(8),source=sourceOverride ?? "docker.io/library/cd-qa-"+UUID().uuidString.lowercased().prefix(8)+":empty"
         let directory=FileManager.default.temporaryDirectory.appendingPathComponent(prefix)
         try FileManager.default.createDirectory(at:directory,withIntermediateDirectories:true)
         defer{try? FileManager.default.removeItem(at:directory)}
@@ -24,7 +24,7 @@ extension RegistryLiveTests {
             let containers=try ContainerItem.parse((try await command(["list","--all","--format","json"])).data)
             if let c=containers.first(where:{$0.id==prefix}) {if c.running{_=try await command(["stop","--",prefix])};_=try await command(["delete","--",prefix])}
             let images=try ResourceItem.parseImages((try await command(["image","list","--format","json"])).data)
-            for name in [target,source]+(hadRegistry ? []:[registryImage]) where images.contains(where:{$0.id==name}) {
+            for name in [target]+(sourceOverride == nil ? [source]:[])+(hadRegistry ? []:[registryImage]) where images.contains(where:{$0.id==name}) {
                 let inventory=try await command(["image","list","--format","json"])
                 let fresh=try await command(["list","--all","--format","json"])
                 try ResourceSafety.validateDeletion(kind:.image,id:name,inventory:inventory.data,containers:fresh.data)
@@ -32,9 +32,11 @@ extension RegistryLiveTests {
             }
         }
         do {
+            if sourceOverride == nil {
             let fixture=URL(fileURLWithPath:#filePath).deletingLastPathComponent().deletingLastPathComponent().appendingPathComponent("Fixtures/empty-oci.py")
             _=try await ProcessRunner.checked("/usr/bin/python3",[fixture.path,archive.path,source])
             _=try await command(["image","load","--input",archive.path])
+            }
             if !hadRegistry {_=try await command(["image","pull","--arch","arm64","--progress","plain","--",registryImage])}
             _=try await command(["create","--name",prefix,"--cpus","1","--memory","256M","--publish","127.0.0.1:\(port):5000","--",registryImage])
             _=try await command(["start","--",prefix])
@@ -56,7 +58,7 @@ extension RegistryLiveTests {
                 let child=try await ProcessRunner.checked("/usr/bin/curl",["--silent","--fail","--max-time","5","-H","Accept: application/vnd.oci.image.manifest.v1+json","http://127.0.0.1:\(port)/v2/qa/image/manifests/"+digest])
                 manifest=try XCTUnwrap(JSONSerialization.jsonObject(with:child.data) as? [String:Any])
             }
-            try XCTAssertEqual((manifest["layers"] as? [Any])?.count,0)
+            try XCTAssertEqual((manifest["layers"] as? [Any])?.count,expectedLayers)
             try await cleanup()
             let after=try ContainerItem.parse((try await command(["list","--all","--format","json"])).data)
             try XCTAssertEqual(Dictionary(uniqueKeysWithValues:after.map{($0.id,$0.state)}),baseline)

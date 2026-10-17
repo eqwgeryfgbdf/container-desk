@@ -46,7 +46,10 @@ struct ComposeProjectsView:View {
                 }.frame(maxHeight:145)
                 Text(s.t("composeDiscoveryNote")).font(.caption).foregroundStyle(.secondary)
                 Text(s.t("composePreviewNote")).font(.caption).foregroundStyle(.secondary)
-            } else {ContentUnavailableView(s.t("composeImport"),systemImage:"square.stack.3d.up")}
+            } else {
+                ContentUnavailableView(s.t("composeImport"),systemImage:"square.stack.3d.up")
+                    .frame(maxWidth:.infinity,maxHeight:.infinity,alignment:.center)
+            }
             if record != nil {
                 HStack {
                     Button(s.t("composeUp")){action="up"}.buttonStyle(.borderedProminent).disabled(plan==nil || !s.canMutate || busy)
@@ -55,7 +58,7 @@ struct ComposeProjectsView:View {
                 }
             }
 
-        }.padding(28)
+        }.padding(28).frame(maxWidth:.infinity,maxHeight:.infinity,alignment:.topLeading)
         .sheet(isPresented:$converting,onDismiss:{if let url=converted{converted=nil;importProject(url)}}) {
             DockerMigrationView{converted=$0}.environmentObject(s)
         }

@@ -11,7 +11,6 @@ struct ResourceManagementView: View {
     @State private var submitted:ResourceRequest?
     @State private var deleting:String?
     @State private var quickDeploy=false
-    @State private var deploymentImage:String?
     @State private var createImage:String?
     @State private var pushSource:String?
     @State private var pushSubmission:(String,String,Bool)?
@@ -26,10 +25,9 @@ struct ResourceManagementView: View {
                 }
                 Spacer()
                 if kind == .image {
-                    Button(s.t("quickDeploy")){quickDeploy=true}.disabled(!s.canMutate)
+                    Button(s.t("deployUnified")){quickDeploy=true}.buttonStyle(.borderedProminent).disabled(!s.canMutate)
                     Button(s.t("build")){editor=ResourceRequest(operation:.build)}.disabled(!s.canMutate)
                     Button(s.t("load")){chooseImport()}.disabled(!s.canMutate)
-                    Button(s.t("pull")){editor=ResourceRequest(operation:.pull)}.buttonStyle(.borderedProminent).disabled(!s.canMutate)
                 } else {
                     Button(s.t("create")){editor=ResourceRequest(operation:kind == .network ? .createNetwork : .createVolume)}.buttonStyle(.borderedProminent).disabled(!s.canMutate)
                 }
@@ -54,8 +52,8 @@ struct ResourceManagementView: View {
             }
         }.padding(28)
         .task {await s.refreshResources()}
-        .sheet(isPresented:$quickDeploy,onDismiss:{if let image=deploymentImage{deploymentImage=nil;createImage=image}}) {
-            QuickDeployView{deploymentImage=$0}.environmentObject(s)
+        .sheet(isPresented:$quickDeploy) {
+            QuickDeployView().environmentObject(s)
         }
         .sheet(item:$editor,onDismiss:{if let request=submitted{submitted=nil;s.resourceOperation(request)}}) {request in
             ResourceEditor(request:request) {submitted=$0;editor=nil}.environmentObject(s)
@@ -203,6 +201,7 @@ struct ContainerUtilityActions:View {
     let item:ContainerItem
     var body:some View {
         Button(s.t("inspect")){s.inspection=InspectionTarget(kind:nil,name:item.id)}
+        Button(s.t("snapshotTitle")){s.snapshotSource=item.id}.disabled(!s.canMutate)
         Button(s.t("files")){s.fileContainer=item.id}.disabled(!item.running || !s.canMutate)
         Button(s.t("openTerminal")){Task{await s.openTerminal(item)}}.disabled(!item.running || !s.canMutate)
         Button(s.t("restart")){s.restartCandidate=item}.disabled(!item.running || !s.canMutate)

@@ -480,6 +480,101 @@ rows.update({'hubSearchAction': ('Search Docker Hub', '搜索 Docker Hub', '搜�
                           '无法连接 Docker Hub。请检查网络后重试，或直接输入映像名称。',
                           '無法連接 Docker Hub。請檢查網路後重試，或直接輸入映像檔名稱。')})
 rows.update({'hubSearchRetry': ('Retry', '重试', '重試')})
+rows.update({'deployUnified': ('Download & Deploy…', '下载与部署…', '下載與部署…'),
+ 'deployUnifiedIntro': ('Search for an image, choose its platform, then download only or continue to '
+                        'container configuration.',
+                        '搜索映像、选择平台后，可仅下载或继续配置容器。',
+                        '搜尋映像檔、選擇平台後，可只下載或繼續設定容器。'),
+ 'deployARMNative': ('ARM64 · Native on Apple Silicon',
+                     'ARM64 · Apple Silicon 原生',
+                     'ARM64 · Apple Silicon 原生'),
+ 'deployAMDTranslated': ('AMD64 · Rosetta translation', 'AMD64 · Rosetta 转译', 'AMD64 · Rosetta 轉譯'),
+ 'deployAvailablePlatforms': ('Available platforms', '可用平台', '可用平台'),
+ 'deployUnknownPlatforms': ('No platform metadata; verify on download', '无平台信息，下载时验证', '無平台資訊，下載時驗證'),
+ 'deployTargetArchitecture': ('Download architecture', '下载架构', '下載架構'),
+ 'deployNoCompatiblePlatform': ('This tag has no Linux ARM64 or AMD64 variant listed. Try another tag.',
+                                '此标签未列出 Linux ARM64 或 AMD64 版本，请尝试其他标签。',
+                                '此標籤未列出 Linux ARM64 或 AMD64 版本，請嘗試其他標籤。'),
+ 'deployArchitectureNote': ('ARM64 is preferred. Selecting another architecture downloads its published '
+                            'variant; it does not convert binaries. For a native ARM64 rebuild, use Build '
+                            'Image with the source project and Dockerfile.',
+                            '优先使用 ARM64。切换架构会下载发布者提供的对应版本，不会转换二进制程序。需要原生 ARM64 时，请通过“构建映像”选择源项目和 Dockerfile '
+                            '重新构建。',
+                            '優先使用 ARM64。切換架構會下載發布者提供的對應版本，不會轉換二進位程式。需要原生 ARM64 時，請透過「建置映像檔」選擇原始專案和 '
+                            'Dockerfile 重新建置。'),
+ 'deployRosettaReady': ('Rosetta is installed on this Mac.', '此 Mac 已安装 Rosetta。', '此 Mac 已安裝 Rosetta。'),
+ 'deployRosettaMissing': ('Rosetta is not installed. Download is available; install Rosetta before '
+                          'deployment.',
+                          '尚未安装 Rosetta。可以下载，部署前请先安装 Rosetta。',
+                          '尚未安裝 Rosetta。可以下載，部署前請先安裝 Rosetta。'),
+ 'deployRosettaUnsupported': ('Rosetta is unavailable on this Mac. Download is available; choose ARM64 for '
+                              'deployment.',
+                              '此 Mac 不支持 Rosetta。可以下载，部署请选用 ARM64。',
+                              '此 Mac 不支援 Rosetta。可以下載，部署請選用 ARM64。'),
+ 'deployRosettaNote': ('AMD64 runs through Rosetta on an ARM64 Linux VM. Compatibility and speed vary; this '
+                       'is not native ARM64 conversion.',
+                       'AMD64 通过 ARM64 Linux 虚拟机中的 Rosetta 运行。兼容性与速度因项目而异，不等同于转换为原生 ARM64。',
+                       'AMD64 透過 ARM64 Linux 虛擬機中的 Rosetta 執行。相容性與速度因專案而異，不等同於轉換為原生 ARM64。'),
+ 'deployDownloaded': ('Image downloaded and selected architecture verified.',
+                      '映像已下载，所选架构已验证。',
+                      '映像檔已下載，所選架構已驗證。'),
+ 'deployDownloadOnly': ('Download Only', '仅下载', '只下載'),
+ 'deployDownloadConfigure': ('Download & Configure', '下载并配置', '下載並設定'),
+ 'deployArchitectureMismatch': ('The selected Linux architecture is not available locally. Download the '
+                                'matching variant first.',
+                                '本地没有所选 Linux 架构，请先下载对应版本。',
+                                '本機沒有所選 Linux 架構，請先下載對應版本。'),
+ 'done': ('Done', '完成', '完成')})
+rows.update({'composeProjects': ('Projects', '项目', '專案'),
+ 'sidebarReorderHelp': ('Click and hold a navigation item, then drag to reorder.',
+                        '按住导航项目并拖动即可排序。',
+                        '按住導覽項目並拖曳即可排序。'),
+ 'sidebarMoveUp': ('Move Up', '上移', '上移'),
+ 'sidebarMoveDown': ('Move Down', '下移', '下移'),
+ 'sidebarReset': ('Restore Default Order', '恢复默认顺序', '還原預設順序'),
+ 'snapshotTitle': ('Save Container as Image…', '将容器保存为映像…', '將容器儲存為映像檔…'),
+ 'snapshotScope': ('Save the current root filesystem and startup command as a new image. Mounted folders and '
+                   'volumes, memory, network/port settings, restart policies and extra runtime privileges '
+                   'are not included.',
+                   '将当前根文件系统和启动命令保存为新映像。不包含挂载目录与卷、内存状态、网络与端口设置、重启策略或额外运行权限。',
+                   '將目前根檔案系統和啟動指令儲存為新映像檔。不包含掛載資料夾與儲存卷、記憶體狀態、網路與連接埠設定、重啟策略或額外執行權限。'),
+ 'snapshotImageName': ('New local image name:tag', '新的本地映像名称:标签', '新的本機映像檔名稱:標籤'),
+ 'snapshotIncludeEnvironment': ('Include environment variables', '包含环境变量', '包含環境變數'),
+ 'snapshotEnvironmentNote': ('Environment values may contain credentials. They are omitted by default; '
+                             'restore required variables when deploying.',
+                             '环境变量可能包含凭据，默认不保存；部署时请补回必需的变量。',
+                             '環境變數可能包含憑證，預設不儲存；部署時請補回必要的變數。'),
+ 'snapshotFilesAcknowledgement': ('I understand container files may contain private data or credentials.',
+                                  '我了解容器文件可能包含私人数据或凭据。',
+                                  '我了解容器檔案可能包含私人資料或憑證。'),
+ 'snapshotRunningAcknowledgement': ('Capture the running filesystem; application/database consistency is not '
+                                    'guaranteed.',
+                                    '对运行中的文件系统制作快照，不保证应用或数据库一致性。',
+                                    '對執行中的檔案系統製作快照，不保證應用程式或資料庫一致性。'),
+ 'snapshotWorking': ('Exporting and preparing the image…', '正在导出并制作映像…', '正在匯出並製作映像檔…'),
+ 'snapshotSave': ('Save Locally', '保存到本地', '儲存到本機'),
+ 'snapshotReady': ('Snapshot image saved locally.', '快照映像已保存到本地。', '快照映像檔已儲存到本機。'),
+ 'snapshotPushNote': ('Push sends all saved filesystem contents to the destination registry using saved CLI '
+                      'credentials. Review the image first. Repository visibility and permissions are '
+                      'managed by the registry.',
+                      '推送会使用已保存的 CLI 凭据，将快照文件系统发送到目标仓库。请先检查映像；仓库可见性及权限由 Registry 管理。',
+                      '推送會使用已儲存的 CLI 憑證，將快照檔案系統傳送到目標倉庫。請先檢查映像檔；倉庫可見性及權限由 Registry 管理。'),
+ 'snapshotUnsupported': ('This container state or startup configuration cannot be preserved safely.',
+                         '无法保留此容器状态或启动配置。',
+                         '無法保留此容器狀態或啟動設定。'),
+ 'snapshotEmpty': ('The exported filesystem is empty.', '导出的文件系统为空。', '匯出的檔案系統為空。'),
+ 'snapshotRunningRequired': ('Confirm the running-filesystem snapshot before continuing.',
+                             '请先确认运行中快照的限制。',
+                             '請先確認執行中快照的限制。'),
+ 'snapshotExportFailed': ('Filesystem export failed. Apple Container 1.5 or later is required.',
+                          '文件系统导出失败，需要 Apple Container 1.5 或更新版本。',
+                          '檔案系統匯出失敗，需要 Apple Container 1.5 或更新版本。'),
+ 'snapshotLoadFailed': ('The snapshot could not be imported. Check the local image list before retrying.',
+                        '快照导入失败，请在重试前检查本地映像列表。',
+                        '快照匯入失敗，請在重試前檢查本機映像檔清單。'),
+ 'snapshotChanged': ('The source container changed during export. Retry after it is stable.',
+                     '导出过程中源容器已改变，请待其稳定后重试。',
+                     '匯出過程中來源容器已改變，請待其穩定後重試。')})
 root=Path(__file__).resolve().parents[1]
 strings={k:{'localizations':{lang:{'stringUnit':{'state':'translated','value':value}} for lang,value in zip(['en','zh-Hans','zh-Hant'],values)}} for k,values in rows.items()}
 (root/'Resources/Localizable.xcstrings').write_text(json.dumps({'sourceLanguage':'en','strings':strings,'version':'1.0'},ensure_ascii=False,indent=2)+'\n')

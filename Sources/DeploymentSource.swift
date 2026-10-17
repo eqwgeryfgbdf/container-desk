@@ -1,4 +1,17 @@
 import Foundation
+import Virtualization
+
+enum DeploymentRuntime {
+    static var rosettaReady:Bool{VZLinuxRosettaDirectoryShare.availability == .installed}
+    static var rosettaStatus:String {
+        switch VZLinuxRosettaDirectoryShare.availability {
+        case .installed:return "deployRosettaReady"
+        case .notInstalled:return "deployRosettaMissing"
+        case .notSupported:return "deployRosettaUnsupported"
+        @unknown default:return "deployRosettaUnsupported"
+        }
+    }
+}
 
 /// Accept registry references and canonical Docker Hub repository links only.
 /// A web page URL is never passed directly to a shell or registry CLI.
@@ -38,18 +51,18 @@ enum DeploymentSource {
 }
 
 @MainActor extension Store {
-    func prepareDeployment(_ image:String) {
+    func prepareDeployment(_ image:String,architecture:String="arm64") {
         guard canMutate,let cli else{return}
             startOperation("quickDeploy",present:false) {
+                guard ["arm64","amd64"].contains(architecture) else{throw DeskError.message("invalidArchitecture")}
                 let existing=try await ProcessRunner.run(cli,["image","inspect","--",image])
-                if existing.code != 0 {
-                    let code=try await StreamingProcess.run(cli,["image","pull","--progress","plain","--arch","arm64","--",image]){self.operationOutput=$0}
+                let hasVariant=existing.code==0 ? try ImagePlatform.hasVariant(existing.data,architecture:architecture):false
+                if !hasVariant {
+                    let code=try await StreamingProcess.run(cli,["image","pull","--progress","plain","--platform","linux/"+architecture,"--",image]){self.operationOutput=$0}
                     guard code==0 else{return code}
                 }
                 let inspected=try await ProcessRunner.checked(cli,["image","inspect","--",image])
-                let rows=try ResourceSafety.rows(inspected.data)
-                let variants=rows.flatMap{$0["variants"] as? [[String:Any]] ?? []}
-                guard variants.contains(where:{let config=$0["config"] as? [String:Any] ?? [:];return config["architecture"] as? String=="arm64" && config["os"] as? String=="linux"}) else{throw DeskError.message("dockerArchitectureBlocked")}
+                guard try ImagePlatform.hasVariant(inspected.data,architecture:architecture) else{throw DeskError.message("deployArchitectureMismatch")}
                 await self.refreshImages()
                 guard self.images.contains(where:{$0.id==image}) else{throw DeskError.message("resourceDisappeared")}
                 return 0

@@ -275,3 +275,31 @@ enum LogSnapshot {
         return text.components(separatedBy:"\n").filter{$0.localizedCaseInsensitiveContains(query)}.joined(separator:"\n")
     }
 }
+
+struct DeploymentSelection:Equatable {
+    let image:String
+    let architecture:String
+    var createRequest:CreateRequest {
+        var request=CreateRequest();request.image=image;request.architecture=architecture
+        request.rosetta=architecture=="amd64";return request
+    }
+}
+
+enum ImagePlatform {
+    static func hasVariant(_ data:Data,architecture:String)throws->Bool {
+        guard let rows=try JSONSerialization.jsonObject(with:data) as? [[String:Any]] else{throw DeskError.message("resourcesUnavailable")}
+        return rows.flatMap{$0["variants"] as? [[String:Any]] ?? []}.contains {
+            let config=$0["config"] as? [String:Any] ?? [:]
+            return config["architecture"] as? String==architecture && config["os"] as? String=="linux"
+        }
+    }
+}
+
+/// Persist stable navigation IDs, never localized titles. Repair old/invalid preferences.
+enum SidebarOrder {
+    static let defaults=["overview","containers","images","networks","volumes","registries","composeProjects","core","settings"]
+    static func normalized(_ value:String)->[String] {
+        var seen=Set<String>()
+        return (value.split(separator:",").map(String.init)+defaults).filter{defaults.contains($0) && seen.insert($0).inserted}
+    }
+}

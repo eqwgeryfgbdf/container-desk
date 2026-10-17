@@ -10,11 +10,20 @@ struct HubRepository:Decodable,Identifiable {
     var reference:String {"docker.io/"+(repo_name.contains("/") ? repo_name : "library/"+repo_name)}
 }
 struct HubTag:Decodable,Identifiable {
-    struct Variant:Decodable {let architecture:String?;let os:String?}
+    struct Variant:Decodable {let architecture:String?;let os:String?;let variant:String?}
     let name:String
     let images:[Variant]?
     var id:String{name}
     var supportsARM:Bool{images?.contains{$0.architecture=="arm64" && $0.os=="linux"} == true}
+    var platforms:[String] {
+        Array(Set((images ?? []).compactMap { item -> String? in
+            guard let os=item.os,let arch=item.architecture,os != "unknown",arch != "unknown" else{return nil}
+            return os+"/"+arch+(item.variant.flatMap{$0.isEmpty ? nil:"/"+$0} ?? "")
+        })).sorted()
+    }
+    var deployableArchitectures:[String] {
+        ["arm64","amd64"].filter { arch in images?.contains{$0.os=="linux" && $0.architecture==arch} == true }
+    }
 }
 struct HubPage<Item:Decodable>:Decodable {
     let results:[Item]

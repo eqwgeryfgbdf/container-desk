@@ -8,9 +8,8 @@ struct CreateView:View {
     @State private var submitting=false
     @State private var validation:String?
     @State private var memoryText="512"
-    init(initialImage:String="") {
-        var draft=CreateRequest();draft.image=initialImage
-        _request=State(initialValue:draft)
+    init(initialImage:String="",initialArchitecture:String="arm64") {
+        _request=State(initialValue:DeploymentSelection(image:initialImage,architecture:initialArchitecture).createRequest)
     }
     private var maxCPUs:Int {max(1,s.host.logicalCores ?? ProcessInfo.processInfo.activeProcessorCount)}
     private var maxMemory:Int {max(200,Int(s.host.memory/1048576))}
@@ -60,6 +59,7 @@ struct CreateView:View {
                 Text(s.t("selectImage")).tag("")
                 ForEach(s.images){Text($0.id).tag($0.id)}
             }.pickerStyle(.menu).disabled(s.imagesLoading || s.images.isEmpty)
+            LabeledContent(s.t("architecture")){Text(s.t(request.architecture=="amd64" ? "deployAMDTranslated":"deployARMNative"))}
             HStack {
                 Text(s.t("localImagesOnly")).font(.caption).foregroundStyle(.secondary)
                 Spacer()

@@ -1,5 +1,6 @@
 import SwiftUI
 import AppKit
+import UniformTypeIdentifiers
 
 @main struct ContainerDeskApp: App {
     @StateObject private var store=Store()
@@ -54,19 +55,40 @@ struct MainView:View {
     @State private var expandedContainerID:String?
     @State private var columnVisibility:NavigationSplitViewVisibility = .all
     @State private var previousColumnVisibility:NavigationSplitViewVisibility = .all
-    private let sections=[("overview","chart.bar.xaxis"),("containers","shippingbox"),("images","square.stack.3d.up"),("networks","network"),("volumes","externaldrive"),("registries","server.rack"),("composeProjects","square.stack.3d.up.fill")]
+    @AppStorage("sidebarOrder") private var sidebarOrder=SidebarOrder.defaults.joined(separator:",")
+    private let icons=["overview":"chart.bar.xaxis","containers":"shippingbox","images":"square.stack.3d.up","networks":"network","volumes":"externaldrive","registries":"server.rack","composeProjects":"square.stack.3d.up.fill","core":"cpu","settings":"gearshape"]
+
     var body:some View {
         NavigationSplitView(columnVisibility:$columnVisibility) {
             VStack(alignment:.leading,spacing:0) {
                 HStack(spacing:10){Image(systemName:"shippingbox").font(.title2);Text("Container Desk").font(.headline)}.padding(.horizontal,18).padding(.top,16).padding(.bottom,22)
                 HStack(spacing:9){Image(systemName:s.host.icon).foregroundStyle(.secondary);VStack(alignment:.leading,spacing:3){Text(s.host.name).font(.subheadline).lineLimit(1);Label(s.t(s.connected ? "connected":"disconnected"),systemImage:s.connected ? "checkmark.circle.fill":"circle").font(.caption).foregroundStyle(s.connected ? Color.green:Color.secondary)}}.padding(.horizontal,18).padding(.bottom,18)
                 List(selection:$s.section) {
-                    Section(s.t("manage")) {
-                        ForEach(sections,id:\.0){ section in Label(s.t(section.0),systemImage:section.1).tag(section.0).padding(.vertical,3) }
-                    }
-                    Section(s.t("system")) {
-                        Label(s.t("core"),systemImage:"cpu").tag("core").padding(.vertical,3)
-                        Label(s.t("settings"),systemImage:"gearshape").tag("settings").padding(.vertical,3)
+                    ForEach(SidebarOrder.normalized(sidebarOrder),id:\.self) { id in
+                        Label(s.t(id),systemImage:icons[id] ?? "square").tag(id).padding(.vertical,3)
+                            .frame(maxWidth:.infinity,alignment:.leading).contentShape(Rectangle())
+                            .help(s.t("sidebarReorderHelp"))
+                            .onTapGesture {s.section=id}
+                            .onDrag {NSItemProvider(object:id as NSString)}
+                            .onDrop(of:[UTType.text.identifier],isTargeted:nil) { providers in
+                                guard let provider=providers.first,provider.canLoadObject(ofClass:NSString.self) else{return false}
+                                _=provider.loadObject(ofClass:NSString.self) { value,_ in
+                                    guard let moving=value as? String else{return}
+                                    Task { @MainActor in
+                                        var order=SidebarOrder.normalized(sidebarOrder)
+                                        guard let source=order.firstIndex(of:moving),let target=order.firstIndex(of:id),source != target else{return}
+                                        order.remove(at:source);order.insert(moving,at:target)
+                                        sidebarOrder=order.joined(separator:",")
+                                    }
+                                }
+                                return true
+                            }
+                            .contextMenu {
+                                Button(s.t("sidebarMoveUp")){moveSidebar(id,by:-1)}.disabled(SidebarOrder.normalized(sidebarOrder).first==id)
+                                Button(s.t("sidebarMoveDown")){moveSidebar(id,by:1)}.disabled(SidebarOrder.normalized(sidebarOrder).last==id)
+                                Divider()
+                                Button(s.t("sidebarReset")){sidebarOrder=SidebarOrder.defaults.joined(separator:",")}
+                            }
                     }
                 }.listStyle(.sidebar)
                 Divider().padding(.horizontal,16)
@@ -156,6 +178,13 @@ struct MainView:View {
         .sheet(isPresented:$create){CreateView().environmentObject(s)}
         .sheet(isPresented:$s.operationPresented){OperationProgressView().environmentObject(s)}
         .sheet(isPresented:Binding(get:{s.fileContainer != nil},set:{if !$0{s.fileContainer=nil}})){ContainerFilesView(containerID:s.fileContainer ?? "").environmentObject(s)}
+        .sheet(isPresented:Binding(get:{s.snapshotSource != nil},set:{if !$0{s.snapshotSource=nil}}),onDismiss:{
+            if let (source,target,http)=s.pendingSnapshotPush{s.pendingSnapshotPush=nil;s.pushImage(source:source,target:target,localHTTP:http)}
+        }) {
+            ContainerSnapshotView(containerID:s.snapshotSource ?? "") { source,target,http in
+                s.pendingSnapshotPush=(source,target,http);s.snapshotSource=nil
+            }.environmentObject(s)
+        }
         .sheet(item:$s.inspection){InspectionView(target:$0).environmentObject(s)}
         .confirmationDialog(s.t("restartConfirm"),isPresented:Binding(get:{s.restartCandidate != nil},set:{if !$0{s.restartCandidate=nil}}),titleVisibility:.visible) {
             Button(s.t("restart"),role:.destructive){if let item=s.restartCandidate{Task{await s.action("restart",item)}};s.restartCandidate=nil}
@@ -165,6 +194,11 @@ struct MainView:View {
             if let c=pending {Button(s.t(verb),role:.destructive){Task{await s.action(verb,c)};pending=nil}}
             Button(s.t("cancel"),role:.cancel){pending=nil}
         } message:{Text((pending?.id ?? "")+"\n"+s.t(verb=="delete" ? "deleteImpact":"stopImpact"))}
+    }
+    private func moveSidebar(_ id:String,by delta:Int) {
+        var order=SidebarOrder.normalized(sidebarOrder)
+        guard let index=order.firstIndex(of:id),order.indices.contains(index+delta) else{return}
+        order.swapAt(index,index+delta);sidebarOrder=order.joined(separator:",")
     }
     func trimSelection() {selectedIDs.formIntersection(Set(s.filtered.map(\.id)))}
     func reviewBatch(_ verb:BatchVerb,_ ids:Set<String>) {

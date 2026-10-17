@@ -8,6 +8,7 @@ struct HubSearchView:View {
     @State private var selected:HubRepository?
     @State private var tags:[HubTag]=[]
     @State private var tag=""
+    @State private var architecture="arm64"
     @State private var page=1
     @State private var tagPage=1
     @State private var more=false
@@ -16,7 +17,12 @@ struct HubSearchView:View {
     @State private var failure:String?
     @State private var task:Task<Void,Never>?
     @State private var generation=UUID()
-    let choose:(String)->Void
+    let choose:(DeploymentSelection)->Void
+    private var selectedTag:HubTag?{tags.first{$0.name==tag}}
+    private var choices:[String] {
+        guard let item=selectedTag,!item.platforms.isEmpty else{return ["arm64","amd64"]}
+        return item.deployableArchitectures
+    }
 
     var body:some View {
         VStack(alignment:.leading,spacing:12) {
@@ -36,20 +42,34 @@ struct HubSearchView:View {
                     Picker(s.t("hubSearchVersions"),selection:$tag) {
                         Text(s.t("hubSearchChooseVersion")).tag("")
                         if !tag.isEmpty,!tags.contains(where:{$0.name==tag}){Text(tag).tag(tag)}
-                        ForEach(tags){item in Text(item.name+(item.supportsARM ? " · Linux ARM64" : " · "+s.t("hubSearchARMUnknown"))).tag(item.name)}
+                        ForEach(tags){item in Text(item.name+" · "+(item.platforms.isEmpty ? s.t("hubSearchARMUnknown"):item.platforms.joined(separator:", "))).tag(item.name)}
                     }
                 }
                 HStack {
                     TextField(s.t("hubSearchCustomTag"),text:$tag).textFieldStyle(.roundedBorder)
                     if moreTags{Button(s.t("hubSearchMoreVersions")){loadTags(selected,next:true)}.disabled(busy)}
                 }
-                Text(s.t("hubSearchVerifyNote")).font(.caption).foregroundStyle(.secondary)
-                if let item=tags.first(where:{$0.name==tag}),!item.supportsARM {
-                    Label(s.t("hubSearchARMWarning"),systemImage:"exclamationmark.triangle").foregroundStyle(.orange).font(.callout)
+                if let item=selectedTag {
+                    LabeledContent(s.t("deployAvailablePlatforms")) {
+                        Text(item.platforms.isEmpty ? s.t("deployUnknownPlatforms"):item.platforms.joined(separator:", "))
+                            .font(.caption).textSelection(.enabled).fixedSize(horizontal:false,vertical:true)
+                    }
+                }
+                if !choices.isEmpty {
+                    Picker(s.t("deployTargetArchitecture"),selection:$architecture) {
+                        ForEach(choices,id:\.self){arch in Text(s.t(arch=="arm64" ? "deployARMNative":"deployAMDTranslated")).tag(arch)}
+                    }.pickerStyle(.menu)
+                } else {
+                    Label(s.t("deployNoCompatiblePlatform"),systemImage:"exclamationmark.triangle").foregroundStyle(.orange)
+                }
+                Text(s.t("deployArchitectureNote")).font(.caption).foregroundStyle(.secondary)
+                if architecture=="amd64",!choices.isEmpty {
+                    Text(s.t(DeploymentRuntime.rosettaStatus)).font(.callout)
+                    Text(s.t("deployRosettaNote")).font(.caption).foregroundStyle(.secondary)
                 }
                 Button(s.t("hubSearchUse")) {
-                    do{choose(try DeploymentSource.image(selected.reference,tag:tag))}catch{failure=error.localizedDescription}
-                }.buttonStyle(.borderedProminent).disabled(tag.isEmpty || busy || tags.contains(where:{$0.name==tag && !$0.supportsARM}))
+                    do{choose(DeploymentSelection(image:try DeploymentSource.image(selected.reference,tag:tag),architecture:architecture))}catch{failure=error.localizedDescription}
+                }.buttonStyle(.borderedProminent).disabled(tag.isEmpty || busy || !choices.contains(architecture))
                 Spacer(minLength:0)
             } else {
                 ScrollView {
@@ -83,6 +103,7 @@ struct HubSearchView:View {
             }
         }
         .onChange(of:query){_,_ in cancel();selected=nil;results=[];searched="";more=false;failure=nil}
+        .onChange(of:tag){_,_ in architecture=choices.first ?? "arm64"}
         .onDisappear{cancel()}
     }
     private func cancel(){task?.cancel();generation=UUID();busy=false}
@@ -110,7 +131,7 @@ struct HubSearchView:View {
                 guard !Task.isCancelled,generation==id else{return}
                 var seen=Set(tags.map(\.id));tags+=response.results.filter{seen.insert($0.id).inserted}
                 tagPage=p;moreTags=response.hasNext;busy=false
-                if tag.isEmpty{tag=tags.first(where:{$0.name=="latest" && $0.supportsARM})?.name ?? tags.first(where:{$0.supportsARM})?.name ?? ""}
+                if tag.isEmpty{tag=tags.first(where:{$0.name=="latest" && $0.supportsARM})?.name ?? tags.first(where:{$0.supportsARM})?.name ?? tags.first(where:{!$0.deployableArchitectures.isEmpty})?.name ?? tags.first?.name ?? ""}
             } catch{guard !Task.isCancelled,generation==id else{return};busy=false;failure=message(error)}
         }
     }
