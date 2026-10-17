@@ -19,13 +19,37 @@ extension Store {
         } catch { self.error=t(error.localizedDescription) }
     }
     func deleteResource(_ kind:ResourceKind, id:String) {
-        guard canMutate, let cli else { return }
-        startOperation("delete") {
-            let inventory = try await ProcessRunner.checked(cli,[kind.rawValue,"list","--format","json"])
-            let containers = try await ProcessRunner.checked(cli,["list","--all","--format","json"])
-            try Task.checkCancellation()
-            try ResourceSafety.validateDeletion(kind:kind,id:id,inventory:inventory.data,containers:containers.data)
-            return try await StreamingProcess.run(cli,[kind.rawValue,"delete","--",id]) {self.operationOutput=$0}
+        deleteResources(ResourceBatchDeletion(kind:kind,ids:[id]))
+    }
+    func deleteResources(_ request:ResourceBatchDeletion) {
+        guard canMutate,let cli,!request.ids.isEmpty else{return}
+        startOperation("deleteSelected") {
+            var report="",failed=0
+            for (index,id) in request.ids.enumerated() {
+                let heading="[\(index+1)/\(request.ids.count)] \(id)\n"
+                do {
+                    try Task.checkCancellation()
+                    let inventory=try await ProcessRunner.checked(cli,[request.kind.rawValue,"list","--format","json"])
+                    let containers=try await ProcessRunner.checked(cli,["list","--all","--format","json"])
+                    try ResourceSafety.validateDeletion(kind:request.kind,id:id,inventory:inventory.data,containers:containers.data)
+                    try Task.checkCancellation()
+                    let code=try await StreamingProcess.run(cli,[request.kind.rawValue,"delete","--",id]) {self.operationOutput=report+heading+$0}
+                    guard code==0 else{throw DeskError.message("operationFailed")}
+                    let after=try await ProcessRunner.checked(cli,[request.kind.rawValue,"list","--format","json"])
+                    let remaining=try request.kind == .image ? ResourceItem.parseImages(after.data):ResourceItem.parseResources(after.data)
+                    guard !remaining.contains(where:{$0.id==id}) else{throw DeskError.message("batchUnconfirmed")}
+                    report+=heading+self.t("operationComplete")+"\n\n"
+                } catch is CancellationError {
+                    self.operationOutput=report+heading+self.t("batchCancelledNote")+"\n"+request.ids[index...].joined(separator:", ")
+                    throw CancellationError()
+                } catch {
+                    failed+=1
+                    report+=heading+self.t("operationFailed")+": "+self.t(error.localizedDescription)+"\n\n"
+                }
+                report=String(report.suffix(60000));self.operationOutput=report
+            }
+            self.operationOutput=report+self.t("batchSummary")+": \(request.ids.count-failed)/\(request.ids.count)\n"
+            return failed==0 ? 0:1
         }
     }
     func openTerminal(_ item:ContainerItem) async {

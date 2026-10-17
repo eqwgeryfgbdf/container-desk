@@ -238,18 +238,17 @@ struct MainView:View {
                     HStack(spacing:18){TextField(s.t("searchContainers"),text:$s.query).textFieldStyle(.roundedBorder).frame(maxWidth:280)
                         Picker(s.t("filter"),selection:$s.filter){Text(s.t("all")).tag("all");Text(s.t("running")).tag("running");Text(s.t("stopped")).tag("stopped")}.pickerStyle(.segmented).labelsHidden().frame(maxWidth:260)
                     }.padding(.horizontal,20).padding(.bottom,16)
-                    if !selectedIDs.isEmpty {
-                        HStack {
-                            Text(s.t("selectedCount")+": \(selectedIDs.count)").font(.caption).foregroundStyle(.secondary)
-                            Spacer()
-                            Menu(s.t("batchOperations")) {
-                                ForEach(BatchVerb.allCases,id:\.self){action in
-                                    Button(s.t(action.rawValue)){reviewBatch(action,selectedIDs)}
-                                }
-                            }.disabled(!s.canMutate)
-                        }.padding(.horizontal,20).padding(.bottom,8)
-                    }
+                    HStack {
+                        SelectionControls(selection:$selectedIDs,visibleIDs:s.filtered.map(\.id))
+                        Spacer()
+                        Menu(s.t("batchOperations")) {
+                            ForEach(BatchVerb.allCases,id:\.self){action in
+                                Button(s.t(action.rawValue)){reviewBatch(action,selectedIDs)}
+                            }
+                        }.disabled(selectedIDs.isEmpty || !s.canMutate)
+                    }.padding(.horizontal,20).padding(.bottom,8)
                     Table(s.filtered,selection:$selectedIDs) {
+                        TableColumn(s.t("select")){c in SelectionCheckbox(id:c.id,label:s.t("select")+" "+c.id,selection:$selectedIDs)}.width(36)
                         TableColumn(s.t("name")){c in Label(c.id,systemImage:"shippingbox").fontWeight(.medium).help(c.id) .frame(minHeight:38)}.width(min:170,ideal:235)
                         TableColumn(s.t("status")){c in StatusView(item:c)}.width(min:85,ideal:95)
                         TableColumn("CPU"){c in Text(s.usage[c.id]?.cpu.map{String(format:"%.1f%%",$0)} ?? "—").monospacedDigit()}.width(65)

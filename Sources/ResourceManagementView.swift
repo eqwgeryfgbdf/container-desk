@@ -6,10 +6,11 @@ struct ResourceManagementView: View {
     @EnvironmentObject var s:Store
     let kind:ResourceKind
     @State private var query=""
-    @State private var selection:String?
+    @State private var selection=Set<String>()
     @State private var editor:ResourceRequest?
     @State private var submitted:ResourceRequest?
-    @State private var deleting:String?
+    @State private var deleting:ResourceBatchDeletion?
+    @State private var submittedDeletion:ResourceBatchDeletion?
     @State private var quickDeploy=false
     @State private var createImage:String?
     @State private var pushSource:String?
@@ -38,19 +39,32 @@ struct ResourceManagementView: View {
                 Spacer()
                 Button(s.t("refresh")){Task{await s.refreshResources()}}.disabled(s.imagesLoading || s.busy)
             }
+            HStack {
+                SelectionControls(selection:$selection,visibleIDs:filtered.map(\.id))
+                Spacer()
+                Button(s.t("deleteSelected"),role:.destructive){deleting=ResourceBatchDeletion(kind:kind,ids:selection.sorted())}
+                    .disabled(selection.isEmpty || !s.canMutate)
+            }
             Table(filtered,selection:$selection) {
+                TableColumn(s.t("select")){item in SelectionCheckbox(id:item.id,label:s.t("select")+" "+item.id,selection:$selection)}.width(36)
                 TableColumn(s.t("name")){item in Label(item.id,systemImage:kind.icon).help(item.id)}.width(min:220,ideal:380)
                 TableColumn(s.t("details"),value:\.detail)
                 TableColumn(s.t(kind == .network ? "type":"size"),value:\.extra)
             }
             .contextMenu(forSelectionType:String.self) { ids in
                 if let id=ids.first,ids.count==1 {actions(id)}
+                if ids.count>1 {
+                    Button(s.t("copyNames")){Clipboard.copy(ids.sorted().joined(separator:"\n"))}
+                    Button(s.t("deleteSelected"),role:.destructive){deleting=ResourceBatchDeletion(kind:kind,ids:ids.sorted())}.disabled(!s.canMutate)
+                }
             } primaryAction: {ids in if let id=ids.first,ids.count==1{s.inspection=InspectionTarget(kind:kind,name:id)}}
             .overlay {if filtered.isEmpty {ContentUnavailableView.search(text:query)}}
-            if let id=selection,items.contains(where:{$0.id==id}) {
+            if selection.count==1,let id=selection.first,items.contains(where:{$0.id==id}) {
                 HStack(spacing:12) {actions(id)}
             }
         }.padding(28)
+        .onChange(of:filtered.map(\.id)){_,ids in selection.formIntersection(Set(ids))}
+        .onChange(of:kind){_,_ in selection=[];query=""}
         .task {await s.refreshResources()}
         .sheet(isPresented:$quickDeploy) {
             QuickDeployView().environmentObject(s)
@@ -64,10 +78,11 @@ struct ResourceManagementView: View {
         .sheet(isPresented:Binding(get:{createImage != nil},set:{if !$0{createImage=nil}})) {
             CreateView(initialImage:createImage ?? "").environmentObject(s)
         }
-        .confirmationDialog(s.t("deleteResourceConfirm"),isPresented:Binding(get:{deleting != nil},set:{if !$0{deleting=nil}}),titleVisibility:.visible) {
-            Button(s.t("delete"),role:.destructive) {if let id=deleting{s.deleteResource(kind,id:id)};deleting=nil}
-            Button(s.t("cancel"),role:.cancel){deleting=nil}
-        } message: {Text((deleting ?? "")+"\n"+s.t(kind == .volume ? "deleteVolumeImpact":"deleteResourceImpact"))}
+        .sheet(item:$deleting,onDismiss:{
+            if let request=submittedDeletion{submittedDeletion=nil;s.deleteResources(request)}
+        }) {request in
+            ResourceDeletionReview(request:request){submittedDeletion=$0;deleting=nil}.environmentObject(s)
+        }
     }
     @ViewBuilder private func actions(_ id:String)->some View {
         Button(s.t("inspect")){s.inspection=InspectionTarget(kind:kind,name:id)}
@@ -78,7 +93,7 @@ struct ResourceManagementView: View {
             Button(s.t("pushImage")){pushSource=id}.disabled(!s.canMutate)
             Button(s.t("save")){chooseExport(id)}.disabled(!s.canMutate)
         }
-        Button(s.t("delete"),role:.destructive){deleting=id}.disabled(!s.canMutate || (kind == .network && ["default","none"].contains(id)))
+        Button(s.t("delete"),role:.destructive){deleting=ResourceBatchDeletion(kind:kind,ids:[id])}.disabled(!s.canMutate || (kind == .network && ["default","none"].contains(id)))
     }
     private func chooseImport() {
         let panel=NSOpenPanel();panel.canChooseDirectories=false;panel.allowsMultipleSelection=false

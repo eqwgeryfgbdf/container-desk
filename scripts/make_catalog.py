@@ -575,6 +575,15 @@ rows.update({'composeProjects': ('Projects', '项目', '專案'),
  'snapshotChanged': ('The source container changed during export. Retry after it is stable.',
                      '导出过程中源容器已改变，请待其稳定后重试。',
                      '匯出過程中來源容器已改變，請待其穩定後重試。')})
+rows.update({
+ 'select':('Select','选择','選取'),
+ 'selectVisible':('Select All Results','全选当前结果','全選目前結果'),
+ 'clearSelection':('Clear Selection','取消选择','取消選取'),
+ 'selectionHelp':('Select individual checkboxes, or use Command-click / Shift-click. Select All applies only to the current results.','勾选复选框，或使用 Command / Shift 点选。全选只包含当前筛选结果。','勾選核取方塊，或使用 Command / Shift 點選。全選只包含目前篩選結果。'),
+ 'deleteSelected':('Delete Selected…','删除所选…','刪除所選…'),
+ 'copyNames':('Copy Names','复制名称','複製名稱'),
+ 'resourceBatchReview':('Review the selected items. In-use or protected resources are skipped and reported individually.','请检查所选项目。正在使用或受保护的资源会跳过并逐项报告。','請檢查所選項目。使用中或受保護的資源會略過並逐項回報。')
+})
 root=Path(__file__).resolve().parents[1]
 strings={k:{'localizations':{lang:{'stringUnit':{'state':'translated','value':value}} for lang,value in zip(['en','zh-Hans','zh-Hant'],values)}} for k,values in rows.items()}
 (root/'Resources/Localizable.xcstrings').write_text(json.dumps({'sourceLanguage':'en','strings':strings,'version':'1.0'},ensure_ascii=False,indent=2)+'\n')

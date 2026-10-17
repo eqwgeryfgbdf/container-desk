@@ -92,7 +92,7 @@ import AppKit
             let existingIDs=Set(containers.map(\.id))
             containerHistory.record([:],at:Date(),existingIDs:existingIDs)
             previous=previous.filter { id,_ in containers.contains(where:{$0.id==id && $0.running}) }
-            if chosen==nil { selected=containers.first?.id }
+            if selected != nil,chosen==nil { selected=nil }
             if version=="—" { let v=try await ProcessRunner.checked(cli,["--version"]);version=v.text.trimmingCharacters(in:.whitespacesAndNewlines) }
             if active>0 {
                 do {

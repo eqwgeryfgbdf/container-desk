@@ -107,3 +107,14 @@ enum ResourceSafety {
         }
     }
 }
+
+struct ResourceBatchDeletion:Identifiable {
+    let id=UUID()
+    let kind:ResourceKind
+    let ids:[String]
+    init(kind:ResourceKind,ids:[String]) {
+        self.kind=kind
+        var seen=Set<String>()
+        self.ids=ids.filter{seen.insert($0).inserted}
+    }
+}
