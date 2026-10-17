@@ -9,7 +9,7 @@ xcrun swiftc -swift-version 5 -parse-as-library -target arm64-apple-macos26.0 \
  "$ROOT/Sources/Models.swift" "$ROOT/Sources/HostInfo.swift" "$ROOT/Sources/ProcessRunner.swift" \
  "$ROOT/Sources/ResourceOperations.swift" "$ROOT/Sources/StreamingProcess.swift" "$ROOT/Sources/Store.swift" \
  "$ROOT/Sources/ManagementStore.swift" "$ROOT/Sources/FileOperations.swift" "$ROOT/Sources/RegistryOperations.swift" \
- "$ROOT/Sources/ComposePlan.swift" "$ROOT/Sources/ComposeOperations.swift" \
+ "$ROOT/Sources/DockerProjectConverter.swift" "$ROOT/Sources/ComposePlan.swift" "$ROOT/Sources/ComposeOperations.swift" \
  "$ROOT"/Tests/Platform/*.swift "$BIN"/Yams.build/*.o "$BIN"/CYaml.build/src/*.o \
  -o "$ROOT/../work/tests/PlatformTests"
 "$ROOT/../work/tests/PlatformTests" "$@"

@@ -56,10 +56,16 @@ struct ComposePlanner {
     private let variables:[String:String]
     private let capacity:Int
     private func issue(_ path:String,_ reason:String)->ComposeIssue{ComposeIssue(path:path,reason:reason)}
-    init(file:URL,projectID:String,volumeGiB:Int=8)throws {
+    init(file:URL,projectID:String,volumeGiB:Int=8,sourceData:Data?=nil)throws {
         self.file=file;self.projectID=projectID;self.capacity=volumeGiB
         guard UUID(uuidString:projectID) != nil,(1...1024).contains(volumeGiB) else{throw ComposeIssue(path:"project",reason:"Invalid project identity or volume capacity")}
-        let data=try Data(contentsOf:file,options:.mappedIfSafe)
+        root=try Self.parseDocument(sourceData ?? Data(contentsOf:file,options:.mappedIfSafe))
+        let dotenv=file.deletingLastPathComponent().appendingPathComponent(".env")
+        variables=FileManager.default.fileExists(atPath:dotenv.path) ? try Self.envFile(dotenv):[:]
+        scope="cd-"+projectID.lowercased().replacingOccurrences(of:"-",with:"").prefix(12)
+    }
+    static func parseDocument(_ data:Data)throws->Node {
+        let root:Node
         guard data.count<=512*1024,let text=String(data:data,encoding:.utf8) else{throw ComposeIssue(path:"document",reason:"Expected UTF-8 YAML, at most 512 KiB")}
         try Self.validateYAML(data)
         do {guard let node=try Yams.compose(yaml:text) else{throw ComposeIssue(path:"document",reason:"Empty document")};root=node}
@@ -81,9 +87,7 @@ struct ComposePlanner {
             }
         }
         try check(root,0)
-        let dotenv=file.deletingLastPathComponent().appendingPathComponent(".env")
-        variables=FileManager.default.fileExists(atPath:dotenv.path) ? try Self.envFile(dotenv):[:]
-        scope="cd-"+projectID.lowercased().replacingOccurrences(of:"-",with:"").prefix(12)
+        return root
     }
     private static func validateYAML(_ data:Data)throws {
         var parser=yaml_parser_t()

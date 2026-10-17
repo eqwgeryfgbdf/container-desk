@@ -32,6 +32,10 @@ The native creation hang UI-001 was traced to `Slider(step: 1)` generating thous
 - Local Compose YAML import and preview, strict property-path diagnostics, dependency/health startup order, managed service-name mappings, labelled project start/stop/removal and retained named volumes. Invalid source YAML does not prevent stopping/removing previously imported project containers. This is a supported subset, not complete Docker Compose compatibility.
 - See [usage, compatibility matrix and test commands](COMPOSE_AND_FILES.md). Private-registry successful authentication needs real-account acceptance; it is deferred rather than prompting for credentials in chat.
 
+## Docker project conversion — current source
+
+- Reviewed Dockerfile/Compose import with a separate, private YAML output; original files and Docker workloads remain unchanged. Common syntax/default-driver normalization, explicit manual-restart opt-in and strict compatibility blocking are implemented. Data, local-only images and application behavior still require migration/verification. See [conversion workflow and limits](DOCKER_CONVERSION.md).
+
 ## Baseline B — remaining, before AI
 
 1. Image-metadata defaults; safe duplicate/recreate with a visible configuration diff and retained-volume policy.

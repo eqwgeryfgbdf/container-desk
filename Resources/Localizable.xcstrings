@@ -9350,6 +9350,754 @@
           }
         }
       }
+    },
+    "dockerConvert": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Convert Docker Project…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "转换 Docker 项目…"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "轉換 Docker 專案…"
+          }
+        }
+      }
+    },
+    "dockerConvertIntro": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a local Compose file, Dockerfile or project folder. Review compatibility and changes before saving a separate configuration."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择本地 Compose 文件、Dockerfile 或项目文件夹。保存独立配置前，请检查兼容性和更改。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "選擇本機 Compose 檔案、Dockerfile 或專案資料夾。儲存獨立設定前，請檢查相容性與變更。"
+          }
+        }
+      }
+    },
+    "dockerChoose": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose Project…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择项目…"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "選擇專案…"
+          }
+        }
+      }
+    },
+    "dockerChooseSource": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a Compose YAML file, Dockerfile or a folder containing one."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请选择 Compose YAML 文件、Dockerfile 或包含它们的文件夹。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請選擇 Compose YAML 檔案、Dockerfile 或包含它們的資料夾。"
+          }
+        }
+      }
+    },
+    "dockerAmbiguousSource": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Several Compose files were found. Select the intended file explicitly; files are not merged automatically."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "发现多个 Compose 文件。请明确选择目标文件；不会自动合并文件。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "發現多個 Compose 檔案。請明確選擇目標檔案；不會自動合併檔案。"
+          }
+        }
+      }
+    },
+    "dockerSourceSize": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The source must be UTF-8 text, at most 512 KiB."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "源文件必须是 UTF-8 文本，最多 512 KiB。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "來源檔案必須是 UTF-8 文字，最多 512 KiB。"
+          }
+        }
+      }
+    },
+    "dockerAllowManualRestart": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Allow replacing restart policies with manual start/stop"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "允许将重启策略改为手动启动／停止"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "允許將重啟原則改為手動啟動／停止"
+          }
+        }
+      }
+    },
+    "dockerConvertible": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Configuration checks passed; review the differences below"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "配置检查通过；请检查以下差异"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "設定檢查通過；請檢查以下差異"
+          }
+        }
+      }
+    },
+    "dockerConversionBlocked": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Manual changes are required before import"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "导入前需要手动修改"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "匯入前需要手動修改"
+          }
+        }
+      }
+    },
+    "dockerYAMLPreview": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Generated YAML (may contain values from the source)"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "生成的 YAML（可能包含源文件中的值）"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "產生的 YAML（可能包含來源檔案中的值）"
+          }
+        }
+      }
+    },
+    "dockerReviewed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I reviewed the changes, limitations and data-migration requirements"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "我已检查更改、限制和数据迁移要求"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "我已檢查變更、限制與資料遷移要求"
+          }
+        }
+      }
+    },
+    "dockerSaveNote": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save creates a private, uniquely named YAML beside the source. Original files remain unchanged. Import does not start containers; review mounts and secrets before sharing the new file."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "保存会在源文件旁创建仅当前用户可读写、名称唯一的 YAML，不改变原文件。导入不会启动容器；分享新文件前请检查挂载和敏感值。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "儲存會在來源檔案旁建立僅目前使用者可讀寫、名稱唯一的 YAML，不改變原檔。匯入不會啟動容器；分享新檔前請檢查掛載與敏感值。"
+          }
+        }
+      }
+    },
+    "dockerSaveImport": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save & Import"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "保存并导入"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "儲存並匯入"
+          }
+        }
+      }
+    },
+    "dockerSourceChanged": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The source changed after preview. Choose it again to review the latest version."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "预览后源文件已改变。请重新选择并检查最新版本。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "預覽後來源檔案已改變。請重新選擇並檢查最新版本。"
+          }
+        }
+      }
+    },
+    "dockerSaveFailed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not create a new configuration beside the source. Check folder permissions."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法在源文件旁创建新配置。请检查文件夹权限。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "無法在來源檔案旁建立新設定。請檢查資料夾權限。"
+          }
+        }
+      }
+    },
+    "dockerBuildWrapper": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A single app service will build this Dockerfile from its parent folder. Image defaults are retained; EXPOSE does not automatically publish host ports."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "将创建单个 app 服务，以父文件夹为上下文构建此 Dockerfile。保留镜像默认值；EXPOSE 不会自动发布主机端口。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "將建立單個 app 服務，以父資料夾為內容建置此 Dockerfile。保留映像檔預設值；EXPOSE 不會自動發佈主機連接埠。"
+          }
+        }
+      }
+    },
+    "dockerArchitectureBlocked": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This importer targets linux/arm64. Verify image/base-image support and adjust architecture explicitly; x86 or GPU workloads are not converted automatically."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "此导入器面向 linux/arm64。请验证镜像／基础镜像支持并明确调整架构；不会自动转换 x86 或 GPU 工作负载。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "此匯入器適用於 linux/arm64。請驗證映像檔／基底映像檔支援並明確調整架構；不會自動轉換 x86 或 GPU 工作負載。"
+          }
+        }
+      }
+    },
+    "dockerOverridesBlocked": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An adjacent override file was found. Export a reviewed, merged Compose file first; this converter does not apply multiple files or profiles."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "发现同目录的覆盖文件。请先导出并检查合并后的 Compose 文件；此转换器不处理多文件合并或 profiles。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "發現同目錄的覆寫檔案。請先匯出並檢查合併後的 Compose 檔案；此轉換器不處理多檔合併或 profiles。"
+          }
+        }
+      }
+    },
+    "dockerVersionRemoved": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Removed obsolete Compose version metadata; service settings are preserved."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已移除旧版 Compose 版本元数据，保留服务设置。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已移除舊版 Compose 版本中繼資料，保留服務設定。"
+          }
+        }
+      }
+    },
+    "dockerUnsupported": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This property has no supported conversion. Adjust it explicitly; it will not be silently removed."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "此属性尚无支持的转换方式。请明确调整；不会静默删除。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "此屬性尚無支援的轉換方式。請明確調整；不會靜默刪除。"
+          }
+        }
+      }
+    },
+    "dockerNamesChanged": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fixed container_name is replaced by project-scoped names. Service keys remain; review hard-coded hostnames and scripts that use old container names."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "固定 container_name 将替换为项目专属名称。服务键保持不变；请检查固定主机名及使用旧容器名称的脚本。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "固定 container_name 將替換為專案專屬名稱。服務鍵保持不變；請檢查固定主機名稱及使用舊容器名稱的腳本。"
+          }
+        }
+      }
+    },
+    "dockerRestartManual": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restart policy becomes \"no\". Containers require manual start/stop; there is no crash recovery or boot-time restart supervisor."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "重启策略改为“no”。容器需要手动启动／停止；没有崩溃恢复或开机自动重启控制器。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "重啟原則改為「no」。容器需要手動啟動／停止；沒有當機復原或開機自動重啟控制器。"
+          }
+        }
+      }
+    },
+    "dockerRestartBlocked": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Automatic restart cannot be preserved. Adjust the source or explicitly allow manual start/stop above."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法保留自动重启。请修改源文件，或明确勾选上方的手动启动／停止选项。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "無法保留自動重啟。請修改來源檔案，或明確勾選上方的手動啟動／停止選項。"
+          }
+        }
+      }
+    },
+    "dockerBuildContext": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Added the Compose default build context: the source folder."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已补上 Compose 默认构建上下文：源文件夹。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已補上 Compose 預設建置內容：來源資料夾。"
+          }
+        }
+      }
+    },
+    "dockerExposeRemoved": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Removed expose metadata. It does not publish a host port; same-network connectivity remains governed by the runtime."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已移除 expose 元数据。它不会发布主机端口；同网络连接仍由运行时控制。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已移除 expose 中繼資料。它不會發佈主機連接埠；同網路連線仍由執行環境控制。"
+          }
+        }
+      }
+    },
+    "dockerNetworkList": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Converted empty per-network mappings to a network-name list; no aliases were discarded."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已将空的逐网络映射转换为网络名称列表，没有丢弃别名。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已將空的逐網路對應轉換為網路名稱清單，沒有捨棄別名。"
+          }
+        }
+      }
+    },
+    "dockerEnvFileShort": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Converted a required env_file path to short syntax; file contents stay in the original file."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已将必需的 env_file 路径转换为短语法；内容保留在原文件中。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已將必要的 env_file 路徑轉換為短語法；內容保留在原檔案中。"
+          }
+        }
+      }
+    },
+    "dockerPortsShort": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Converted an explicit long-form port mapping to short syntax."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已将明确的长格式端口映射转换为短语法。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已將明確的長格式連接埠對應轉換為短語法。"
+          }
+        }
+      }
+    },
+    "dockerLoopback": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Published ports bind to 127.0.0.1. Other computers cannot connect through the Mac's LAN address."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "发布端口绑定到 127.0.0.1。其他电脑无法通过 Mac 的局域网地址连接。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "發佈連接埠綁定至 127.0.0.1。其他電腦無法透過 Mac 的區域網路位址連線。"
+          }
+        }
+      }
+    },
+    "dockerSocketBlocked": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A Docker socket mount requires the Docker API and cannot be migrated automatically to Apple Container."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Docker 套接字挂载依赖 Docker API，无法自动迁移到 Apple Container。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Docker Socket 掛載依賴 Docker API，無法自動遷移至 Apple Container。"
+          }
+        }
+      }
+    },
+    "dockerDefaultDriver": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uses an Apple Container-managed resource instead of Docker's default driver. Driver options and custom drivers are not converted."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "将使用 Apple Container 管理的资源，替代 Docker 默认驱动程序。不转换驱动选项或自定义驱动。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "將使用 Apple Container 管理的資源，取代 Docker 預設驅動程式。不轉換驅動選項或自訂驅動。"
+          }
+        }
+      }
+    },
+    "dockerVolumeData": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Docker volume contents are NOT copied. Managed volumes start separately; migrate and verify application data before switching services. External volumes must already exist in Apple Container."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不会复制 Docker 卷内容。受管卷单独创建；切换服务前请迁移并验证应用数据。外部卷必须已存在于 Apple Container。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不會複製 Docker 儲存卷內容。受管理儲存卷另外建立；切換服務前請遷移並驗證應用資料。外部儲存卷必須已存在於 Apple Container。"
+          }
+        }
+      }
+    },
+    "dockerImageStore": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Docker's local image store is separate. Publish/import local-only images or supply a build context before starting; image architecture and availability are verified when pulling/building."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Docker 本地镜像存储是独立的。启动前请发布／导入仅本地存在的镜像，或提供构建上下文；下载／构建时才验证镜像架构和可用性。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Docker 本機映像檔儲存區是獨立的。啟動前請發佈／匯入僅本機存在的映像檔，或提供建置內容；下載／建置時才驗證映像檔架構與可用性。"
+          }
+        }
+      }
+    },
+    "dockerRuntimeCheck": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This report validates configuration, not application behavior. Build/pull, credentials, health and data must still be tested. Host environment variables are not inherited; use an adjacent .env file. No Docker daemon or existing container is changed."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "此报告验证配置，不保证应用行为。仍需测试构建／下载、凭证、健康和数据。不继承主机环境变量；请使用同目录 .env 文件。不会更改 Docker 守护进程或现有容器。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "此報告驗證設定，不保證應用行為。仍需測試建置／下載、憑證、健康與資料。不繼承主機環境變數；請使用同目錄 .env 檔案。不會更改 Docker Daemon 或現有容器。"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

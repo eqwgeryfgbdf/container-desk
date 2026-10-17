@@ -16,6 +16,8 @@ From **Images**, choose **Push Image**, supply a fully qualified `registry/names
 
 ## Compose
 
+For existing Docker projects, use [**Convert Docker Project…**](DOCKER_CONVERSION.md) to review and normalize supported settings first.
+
 Choose **Compose Projects → Import Compose…**, select a local YAML file and review the services, actual container names, networks, volumes, mounts, commands and startup order. Import and validation do not execute the project. **Create & Start** asks for confirmation before pulling/building images or starting containers. Relative paths resolve beside the selected Compose file.
 
 | Supported | Scope |

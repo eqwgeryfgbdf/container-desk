@@ -20,6 +20,7 @@ func XCTUnwrap<T>(_ value:T?)throws->T{guard let value else{throw DeskError.mess
         setbuf(stdout,nil)
         do {
         let unit=PlatformTests();defer{unit.clean()}
+        try unit.testDockerMigration()
         try unit.testComposeOrderAndLiteralArguments()
         try unit.testComposeRejectsUnsupportedAndAmbiguousConfiguration()
         try unit.testEnvFilesAndInterpolation()
@@ -29,17 +30,17 @@ func XCTUnwrap<T>(_ value:T?)throws->T{guard let value else{throw DeskError.mess
         try unit.testRegistryValidationAndMetadata()
         try await unit.testCredentialPipeAndSuppressedOutput()
         try await unit.testArchiveTraversalAndCancellation()
-        print("PASS: 9 platform suites (Compose semantics and rejection cases, env interpolation, file safety, registry validation, credential pipe)")
+        print("PASS: 10 platform suites (Compose semantics and rejection cases, env interpolation, file safety, registry validation, credential pipe)")
         if CommandLine.arguments.contains("--registry") {
             try await RegistryLiveTests().testLocalAuthentication()
         }
         if CommandLine.arguments.contains("--push") {
             try await RegistryLiveTests().testLoopbackPush()
         }
-        if CommandLine.arguments.contains("--run") {
+        if CommandLine.arguments.contains("--run") || CommandLine.arguments.contains("--convert-run") {
             setenv("CONTAINERDESK_LIVE_PLATFORM_TESTS","1",1)
             let live=PlatformLiveTests();defer{live.clean()}
-            try await live.testLiveComposeAndFiles()
+            try await live.testLiveComposeAndFiles(converted:CommandLine.arguments.contains("--convert-run"))
             print("PASS: real Compose dependency/health startup, service DNS, file transfer round trip, no-overwrite, rename/mkdir/remove, project stop/restart/removal, retained volume, changed-config refusal and original-state preservation")
         }
         } catch {fputs("FAIL: \(error.localizedDescription)\n",stderr);exit(1)}

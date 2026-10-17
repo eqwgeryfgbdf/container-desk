@@ -10,7 +10,7 @@ final class PlatformLiveTests:PlatformTestCase {
         while s.refreshing {try await Task.sleep(for:.milliseconds(100))}
         await s.refresh()
     }
-    @MainActor func testLiveComposeAndFiles()async throws {
+    @MainActor func testLiveComposeAndFiles(converted:Bool=false)async throws {
         guard ProcessInfo.processInfo.environment["CONTAINERDESK_LIVE_PLATFORM_TESTS"]=="1" else{print("SKIP: live engine tests require --run");return}
         let s=Store();await s.start();let cli=try XCTUnwrap(s.cli);try XCTAssertTrue(s.connected)
         let baseline=Dictionary(uniqueKeysWithValues:s.containers.map{($0.id,$0.state)})
@@ -18,7 +18,8 @@ final class PlatformLiveTests:PlatformTestCase {
         let dir=FileManager.default.temporaryDirectory.appendingPathComponent("cd-live-"+UUID().uuidString)
         try FileManager.default.createDirectory(at:dir,withIntermediateDirectories:true)
         defer{try? FileManager.default.removeItem(at:dir)}
-        let file=dir.appendingPathComponent("compose.yaml"),project=UUID().uuidString.lowercased()
+        var file=dir.appendingPathComponent("compose.yaml")
+        let project=UUID().uuidString.lowercased()
         try """
         name: qa-compose
         services:
@@ -41,6 +42,19 @@ final class PlatformLiveTests:PlatformTestCase {
               retries: 10
         volumes: {data: {}}
         """.write(to:file,atomically:true,encoding:.utf8)
+        if converted {
+            let original="version: '3.8'\n"+(try String(contentsOf:file,encoding:.utf8))
+                .replacingOccurrences(of:"  web:\n",with:"  web:\n    container_name: docker-original-name\n    restart: unless-stopped\n")
+                .replacingOccurrences(of:"volumes: {data: {}}",with:"volumes: {data: {driver: local}}\nnetworks: {default: {driver: bridge}}")
+            try original.write(to:file,atomically:true,encoding:.utf8)
+            try XCTAssertFalse(try DockerProjectConverter.analyze(file).canImport)
+            let conversion=try DockerProjectConverter.analyze(file,allowManualRestart:true)
+            try XCTAssertTrue(conversion.canImport)
+            let migrated=try conversion.save()
+            try XCTAssertEqual(try String(contentsOf:file,encoding:.utf8),original)
+            file=migrated
+            print("LIVE: Docker configuration converted to separate validated Compose file; original preserved")
+        }
         let plan=try ComposePlanner(file:file,projectID:project,volumeGiB:1).plan()
         func command(_ args:[String])async throws->CommandResult {try await ProcessRunner.checked(cli,args,timeout:120)}
         func cleanup()async throws {

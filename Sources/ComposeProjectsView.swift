@@ -4,6 +4,8 @@ import AppKit
 struct ComposeProjectsView:View {
     @EnvironmentObject var s:Store
     @StateObject private var library=ComposeProjectLibrary()
+    @State private var converting=false
+    @State private var converted:URL?
     @State private var selected:String?
     @State private var plan:ComposePlan?
     @State private var failure:String?
@@ -14,7 +16,7 @@ struct ComposeProjectsView:View {
     private var record:ComposeProjectRecord?{library.projects.first{$0.id==selected}}
     var body:some View {
         VStack(alignment:.leading,spacing:18) {
-            HStack {Text(s.t("composeProjects")).font(.largeTitle).fontWeight(.semibold);Spacer();Button(s.t("composeImport"),action:choose).buttonStyle(.borderedProminent).disabled(busy)}
+            HStack {Text(s.t("composeProjects")).font(.largeTitle).fontWeight(.semibold);Spacer();Button(s.t("dockerConvert")){converting=true}.disabled(busy);Button(s.t("composeImport"),action:choose).buttonStyle(.borderedProminent).disabled(busy)}
             Text(s.t("composeScopeNote")).foregroundStyle(.secondary)
             if let error=failure ?? library.error {Text(error.hasPrefix("compose") ? s.t(error):error).foregroundStyle(.red).textSelection(.enabled).lineLimit(6)}
             HStack {
@@ -54,6 +56,9 @@ struct ComposeProjectsView:View {
             }
 
         }.padding(28)
+        .sheet(isPresented:$converting,onDismiss:{if let url=converted{converted=nil;importProject(url)}}) {
+            DockerMigrationView{converted=$0}.environmentObject(s)
+        }
         .onChange(of:selected){_,_ in Task{await validate()}}
         .onChange(of:s.operationRunning){_,running in if !running{Task{await refreshOwned()}}}
         .confirmationDialog(s.t(action=="up" ? "composeUp":action=="stop" ? "composeStop":"composeDown"),isPresented:Binding(get:{!action.isEmpty},set:{if !$0{action=""}}),titleVisibility:.visible) {
@@ -87,8 +92,11 @@ struct ComposeProjectsView:View {
         let panel=NSOpenPanel();panel.canChooseDirectories=false;panel.allowsMultipleSelection=false
         panel.begin {response in
             guard response == .OK,let url=panel.url else{return}
-            do {let record=try library.add(url);selected=record.id;Task{await validate()}}catch{failure=diagnostic(error);plan=nil}
+            importProject(url)
         }
+    }
+    private func importProject(_ url:URL) {
+        do {let record=try library.add(url);selected=record.id;Task{await validate()}}catch{failure=diagnostic(error);plan=nil}
     }
     private func validate()async {
         guard let record=library.projects.first(where:{$0.id==selected}) else{plan=nil;return}
