@@ -4,6 +4,37 @@ import json
 from pathlib import Path
 # Canonical English source with independently authored Simplified / Traditional Chinese.
 rows = {
+'imageDefaults':('Image Defaults','镜像默认配置','映像預設設定'),
+'imageDefaultsNote':('Blank command overrides inherit image defaults. Exposed ports are metadata; publish them explicitly after choosing free host ports.','命令覆盖留空时继承镜像默认值。暴露端口只是元数据，请选择空闲主机端口后明确发布。','命令覆寫留空時繼承映像預設值。暴露連接埠只是中繼資料，請選擇空閒主機埠後明確發布。'),
+'containerUserOptional':('User / UID:GID (optional)', '用户／UID:GID（可选）', '使用者／UID:GID（選用）'),
+'catalogTitle':('Browse Registry', '浏览仓库', '瀏覽倉庫'),
+'catalogRepository':('Repository path (blank for catalog)', '仓库路径（留空浏览目录）', '倉庫路徑（留空瀏覽目錄）'),
+'catalogScope':('Browse Registry v2 repositories and tags over HTTPS. Some services disable catalog access; enter a known repository path. For Docker Hub, use its dedicated search.', '通过 HTTPS 浏览 Registry v2 目录及标签。部分服务不提供目录，请直接输入已知仓库路径。Docker Hub 请使用专用搜索。', '透過 HTTPS 瀏覽 Registry v2 目錄及標籤。部分服務不提供目錄，請直接輸入已知倉庫路徑。Docker Hub 請使用專用搜尋。'),
+'catalogSessionAuth':('Optional credentials for this browsing session', '本次浏览凭据（可选）', '本次瀏覽憑證（選用）'),
+'catalogAuthScope':('Basic authentication only. Credentials are sent only to the entered HTTPS server, never across redirects, and are forgotten when this window closes. CLI login is separate; bearer-only services may not support this browser.', '仅支持 Basic 认证。凭据仅发送至输入的 HTTPS 服务器，不跟随重定向，关闭窗口后清除。CLI 登录独立；仅支持 Bearer 的服务可能无法浏览。', '僅支援 Basic 驗證。憑證只送至輸入的 HTTPS 伺服器，不跟隨重新導向，關閉視窗後清除。CLI 登入獨立；僅支援 Bearer 的服務可能無法瀏覽。'),
+'catalogNext':('Next 100', '下一页（100）', '下一頁（100）'),
+'catalogTags':('Show Tags', '查看标签', '查看標籤'),
+'catalogInvalidRepository':('Enter a valid repository path.', '请输入有效仓库路径。', '請輸入有效倉庫路徑。'),
+'catalogUnavailable':('This registry does not expose a compatible catalog/tag response, or the request failed. Try a known repository path.', '该仓库未提供兼容的目录／标签响应，或请求失败。请尝试已知仓库路径。', '該倉庫未提供相容的目錄／標籤回應，或請求失敗。請嘗試已知倉庫路徑。'),
+'catalogAuthentication':('Registry access was refused. Check credentials and permissions; bearer-only authentication needs the service’s own browser.', '仓库拒绝访问。请检查凭据及权限；仅 Bearer 认证请使用服务自身的浏览界面。', '倉庫拒絕存取。請檢查憑證與權限；僅 Bearer 驗證請使用服務本身的瀏覽介面。'),
+
+'cloneContainer':('Duplicate / Recreate Separately…', '复制／独立重建…', '複製／獨立重建…'),
+'cloneScope':('Create a new stopped container from the original image and reviewed configuration. The original container and its writable layer remain untouched; writable-layer changes are not copied. Use Save Container as Image first if needed.', '使用原始镜像和确认的配置创建新的停止容器。保留原容器及可写层，不复制可写层修改；需要时先保存为镜像。', '使用原始映像與確認的設定建立新的停止容器。保留原容器及可寫層，不複製可寫層變更；需要時先儲存為映像。'),
+'clonePortsCleared':('Not copied; choose unused host ports in the next step.', '不复制；下一步选择空闲主机端口。', '不複製；下一步選擇空閒主機連接埠。'),
+'cloneEnvironment':('Include environment variables (may contain secrets)', '包含环境变量（可能含密钥）', '包含環境變數（可能含密鑰）'),
+'cloneMounts':('Reuse existing mounts', '复用现有挂载', '重用現有掛載'),
+'cloneWritable':('Retain original writable mount permissions', '保留原挂载写入权限', '保留原掛載寫入權限'),
+'cloneMountWarning':('Mounts reference existing data; they are not independent copies. Read-only is the default. Writable reuse requires the source to be stopped when creating the copy. Do not run both writers on the same database.', '挂载指向原有数据，并非独立副本。默认只读。可写复用要求创建时原容器已停止。不要让两个实例同时写入同一数据库。', '掛載指向原有資料，並非獨立副本。預設唯讀。可寫重用要求建立時原容器已停止。不要讓兩個實例同時寫入相同資料庫。'),
+'cloneConfigure':('Review & Configure…', '检查并配置…', '檢查並設定…'),
+'cloneChanged':('Source configuration/image changed, or the source must be stopped for writable mounts. Review it again.', '源配置／镜像已改变，或原容器需先停止才能复用可写挂载。请重新检查。', '來源設定／映像已改變，或原容器需先停止才能重用可寫掛載。請重新檢查。'),
+'cloneUnsupported':('This configuration cannot be reproduced faithfully by this editor. Use a reviewed project configuration instead.', '此编辑器无法完整重建该配置，请使用经检查的项目配置。', '此編輯器無法完整重建該設定，請使用經檢查的專案設定。'),
+
+'diskUsageCleanup':('Disk Usage & Cleanup', '磁盘用量与清理', '磁碟用量與清理'),
+'reclaimable':('Potentially reclaimable', '可能可回收', '可能可回收'),
+'cleanupScope':('Select unused resources to review. Referenced resources and built-in networks are protected. Engine totals include shared/cached data; the selected space recovered can differ. Containers are never stopped or removed here.', '选择未使用的资源进行确认。保护被引用资源和内置网络。引擎统计包含共享及缓存数据，实际回收空间可能不同。此处不会停止或删除容器。', '選取未使用的資源進行確認。保護被參照資源與內建網路。引擎統計含共用及快取資料，實際回收空間可能不同。此處不會停止或刪除容器。'),
+'noCleanupCandidates':('No eligible unused resources', '没有可清理的未使用资源', '沒有可清理的未使用資源'),
+'reviewCleanup':('Review Selected Cleanup…', '确认所选清理…', '確認所選清理…'),
+
 'fileTransferProgress':('Transferring files', '正在传输文件', '正在傳輸檔案'),
 'fileTransferLimit':('Transfer exceeds its safety limits or uses an unsupported archive format. Use a plain tar archive under 4 GiB with at most 10,000 entries.', '传输超过安全限制或使用了不支持的归档格式。请使用小于 4 GiB、最多 10,000 个条目的普通 tar 归档。', '傳輸超過安全限制或使用不支援的封存格式。請使用小於 4 GiB、最多 10,000 個項目的普通 tar 封存檔。'),
 'composeHostsFailed':('Could not update project service-name mappings.','无法更新项目服务名称映射。','無法更新專案服務名稱映射。'),
@@ -159,6 +190,7 @@ rows.update({
 })
 rows['migrationUnsupported']=('This custom layout or data directory cannot be migrated automatically. Keep using its original installer.','此自定义布局或数据目录无法自动迁移，请继续使用原安装工具。','此自訂配置或資料目錄無法自動遷移，請繼續使用原安裝工具。')
 rows['migrationPolicy']=('Only the recognized per-user Apple Container layout can migrate to the same tested version. /usr/local must be unused and containers stopped. Original files and data are retained.','仅支持已识别的个人用户 Apple Container 安装迁移到相同已验证版本。/usr/local 必须尚未安装且容器已停止。保留原文件与数据。','僅支援已識別的個人使用者 Apple Container 安裝遷移至相同已驗證版本。/usr/local 必須尚未安裝且容器已停止。保留原檔案與資料。')
+rows['unsignedRelease']=('Public release, ad hoc signed. No Developer ID signature or Apple notarization.','公开发行版，采用临时签名，未经 Developer ID 签名及 Apple 公证。','公開發行版，採用臨時簽章，未經 Developer ID 簽署及 Apple 公證。')
 rows['releaseBuild']=('Developer ID distribution build.','Developer ID 分发构建。','Developer ID 散佈版本。')
 rows['openPortInBrowser']=('Open in default browser','在默认浏览器中打开','在預設瀏覽器中開啟')
 rows['copyPortURL']=('Copy URL','复制网址','複製網址')
@@ -584,6 +616,7 @@ rows.update({
  'copyNames':('Copy Names','复制名称','複製名稱'),
  'resourceBatchReview':('Review the selected items. In-use or protected resources are skipped and reported individually.','请检查所选项目。正在使用或受保护的资源会跳过并逐项报告。','請檢查所選項目。使用中或受保護的資源會略過並逐項回報。')
 })
+rows.update({'Expanded configuration exceeds the 512 KiB value or 2 MiB project limit':('Expanded configuration exceeds the 512 KiB value or 2 MiB project limit','展开后的配置超出单值 512 KiB 或项目 2 MiB 上限','展開後的設定超出單值 512 KiB 或專案 2 MiB 上限')})
 root=Path(__file__).resolve().parents[1]
 strings={k:{'localizations':{lang:{'stringUnit':{'state':'translated','value':value}} for lang,value in zip(['en','zh-Hans','zh-Hant'],values)}} for k,values in rows.items()}
 (root/'Resources/Localizable.xcstrings').write_text(json.dumps({'sourceLanguage':'en','strings':strings,'version':'1.0'},ensure_ascii=False,indent=2)+'\n')

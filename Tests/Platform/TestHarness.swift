@@ -25,16 +25,19 @@ func XCTUnwrap<T>(_ value:T?)throws->T{guard let value else{throw DeskError.mess
         try await unit.testHubSearch()
         try unit.testSnapshotPlan()
         try unit.testComposeOrderAndLiteralArguments()
+        try unit.testComposeArgumentIsolationAndExpansionLimits()
         try unit.testComposeRejectsUnsupportedAndAmbiguousConfiguration()
         try unit.testEnvFilesAndInterpolation()
         try unit.testFileNamesAndNoOverwriteCommands()
         try unit.testManagedHostsIsolation()
         try unit.testCorruptProjectLibraryIsPreserved()
         try unit.testRegistryValidationAndMetadata()
+        try unit.testRegistryCatalog()
         try await unit.testCredentialPipeAndSuppressedOutput()
         try await unit.testArchiveTraversalAndCancellation()
         try await unit.testArchiveBudgets()
-        print("PASS: 14 platform suites (Hub search, Compose semantics and rejection cases, env interpolation, file safety, registry validation, credential pipe)")
+        print("PASS: 16 platform suites (Hub search, Compose semantics and rejection cases, env interpolation, file safety, registry validation, credential pipe)")
+        if CommandLine.arguments.contains("--clone"){try await unit.testCloneLive()}
         if CommandLine.arguments.contains("--resource-batch"){try await unit.testResourceBatchLive()}
         if CommandLine.arguments.contains("--snapshot"){try await unit.testContainerSnapshotLive()}
         if CommandLine.arguments.contains("--hub-search"){try await unit.testHubSearchLive()}

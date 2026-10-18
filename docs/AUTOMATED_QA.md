@@ -1,3 +1,5 @@
+> 0.2.0: tests run only on the developer’s own Mac. Second-Mac testing is deferred by the owner. See [current validation](RELEASE_0.2.0_VALIDATION.md). The desktop must be unlocked for native UI tests; they do not bypass the lock screen.
+
 # Automated QA
 
 Run on Apple Silicon with macOS 26 and Swift command-line tools. Tests use real Apple Container operations when `--live` is supplied. The suite never performs a global prune, replaces the engine, or uses saved credentials to publish to a remote registry.
@@ -10,7 +12,7 @@ xcrun swiftc -parse-as-library scripts/annotate-video.swift -o ../work/annotate-
 ../work/annotate-video ../work/promo/raw.mov ../work/promo/window.json ../work/promo/ui.log ../work/promo/Container-Desk-Overview.mp4
 ```
 
-Build the application first with `bash scripts/build.sh`. UI tests use that build, temporarily launch in English/light appearance, and require an unlocked desktop plus Accessibility permission for the runner. Recording also requires Screen Recording permission. The test cannot grant these permissions silently. Do not interact with the desktop during the foreground script. Normal application preferences are not changed by the language launch overrides.
+Build the application first with `bash scripts/build.sh`. UI tests use that build, temporarily launch in English/light appearance, and require an unlocked desktop plus Accessibility permission for the runner. Recording also requires Screen Recording permission. The test cannot grant these permissions silently. Do not interact with the desktop during the foreground script. The matrix changes language and appearance through Settings and returns to English/light; it does not restore a different prior preference.
 
 The live suite downloads official Python/BusyBox/Distribution images as needed. Standalone UI tests/recording also provision the official Python image if absent and remove only that newly added reference afterward. Each test names its own fixtures, checks readback, and cleans up. The runner saves resource inventory before and after; unexplained differences are failures and are not broadly deleted. An active existing builder is left alone, with the build test marked skipped. Logs, JSON, JUnit XML and Markdown reports go to `../work/qa/<timestamp>/`. Exit code 1 means a failure. **SKIP is not PASS.** Some suites contain multiple assertions; suite totals are not code-coverage percentages.
 
@@ -34,9 +36,9 @@ The live suite downloads official Python/BusyBox/Distribution images as needed. 
 
 ## Acceptance that remains separate
 
-- Another clean Mac: download the actual GitHub DMG, first launch, real core install, administrator cancellation/retry and upgrade recovery.
+- Clean installation / real upgrade acceptance remains unverified. The owner deferred a second Mac for 0.2.0; do not mark this check passed.
 - Trusted HTTPS private-registry login success with a dedicated account.
-- VoiceOver reading quality, high contrast, all three languages at supported window sizes, sidebar drag ordering and service URL opening in the user's browser.
+- Manual VoiceOver reading quality, high contrast, sidebar drag ordering and service URL opening in the user's browser. Three-language creation layout is covered separately by the matrix.
 - A 60-minute idle performance run. Use the app PID from `../work/tests/UIAutomation metadata`:
 
 ```sh
@@ -49,4 +51,17 @@ AI deployment is intentionally deferred. A future trial should start with one li
 
 ## Recording policy
 
-`raw.mov` is private test evidence and can show the host name. Only the annotated MP4 is intended for promotion: its host-name regions are masked, chapter captions use Traditional Chinese, and the footer identifies actual app footage and development-preview status. Review the four exported frames and the entire clip before publication. The recorder finishes its fixed 90-second window normally (interrupting macOS screencapture can discard the movie). The annotator checks that the scenario completed before the recording ended and trims only trailing idle footage; action timing is not accelerated. The recorder does not change repository visibility or upload footage automatically.
+`raw.mov` is private test evidence and can show the host name. Only the annotated MP4 is intended for promotion: its host-name regions are masked, chapter captions use Traditional Chinese, and the footer identifies actual app footage and version. Review the four exported frames and the entire clip before publication. The recorder finishes its fixed 150-second window normally (interrupting macOS screencapture can discard the movie). The annotator checks that the scenario completed before the recording ended and trims only trailing idle footage; action timing is not accelerated. The recorder does not change repository visibility or upload footage automatically.
+
+## Three-language native matrix and recording
+
+```sh
+bash scripts/build.sh
+bash scripts/test-ui.sh --matrix --record --out ../work/ui-candidate
+```
+
+The matrix covers English, Traditional Chinese and Simplified Chinese, light/dark, at 1320×860 and the actual minimum window size 1100×692 (640-point content plus native chrome). It visits Overview, Containers, Engine and Settings and checks creation-field/cancel accessibility. Theme and language return to English/light. A failure remains a failure; screenshots are private until reviewed and redacted. This is not a full VoiceOver certification.
+
+`--reuse` uses an already-running candidate at the exact requested app path, allowing a continuous stability run without relaunch. Start that candidate in English/light, and keep it unlocked. Recording captures a bounded 150 seconds; the annotator trims trailing idle footage only and refuses failed UI scenarios. The native runner ignores macOS screen-sharing overlay windows when identifying the main app window.
+
+With the native test driver compiled and the candidate in English/light, run `python3 scripts/ui-creation-check.py --out ../work/ui-creation` for real CPU-menu and memory-boundary validation, stopped creation, CLI readback and owned-fixture cleanup. It downloads BusyBox only if absent. `Tests/UI/navigation.json` exercises 30 page changes and logs navigation latency.

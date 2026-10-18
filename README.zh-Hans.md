@@ -1,16 +1,16 @@
-# Container Desk 0.1.3 — 开发者预览版
+# Container Desk 0.2.0 — 公开版
 
 [English](README.md) · [中文（繁體）](README.zh-Hant.md) · [中文（简体）](README.zh-Hans.md)
 
 使用 macOS 26 SDK 制作的原生 SwiftUI **本机 Apple Container** 管理工具。需要 Apple Silicon、macOS 26 以上，以及已测试的引擎 **1.5.0**。这是独立开发的应用，并非 Apple 产品。
 
-[下载 0.1.3 预览版](https://github.com/eqwgeryfgbdf/container-desk/releases/tag/v0.1.3-preview) · [完整快速上手教程](docs/QUICK_START.zh-Hans.md) · [三语版本说明](RELEASE_NOTES.md)
+[下载 0.2.0 公开版](https://github.com/eqwgeryfgbdf/container-desk/releases/tag/v0.2.0) · [完整快速上手教程](docs/QUICK_START.zh-Hans.md) · [三语版本说明](RELEASE_NOTES.md)
 
-**仓库保持私有。** 测试者需要仓库访问权限并登录 GitHub。通过[公开验收标准](docs/PUBLIC_RELEASE_GATE.md)前不会公开；此版本仍为预览版。
+**公开版 0.2.0。** 仅在开发者自己的 M4 Mac mini（16 GiB、macOS 26.7.1、Apple Container 1.5.0）测试。按所有者决定暂不进行第二台 Mac 测试。本版只有 ad hoc 签名，没有 Developer ID／Apple 公证；请先阅读[验证范围及已知限制](docs/RELEASE_0.2.0_VALIDATION.md)。
 
 ## 五分钟开始体验
 
-1. 从 Release 下载 DMG 和可选的 `Container-Desk-0.1.3-Quick-Start.zip`，使用 `SHA256SUMS.txt` 核对文件。
+1. 从 Release 下载 DMG 和可选的 `Container-Desk-0.2.0-Quick-Start.zip`，使用 `SHA256SUMS.txt` 核对文件。
 2. 将 **Container Desk.app** 拖入“应用程序”。本版仅有 ad hoc 签名，没有 Developer ID 或 Apple 公证；遇到 macOS 阻止时，参照[安装教程](docs/QUICK_START.zh-Hans.md)。
 3. 在“容器引擎”连接或安装受支持的官方 Apple Container。App 与引擎分别下载，管理员授权由 macOS 处理。
 4. 解压入门包，在该文件夹打开终端：
@@ -32,10 +32,17 @@ bash quick-test.sh --run
 
 ![容器搜索、状态与资源配置](docs/images/containers-en.jpg)
 
-[观看／下载 58.5 秒实机介绍视频](https://github.com/eqwgeryfgbdf/container-desk/releases/download/v0.1.3-preview/Container-Desk-Overview-zh-Hant.mp4)（繁体字幕）。截图与视频来自此前的 0.1.2 QA 构建及 macOS 26.7.1，使用真实的临时测试资源，主机名称已遮挡；不代表 0.1.3 的全新安装或升级验收。[媒体来源](docs/MEDIA.md)。
+### 创建容器
 
-## 0.1.3 包含的功能
+![CPU / Memory / Image](docs/images/create-en.png)
 
+[观看实机操作视频](https://github.com/eqwgeryfgbdf/container-desk/releases/download/v0.2.0/Container-Desk-Overview-zh-Hant.mp4)（繁体字幕）。截图与视频均为 **0.2.0 在开发者自己的 Mac** 上操作真实测试容器，主机名已遮挡，没有模拟数据；可能显示 macOS 录屏指示。媒体不代表全新安装／升级验收。[来源说明](docs/MEDIA.md)。
+
+## 0.2.0 包含的功能
+
+- **安全复制容器：** 从实际配置创建独立副本，清除端口；环境变量与挂载需选择加入，挂载默认只读，可写共享需源容器已停止。保留原容器。
+- **磁盘用量与清理：** 读取真实用量，逐项确认可删除的镜像／网络／卷，不做全局 prune。
+- **镜像默认信息与仓库浏览：** 创建前查看启动命令、用户、工作目录与声明端口；浏览 HTTPS Registry V2 项目／标签后部署。目录浏览采用独立临时 Basic 认证，不保证支持所有 Bearer 认证服务。
 - **容器管理：** 创建、启动、停止、重启、检查与删除；批量选择和操作确认；CPU 下拉菜单、内存滑块／数字输入、已下载镜像选择。新容器先创建为停止状态。
 - **完整信息：** 双击展开、实时 CPU／内存／进程／网络摘要、会话图表、日志搜索和导出、可点击的 TCP 地址与复制网址。不模拟缺失数据；网络数字为累计流量。
 - **镜像与部署：** Docker Hub 搜索、仓库镜像引用、架构检查、下载并配置、ARM64 或 AMD64／Rosetta 选择、Dockerfile 构建、标签／删除、OCI 导入导出。切换架构不等于转换二进制文件。
@@ -45,15 +52,15 @@ bash quick-test.sh --run
 - **原生界面：** 保存侧栏顺序、80–150% 内容缩放（⌘+、⌘−、⌘0）、遵循减少动态效果、真实主机规格、英文／繁中／简中，没有演示模式。
 - **引擎：** 官方来源安装、手动及选择启用的自动更新，含工作负载检查。安装仅限已测试版本并需要系统授权；App 打开时才进行更新。
 
-## 测试结果与待完成事项
+## 测试范围
 
-此前完整自动化基线为 **17 组通过、0 失败**，含 **56 个原生界面步骤**；另有 5 组依赖外部环境的测试跳过。核心、管理、工作流、安装模拟及平台测试均可通过脚本重跑；已实测 ARM64 与 AMD64／Rosetta。创建容器窗口的布局卡死问题已修复。本版新增免编译快速测试，并同步显示打包版本。[自动化教程](docs/AUTOMATED_QA.md) · [本版验证记录](docs/RELEASE_0.1.3_VALIDATION.md)。
+自动化覆盖容器生命周期、数据保留、文件、镜像、项目与转换、仓库失败／本地推送及资源保护。新增容器复制、镜像信息、仓库目录与三项中度安全修复回归测试。完整结果、跳过项目及长时间运行数据见[本版验证记录](docs/RELEASE_0.2.0_VALIDATION.md)；跳过不代表通过。
 
-第二台 Mac 全新安装／升级、完整无障碍验收、60 分钟长时间运行和真实私有仓库验收仍待完成。短时间基本检查不等于长时间验收。AI 模型集成延后；尚无远程主机管理、内嵌交互终端、App 关闭后更新或独立客户机内核更新器。文件解压仅接受限制大小的普通 tar，拒绝压缩、稀疏及超限归档。安全审查在覆盖范围内未确认高／严重漏洞，但不保证完全不存在漏洞。[功能状态](docs/FEATURE_ROADMAP.md) · [测试反馈模板](docs/TEST_REPORT.md)。
+仅在自己的设备上测试。全新引擎安装、真实旧版升级、外部私有 HTTPS 仓库成功流程及完整 VoiceOver 人工验收仍未验证。AI 延后；Docker 数据与本地镜像仍需单独迁移，尚无自动重启监督、切换／回滚、远程主机、内嵌终端或 App 关闭后更新。[功能状态](docs/FEATURE_ROADMAP.md) · [反馈模板](docs/TEST_REPORT.md)。
 
 ## 源码、打包与许可
 
-DMG、`preview-source.zip` 及 manifest 对应同一个版本提交。源码包含 **Apache-2.0** 许可、资源、脚本和测试。`SHA256SUMS.txt` 覆盖上传附件，入门包中的 `BUILD.json` 记录来源提交。入门包不重复包含 DMG；0.1.2 历史附件保留以便追溯。
+DMG、`source.zip` 及 manifest 对应同一个版本提交。源码包含 **Apache-2.0** 许可、资源、脚本和测试。`SHA256SUMS.txt` 覆盖上传附件，入门包中的 `BUILD.json` 记录来源提交。入门包不重复包含 DMG；0.1.2 历史附件保留以便追溯。
 
 开发者需要 Command Line Tools／Xcode 26 和 Python 3：
 
@@ -65,7 +72,7 @@ bash scripts/package.sh ../outputs
 python3 scripts/make-quick-start.py --output ../outputs
 ```
 
-打包要求干净的 Git 工作目录，Release 标签必须对应 manifest 的提交。可选的 Developer ID／公证流程已准备，但尚未产出签名的稳定版。[Apache-2.0 许可](LICENSE) · [公开门槛](docs/PUBLIC_RELEASE_GATE.md)。
+打包要求干净的 Git 工作目录，Release 标签必须对应 manifest 的提交。可选的 Developer ID／公证流程已准备，本次公开版仅有 ad hoc 签名。[Apache-2.0 许可](LICENSE) · [公开门槛](docs/PUBLIC_RELEASE_GATE.md)。
 
 ## 官方依赖
 

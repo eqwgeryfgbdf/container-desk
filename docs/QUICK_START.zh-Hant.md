@@ -1,30 +1,30 @@
-# 快速上手 — Container Desk 0.1.3 預覽版
+# 快速上手 — Container Desk 0.2.0 公開版
 
 [English](QUICK_START.md) · **中文（繁體）** · [中文（简体）](QUICK_START.zh-Hans.md)
 
-不必編譯，就能試用真正的本機容器服務。目前儲存庫仍為私人；測試者需要先取得儲存庫存取權，並登入 GitHub。下載頁顯示 404 時，請先確認登入帳號與權限。
+不需編譯即可嘗試真實本機服務。0.2.0 將公開發行，僅在開發者自己的 M4 Mac mini（16 GiB、macOS 26.7.1、Apple Container 1.5.0）測試；依擁有者決定暫不測試第二台 Mac。
 
 ## 1. 下載哪個檔案？
 
-前往 [v0.1.3-preview](https://github.com/eqwgeryfgbdf/container-desk/releases/tag/v0.1.3-preview)。
+前往 [v0.2.0](https://github.com/eqwgeryfgbdf/container-desk/releases/tag/v0.2.0)。
 
 | 檔案 | 用途 |
 |---|---|
-| `Container-Desk-0.1.3-arm64-preview.dmg` | 安裝 Mac App，不需要 Xcode。 |
-| `Container-Desk-0.1.3-Quick-Start.zip` | 選用的入門包：三語教學、快速測試腳本、兩個 `.command` 啟動器及範例專案，不重複包含 DMG。 |
-| `Container-Desk-0.1.3-preview-source.zip` | 同版 Apache-2.0 原始碼、建置腳本和完整自動化測試。 |
-| `Container-Desk-0.1.3-preview-manifest.json` | 原始碼提交、檔案樹與主要產物雜湊。 |
+| `Container-Desk-0.2.0-arm64.dmg` | 安裝 Mac App，不需要 Xcode。 |
+| `Container-Desk-0.2.0-Quick-Start.zip` | 選用的入門包：三語教學、快速測試腳本、兩個 `.command` 啟動器及範例專案，不重複包含 DMG。 |
+| `Container-Desk-0.2.0-source.zip` | 同版 Apache-2.0 原始碼、建置腳本和完整自動化測試。 |
+| `Container-Desk-0.2.0-manifest.json` | 原始碼提交、檔案樹與主要產物雜湊。 |
 | `SHA256SUMS.txt` | 所有附件的 SHA-256（不包含校驗檔自己）。 |
-| `Container-Desk-Overview-zh-Hant.mp4` | 58.5 秒實機操作影片、繁體字幕；來自前一個 QA 建置，不代表安裝／升級驗收。 |
+| `Container-Desk-Overview-zh-Hant.mp4` | Actual 0.2.0 app footage / 0.2.0 實機操作 / 0.2.0 实机操作；繁體字幕。 |
 
 需求：Apple Silicon、macOS 26 以上、可下載映像檔的網路，以及 **Apple Container 1.5.0**。不支援 Intel Mac。只有原始碼建置／完整 QA 需要 Xcode 或 Command Line Tools 26 與 Python 3；快速測試只用內建 Bash、curl 和已安裝的引擎。
 
-全部附件放同一資料夾後，可執行 `shasum -a 256 -c SHA256SUMS.txt`。若只下載 DMG，請執行 `shasum -a 256 Container-Desk-0.1.3-arm64-preview.dmg`，比對校驗檔內相應的完整雜湊；缺少選用附件不代表 DMG 損壞。
+全部附件放同一資料夾後，可執行 `shasum -a 256 -c SHA256SUMS.txt`。若只下載 DMG，請執行 `shasum -a 256 Container-Desk-0.2.0-arm64.dmg`，比對校驗檔內相應的完整雜湊；缺少選用附件不代表 DMG 損壞。
 
 ## 2. 安裝與連線
 
 1. 開啟 DMG，把 **Container Desk** 拖到 **應用程式**，再從應用程式啟動。更新舊版前先結束舊 App；完成後退出 DMG。
-2. 此預覽版只有 ad hoc 簽章，尚無 Developer ID 或 Apple 公證，首次啟動可能被 macOS 阻擋。確認信任這份下載後，依 [Apple 的單一 App 開啟說明](https://support.apple.com/en-nz/102445)檢查「系統設定 → 隱私權與安全性 → 強制打開／仍要打開」。不要全域關閉 Gatekeeper。若沒有單一 App 允許選項，請回報完整提示。
+2. 此版本只有 ad hoc 簽章，尚無 Developer ID 或 Apple 公證，首次啟動可能被 macOS 阻擋。確認信任這份下載後，依 [Apple 的單一 App 開啟說明](https://support.apple.com/en-nz/102445)檢查「系統設定 → 隱私權與安全性 → 強制打開／仍要打開」。不要全域關閉 Gatekeeper。若沒有單一 App 允許選項，請回報完整提示。
 3. 開啟左側 **容器引擎**。若尚未安裝引擎，可使用 App 的官方來源安裝流程，或從 [Apple Container](https://github.com/apple/container)安裝支援版本；macOS 管理員授權由你本人確認。App 與引擎是分開安裝的。
 4. 視需要啟動引擎，等狀態變成「已連線」。在總覽核對真實 CPU、記憶體及系統版本。遇到無法識別的自訂安裝，先閱讀提示，不要覆寫既有設定。
 5. 到設定選擇英文／繁體／簡體介面；CPU 與記憶體範圍取自主機規格。
@@ -78,11 +78,18 @@ http.server
 - **映像倉庫**：先使用自己有權限的測試倉庫；登入透過官方 CLI 儲存憑證，標記／推送都是明確操作。可搜尋公開映像，不代表有 Docker Hub 推送權限。私人 HTTPS 倉庫登入成功仍須依帳號環境驗收。
 - **檔案**：先用測試容器試傳輸至空白目的地。限制為 4 GiB／10,000 個項目及一般未壓縮 tar；特殊壓縮、稀疏檔案或不支援的中繼資料會拒絕。既有目的地檔案受保護。詳見[檔案與專案指南](COMPOSE_AND_FILES.md)。
 
+## 6. 新增便利功能
+
+- **複製：** 容器 → 更多操作 → 複製／另外重建，檢查來源設定後再設定新容器。原容器保留；連接埠清除，掛載預設唯讀，環境變數需選擇加入。儲存卷是共用，不是複製；需要可寫層變更時先儲存為映像。
+- **磁碟用量：** 映像／網路／儲存卷 → 磁碟用量與清理，重新整理後選取並確認個別項目。刪除前重查參照，不刪除容器，也不全域 prune。
+- **瀏覽倉庫：** 輸入 HTTPS 主機，必要時直接指定專案，再選標籤部署。目錄 Basic 認證僅暫存本次視窗；拉取／推送另用 CLI 登入。部分服務不支援目錄或需要尚未支援的 Bearer 流程。簡短主機名會明確加上 `:443`，認證拉取請使用相同名稱登入。
+- **映像資訊：** 建立時選擇本機映像與架構，展開映像預設資訊查看啟動指令、使用者、工作目錄與連接埠；不會自動公開連接埠。
+
 ## 排除問題與回報
 
 | 狀況 | 處理方式 |
 |---|---|
-| GitHub 404 | 確認使用已獲此私人儲存庫邀請的帳號登入。 |
+| GitHub 404 | 核對 Release 網址及網路連線，儲存庫公開後不需邀請權限。 |
 | App 無法開啟 | 核對 Apple Silicon、macOS 26、DMG 完整校驗碼，記錄系統提示。 |
 | 未連線／找不到 CLI | 在容器引擎頁確認官方引擎的安裝與啟動狀態，不要刪除引擎資料。 |
 | 連接埠已占用 | 改用 18081 或其他空閒埠，不要停止不相關的服務。 |
@@ -93,4 +100,4 @@ http.server
 
 回報 App 版本、macOS／晶片、引擎版本、操作步驟、預期／實際結果及 `PASS`／`FAIL` 輸出即可。分享前移除電腦名稱、私人路徑、環境變數內容、密碼與 Token。腳本不會自動傳送報告。
 
-開發者可先 `bash scripts/build.sh`，再 `python3 scripts/qa.py --live --ui`，請先讀[完整自動化說明](AUTOMATED_QA.md)。它會下載測試映像並操作前景 App，執行期間不要操作桌面。既有基線為 17 組通過／0 失敗、56 步 UI 通過；第二台 Mac 的安裝／升級、完整無障礙／視覺檢查及 60 分鐘穩定性仍待驗收。AI 模型延後。
+開發者先執行 `bash scripts/build.sh`，再執行 `python3 scripts/qa.py --live --ui`；先讀[自動化說明](AUTOMATED_QA.md)。介面測試期間請保持 Mac 解鎖，暫停操作桌面。[本版驗證紀錄](RELEASE_0.2.0_VALIDATION.md)列出真實結果。乾淨安裝、真正引擎升級、外部私人 HTTPS 倉庫成功流程及完整人工無障礙驗收仍未驗證；AI 延後。

@@ -13,6 +13,9 @@ struct QuickDeployView:View {
     @State private var requested:DeploymentSelection?
     @State private var mode="search"
     @State private var continueToConfiguration=false
+    init(initialSource:String="") {
+        _input=State(initialValue:initialSource);_mode=State(initialValue:initialSource.isEmpty ? "search":"direct")
+    }
     private var canConfigure:Bool{architecture != "amd64" || DeploymentRuntime.rosettaReady}
     var body:some View {
         Group {

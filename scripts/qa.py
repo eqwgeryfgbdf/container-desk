@@ -54,7 +54,7 @@ try:
         run('management',['bash','scripts/test-management-live.sh','--run'])
         run('workflows',['bash','scripts/test-workflows-live.sh','--run'])
         binary=str(ROOT.parent/'work/tests/PlatformTests')
-        for name,flags in [('platform-files',['--run']),('conversion',['--convert-run']),('resolved-compose',['--resolved-run']),('registry',['--registry','--push']),('snapshot',['--snapshot']),('search',['--hub-search','--hub-download']),('resource-batch',['--resource-batch'])]:
+        for name,flags in [('clone',['--clone']),('platform-files',['--run']),('conversion',['--convert-run']),('resolved-compose',['--resolved-run']),('registry',['--registry','--push']),('snapshot',['--snapshot']),('search',['--hub-search','--hub-download']),('resource-batch',['--resource-batch'])]:
             run(name,[binary,*flags])
         if 'docker.io/library/busybox:1.37' in baseline['image']: skip('architecture','BusyBox reference already exists; architecture fixture refuses to alter it')
         else: run('architecture',[binary,'--architecture-deploy'])
@@ -66,7 +66,9 @@ try:
         else: skip('image-build-archive','Existing builder is active; do not interrupt it')
     elif args.live: skip('live','Engine unavailable or unit suite failed')
     else: skip('live','Pass --live to authorize disposable engine fixtures and official image downloads')
-    if args.ui: run('native-ui',['bash','scripts/test-ui.sh','--out',str(out/'ui')],timeout=600)
+    if args.ui:
+        if run('native-ui',['bash','scripts/test-ui.sh','--matrix','--out',str(out/'ui')],timeout=900):
+            run('native-creation',['python3','scripts/ui-creation-check.py','--out',str(out/'ui-creation')],timeout=600)
     else: skip('native-ui','Pass --ui on an unlocked desktop with Accessibility permission')
 except Exception as error:
     results.append(dict(name='orchestrator',status='FAIL',seconds=0,notes=[str(error)]))
@@ -81,7 +83,7 @@ finally:
             results.append(dict(name='state-preservation',status='PASS' if baseline==after else 'FAIL',seconds=0,notes=['Exact container states/image/network/volume inventory comparison; unexpected leftovers are reported, never broadly deleted.']))
         except Exception as error: results.append(dict(name='state-preservation',status='FAIL',seconds=0,notes=[str(error)]))
     for name,reason in [
-        ('clean-mac-install','Requires the second test Mac: GitHub download, first launch, installer authorization/cancel/retry.'),
+        ('clean-mac-install','Second-Mac testing was explicitly waived by the owner. Tests run only on the developer Mac; clean installation and downloaded-DMG Gatekeeper acceptance remain unverified.'),
         ('real-core-upgrade','Requires a controlled previous-version engine; this run does not stop or replace the host engine.'),
         ('private-registry-success','Requires a dedicated HTTPS test registry account; failure/loopback push paths are automated.'),
         ('accessibility-manual','VoiceOver reading quality, contrast and subjective layout review need manual acceptance.'),

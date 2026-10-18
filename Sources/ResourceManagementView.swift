@@ -12,6 +12,7 @@ struct ResourceManagementView: View {
     @State private var deleting:ResourceBatchDeletion?
     @State private var submittedDeletion:ResourceBatchDeletion?
     @State private var quickDeploy=false
+    @State private var diskUsage=false
     @State private var createImage:String?
     @State private var pushSource:String?
     @State private var pushSubmission:(String,String,Bool)?
@@ -36,6 +37,7 @@ struct ResourceManagementView: View {
             HStack {
                 TextField(s.t("searchResources"),text:$query).textFieldStyle(.roundedBorder).frame(maxWidth:320)
                 Text("\(filtered.count)").monospacedDigit().foregroundStyle(.secondary)
+                Button(s.t("diskUsageCleanup")){diskUsage=true}.disabled(!s.canMutate)
                 Spacer()
                 Button(s.t("refresh")){Task{await s.refreshResources()}}.disabled(s.imagesLoading || s.busy)
             }
@@ -66,6 +68,7 @@ struct ResourceManagementView: View {
         .onChange(of:filtered.map(\.id)){_,ids in selection.formIntersection(Set(ids))}
         .onChange(of:kind){_,_ in selection=[];query=""}
         .task {await s.refreshResources()}
+        .sheet(isPresented:$diskUsage){DiskUsageView().environmentObject(s)}
         .sheet(isPresented:$quickDeploy) {
             QuickDeployView().environmentObject(s)
         }
@@ -216,6 +219,7 @@ struct ContainerUtilityActions:View {
     let item:ContainerItem
     var body:some View {
         Button(s.t("inspect")){s.inspection=InspectionTarget(kind:nil,name:item.id)}
+        Button(s.t("cloneContainer")){s.cloneSource=item.id}.disabled(!s.canMutate)
         Button(s.t("snapshotTitle")){s.snapshotSource=item.id}.disabled(!s.canMutate)
         Button(s.t("files")){s.fileContainer=item.id}.disabled(!item.running || !s.canMutate)
         Button(s.t("openTerminal")){Task{await s.openTerminal(item)}}.disabled(!item.running || !s.canMutate)

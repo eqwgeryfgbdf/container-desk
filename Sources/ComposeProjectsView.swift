@@ -78,16 +78,13 @@ struct ComposeProjectsView:View {
         return s.t(error.localizedDescription)
     }
     private func serviceSummary(_ service:ComposeService)->String {
-        let args=service.createArguments
         var lines:[String]=[]
-        for (flag,key) in [("--volume","mounts"),("--publish","ports")] {
-            let values=args.indices.filter{args[$0]==flag}.map{args[$0+1]}
-            if !values.isEmpty {lines.append("\(service.name) · \(s.t(key)): \(values.joined(separator:", "))")}
+        let mounts=service.mounts.map{$0.source+":"+$0.target+($0.readOnly ? ":ro":"")}
+        let ports=service.ports.map{"127.0.0.1:"+$0.host+":"+$0.container+"/"+$0.transport}
+        for (values,key) in [(mounts,"mounts"),(ports,"ports")] {
+            if !values.isEmpty{lines.append("\(service.name) · \(s.t(key)): \(values.joined(separator:", "))")}
         }
-        if let separator=args.firstIndex(of:"--") {
-            let command=Array(args.dropFirst(separator+2))
-            if !command.isEmpty {lines.append("\(service.name) · \(s.t("commandArguments")): \(command.map(shellQuote).joined(separator:" "))")}
-        }
+        if !service.command.isEmpty {lines.append("\(service.name) · \(s.t("commandArguments")): \(service.command.map(shellQuote).joined(separator:" "))")}
         if let build=service.buildArguments {lines.append("\(service.name) · \(s.t("buildContext")): \(build.last ?? "")")}
         return lines.joined(separator:"\n")
     }

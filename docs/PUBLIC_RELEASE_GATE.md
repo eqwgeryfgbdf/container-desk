@@ -1,6 +1,10 @@
+> 2026-10-18: The owner authorized a regular public 0.2.0 release and explicitly deferred second-Mac testing. Only the developer’s own Mac was used. This older record is preserved for traceability; its private/preview decision is no longer current. Unperformed gates remain unverified, not PASS. See [0.2.0 verification and limits](RELEASE_0.2.0_VALIDATION.md).
+>
+> 擁有者已決定公開 0.2.0 正式發行並暫不測試第二台 Mac；僅在自己的設備上測試。舊驗收標準保留供追溯，未執行項目不會改標通過。
+
 # Public release acceptance / 公開驗收門檻
 
-Status: **NOT READY — keep the repository private.**
+Status: **Historical acceptance target, superseded for 0.2.0 by the owner’s explicit public-release decision.**
 
 This is the acceptance contract for the first public Container Desk preview. Passing it makes the release eligible for public visibility; it does not claim Apple endorsement, notarization, or support for untested Container versions. A later stable release needs its own completed record. No score averaging: every required gate must pass, with zero open critical or major defects. Pending, blocked, and simulated results do not count as a real-machine pass.
 

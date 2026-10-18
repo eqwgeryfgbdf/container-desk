@@ -1,3 +1,7 @@
+> 2026-10-18: The owner authorized a regular public 0.2.0 release and explicitly deferred second-Mac testing. Only the developer’s own Mac was used. This older record is preserved for traceability; its private/preview decision is no longer current. Unperformed gates remain unverified, not PASS. See [0.2.0 verification and limits](RELEASE_0.2.0_VALIDATION.md).
+>
+> 擁有者已決定公開 0.2.0 正式發行並暫不測試第二台 Mac；僅在自己的設備上測試。舊驗收標準保留供追溯，未執行項目不會改標通過。
+
 # Current-source QA — 2026-10-17
 
 This is a source/development-build record, not certification of the existing GitHub download. The repository remains private and the public release decision remains **NOT READY**.

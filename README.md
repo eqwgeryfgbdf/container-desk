@@ -1,16 +1,16 @@
-# Container Desk 0.1.3 — Developer Preview
+# Container Desk 0.2.0 — Public Release
 
 [English](README.md) · [中文（繁體）](README.zh-Hant.md) · [中文（简体）](README.zh-Hans.md)
 
 Native SwiftUI manager for **local Apple Container**, built with the macOS 26 SDK. Requires Apple Silicon, macOS 26 or later, and tested engine **1.5.0**. This is an independent application, not an Apple product.
 
-[Download 0.1.3 preview](https://github.com/eqwgeryfgbdf/container-desk/releases/tag/v0.1.3-preview) · [Detailed quick start](docs/QUICK_START.md) · [Release notes](RELEASE_NOTES.md)
+[Download 0.2.0](https://github.com/eqwgeryfgbdf/container-desk/releases/tag/v0.2.0) · [Detailed quick start](docs/QUICK_START.md) · [Release notes](RELEASE_NOTES.md)
 
-**The repository remains private.** Testers need repository access and GitHub sign-in. Public visibility waits for the [acceptance gates](docs/PUBLIC_RELEASE_GATE.md); this preview is not a verified stable release.
+**Public release 0.2.0.** Tested only on the developer's own M4 Mac mini (16 GiB, macOS 26.7.1, Apple Container 1.5.0). The owner explicitly deferred second-Mac testing. This release is ad hoc signed, without Developer ID or Apple notarization. Read the [verification scope and known limits](docs/RELEASE_0.2.0_VALIDATION.md) before use.
 
 ## Try it in five minutes
 
-1. Download the DMG and optional `Container-Desk-0.1.3-Quick-Start.zip` from the release. Verify them using `SHA256SUMS.txt`.
+1. Download the DMG and optional `Container-Desk-0.2.0-Quick-Start.zip` from the release. Verify them using `SHA256SUMS.txt`.
 2. Drag **Container Desk.app** to **Applications**. This build is ad hoc signed, without Developer ID or Apple notarization; see the [installation guide](docs/QUICK_START.md#2-install-and-connect) if macOS blocks opening it.
 3. Open **Container Engine** to connect to or install the supported official Apple Container engine. The app and engine are separate downloads; administrator authorization belongs to macOS.
 4. Unzip the Quick Start bundle, open Terminal in its folder, and run:
@@ -32,10 +32,18 @@ The check is read-only. The test uses one temporary BusyBox HTTP container on `1
 
 ![Container management, search, status and resource allocation](docs/images/containers-en.jpg)
 
-[Watch or download the 58.5-second walkthrough](https://github.com/eqwgeryfgbdf/container-desk/releases/download/v0.1.3-preview/Container-Desk-Overview-zh-Hant.mp4) (Traditional Chinese captions). Screenshots and video come from the preceding 0.1.2 QA build on macOS 26.7.1; they show real disposable fixtures, with host identity redacted. They are not evidence of a clean 0.1.3 installation or upgrade. [Media provenance](docs/MEDIA.md).
+### Create a container
 
-## What is included in 0.1.3
+![Downloaded image picker, CPU menu and memory slider with direct numeric entry](docs/images/create-en.png)
 
+[Watch the actual app walkthrough](https://github.com/eqwgeryfgbdf/container-desk/releases/download/v0.2.0/Container-Desk-Overview-zh-Hant.mp4) (Traditional Chinese captions). These screenshots and the video show **0.2.0 on the developer's own Mac**, using real disposable containers. Host names are visibly masked; runtime values are not fabricated. macOS's recording indicator may be visible. Media does not certify installation or upgrades. [Media provenance](docs/MEDIA.md).
+
+
+## What is included in 0.2.0
+
+- **Duplicate safely:** create a separate container from inspected configuration. Ports are cleared; environment and mounts require opt-in, mounts default read-only, and writable sharing requires a stopped source. The original container stays intact.
+- **Disk usage:** inspect actual image/container/volume usage and review selectively eligible image/network/volume cleanup; no global prune.
+- **Image defaults and catalogs:** inspect startup command, user, working directory and exposed ports before creation; browse HTTPS Registry V2 repository/tag pages and deploy a selected tag. Catalog authentication is a separate ephemeral Basic-auth session, not universal bearer-token support.
 - **Containers:** create, start, stop, restart, inspect and delete; reviewed batch selection/actions; CPU menu, synchronized memory slider/number field, and downloaded-image selector. New containers start stopped.
 - **Details:** double-click to expand, live CPU/memory/process/network summaries, session charts, searchable/exportable logs, clickable TCP web links and Copy URL. Missing measurements remain unavailable; network totals are cumulative traffic.
 - **Images and deployment:** Docker Hub search, registry references, platform inspection, download-and-configure, ARM64 or AMD64/Rosetta selection, Dockerfile builds, tag/delete, OCI import/export. Architecture selection is not binary conversion.
@@ -47,13 +55,13 @@ The check is read-only. The test uses one temporary BusyBox HTTP container on `1
 
 ## Verification and remaining work
 
-The preceding automated baseline passed **17 groups, 0 failures**, including **56 native UI steps**; 5 environment-dependent groups were skipped. Core, management, workflow, installer simulation and platform suites are repeatable from scripts. Real ARM64 and AMD64/Rosetta paths were exercised. The creation-sheet layout hang was fixed. This release adds a no-compiler smoke test and synchronized packaged-app version reporting. [Automation guide](docs/AUTOMATED_QA.md) · [Release validation](docs/RELEASE_0.1.3_VALIDATION.md).
+Automated tests cover container lifecycle, persistent data, files, images, projects, conversion, registry failure/loopback push paths and resource protection. New regressions cover clone preconditions, image metadata, registry catalog validation and three repaired medium-severity security findings. See the [current validation record](docs/RELEASE_0.2.0_VALIDATION.md) for exact results, skipped checks and final stability measurements; a skipped check is not a pass.
 
-Clean installation/upgrade on the second Mac, complete accessibility acceptance, a 60-minute soak and real private-registry acceptance remain pending. The short soak smoke is not the long-run acceptance test. AI model integration is deferred. There is no remote-host management, embedded interactive terminal, closed-app updater or independent guest-kernel updater. File extraction accepts bounded ordinary tar archives; compressed/sparse or oversized archives are refused. The security review found no validated high/critical findings within its scope; this is not a guarantee of absence. [Feature status](docs/FEATURE_ROADMAP.md) · [Report a test result](docs/TEST_REPORT.md).
+Clean engine installation, genuine engine upgrades, external private HTTPS registry success and complete manual VoiceOver acceptance remain unverified. Only the developer's own device was used. AI is deferred. Full Docker migration still requires separate data/local-image transfer, with no restart supervisor or automatic cutover/rollback. There is no remote-host management, embedded terminal or updater while the app is closed. [Feature status](docs/FEATURE_ROADMAP.md) · [Report a test result](docs/TEST_REPORT.md).
 
 ## Source, packaging and license
 
-The DMG, `preview-source.zip` and manifest are built from the same release commit. The source ZIP contains **Apache-2.0** licensing, resources, scripts and tests. `SHA256SUMS.txt` covers the uploaded files; `BUILD.json` in the optional Quick Start ZIP records its source commit. The Quick Start ZIP does not duplicate the DMG. Historical 0.1.2 assets remain available for traceability.
+The DMG, `source.zip` and manifest are built from the same release commit. The source ZIP contains **Apache-2.0** licensing, resources, scripts and tests. `SHA256SUMS.txt` covers the uploaded files; `BUILD.json` in the optional Quick Start ZIP records its source commit. The Quick Start ZIP does not duplicate the DMG. Historical 0.1.2 assets remain available for traceability.
 
 For contributors with Command Line Tools/Xcode 26 and Python 3:
 
@@ -65,7 +73,7 @@ bash scripts/package.sh ../outputs
 python3 scripts/make-quick-start.py --output ../outputs
 ```
 
-Packaging refuses a dirty checkout. Keep the GitHub release tag on the manifest's source commit. The optional Developer ID/notarization pipeline is prepared but has not produced a signed stable release. [Apache-2.0 license](LICENSE) · [Release gates](docs/PUBLIC_RELEASE_GATE.md).
+Packaging refuses a dirty checkout. Keep the GitHub release tag on the manifest's source commit. The optional Developer ID/notarization pipeline is prepared; this public build has only an ad hoc signature. [Apache-2.0 license](LICENSE) · [Release gates](docs/PUBLIC_RELEASE_GATE.md).
 
 ## Official dependency
 

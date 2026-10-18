@@ -33,7 +33,7 @@ import CoreImage
             let image=NSImage(size:NSSize(width:size.width,height:76));image.lockFocus()
             NSColor(calibratedWhite:0.07,alpha:0.94).setFill();NSRect(x:0,y:0,width:size.width,height:76).fill()
             (title as NSString).draw(at:NSPoint(x:28,y:31),withAttributes:[.font:NSFont.systemFont(ofSize:23,weight:.medium),.foregroundColor:NSColor.white])
-            ("REAL APP FOOTAGE  ·  DEVELOPMENT PREVIEW" as NSString).draw(at:NSPoint(x:29,y:11),withAttributes:[.font:NSFont.systemFont(ofSize:11,weight:.medium),.foregroundColor:NSColor(calibratedWhite:0.7,alpha:1)])
+            ("REAL APP FOOTAGE  ·  CONTAINER DESK 0.2.0" as NSString).draw(at:NSPoint(x:29,y:11),withAttributes:[.font:NSFont.systemFont(ofSize:11,weight:.medium),.foregroundColor:NSColor(calibratedWhite:0.7,alpha:1)])
             image.unlockFocus();return CIImage(cgImage:image.cgImage(forProposedRect:nil,context:nil,hints:nil)!)
         }
         let titles=chapters.map{($0.0,overlay($0.1))}
@@ -44,8 +44,13 @@ import CoreImage
                 // Sidebar stays visible on most pages. Overview's second hostname
                 // only needs masking through the initial page transition.
                 if r["x"]!>220 && time>6 {continue}
-                if r["x"]!<=220 && time>detailsStart+0.8 && time<imagesStart {continue}
-                let rect=CGRect(x:r["x"]!,y:size.height-r["y"]!-r["height"]!,width:r["width"]!,height:r["height"]!)
+                if r["x"]!<=220 && time>detailsStart+2 && time<imagesStart-4 {continue}
+                // Cover the full possible sidebar name band while the native
+                // split-view animation moves its label horizontally.
+                let sidebar=r["x"]!<=220
+                let x=sidebar ? 0:r["x"]!,width=sidebar ? 220:r["width"]!
+                let y=r["y"]!-(sidebar ? 4:0),height=r["height"]!+(sidebar ? 8:0)
+                let rect=CGRect(x:x,y:size.height-y-height,width:width,height:height)
                 frame=CIImage(color:CIColor(red:0.94,green:0.95,blue:0.96)).cropped(to:rect).composited(over:frame)
             }
             if let title=titles.last(where:{$0.0<=time})?.1 ?? titles.first?.1 {frame=title.composited(over:frame)}

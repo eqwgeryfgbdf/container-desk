@@ -27,7 +27,7 @@ for candidate in "$(command -v container || true)" /usr/local/bin/container "$HO
 done
 [[ -n "$CLI" ]] || { echo 'BLOCKED: install Apple Container from the official source in the Container Engine page first.' >&2; exit 1; }
 VERSION="$("$CLI" --version)"
-[[ "$VERSION" == 'container CLI version 1.5.0 '* || "$VERSION" == 'container CLI version 1.5.0' ]] || { echo "BLOCKED: this preview was tested with Apple Container 1.5.0; found $VERSION" >&2; exit 1; }
+[[ "$VERSION" == 'container CLI version 1.5.0 '* || "$VERSION" == 'container CLI version 1.5.0' ]] || { echo "BLOCKED: this release was tested with Apple Container 1.5.0; found $VERSION" >&2; exit 1; }
 "$CLI" list --all --quiet >/dev/null
 printf 'PASS: Apple Silicon, macOS %s, engine 1.5.0 reachable\n' "$OS"
 if [[ "$MODE" == check ]]; then

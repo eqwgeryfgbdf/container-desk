@@ -176,6 +176,7 @@ struct MainView:View {
             if let request=submittedBatch {submittedBatch=nil;s.batchOperation(request)}
         }) {request in BatchReviewView(request:request){submittedBatch=$0}.environmentObject(s)}
         .sheet(isPresented:$create){CreateView().environmentObject(s)}
+        .modifier(ClonePresentation())
         .sheet(isPresented:$s.operationPresented){OperationProgressView().environmentObject(s)}
         .sheet(isPresented:Binding(get:{s.fileContainer != nil},set:{if !$0{s.fileContainer=nil}})){ContainerFilesView(containerID:s.fileContainer ?? "").environmentObject(s)}
         .sheet(isPresented:Binding(get:{s.snapshotSource != nil},set:{if !$0{s.snapshotSource=nil}}),onDismiss:{

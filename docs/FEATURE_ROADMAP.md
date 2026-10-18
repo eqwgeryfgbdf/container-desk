@@ -1,6 +1,6 @@
 # Functional baseline and convenience roadmap
 
-Updated 2026-10-17. User priority: finish the common container-management baseline first, then local AI, then cloud AI. Routine implementation decisions proceed without waiting for replies. Decisions about accounts, paid services, model licensing and optional providers stay deferred. This file tracks scope; it is not a claim of feature parity or public-release acceptance.
+Updated 2026-10-18. User priority: finish the common container-management baseline first, then local AI, then cloud AI. Routine implementation decisions proceed without waiting for replies. Decisions about accounts, paid services, model licensing and optional providers stay deferred. This file tracks scope; it is not a claim of feature parity or public-release acceptance.
 
 ## Baseline A — implemented in current source
 
@@ -41,15 +41,20 @@ The native creation hang UI-001 was traced to `Slider(step: 1)` generating thous
 - Official Docker Compose config resolution and revalidation, multiple networks/aliases, build args/targets, and a Docker Hub/reference quick-deployment entry are implemented in current source.
 - Complete volume/data migration, local-image bridging, automatic restart supervision and verified cutover/rollback remain pending. See the explicit [migration acceptance contract](MIGRATION_ACCEPTANCE.md); configuration success is not full migration success.
 
-## Baseline B — remaining, before AI
+## Convenience additions in 0.2.0
 
-1. Image-metadata defaults; safe duplicate/recreate with a visible configuration diff and retained-volume policy.
-2. Finish multi-selection interactive and accessibility acceptance across window sizes; expand cancellation and external-state-change coverage.
-3. Finish file-browser interactive/accessibility acceptance and optional embedded terminal; finish boot-log and large-snapshot acceptance. The current Terminal action uses macOS Terminal and needs a shell inside the image.
-4. Registry catalog/tag browsing and real authenticated pull/push/login/logout acceptance. Supply accounts only through an appropriate secure flow; do not send credentials in chat.
-5. Extend Compose beyond the documented subset: continuous service discovery/restart supervision, scaling, recreate/diff, and additional Compose semantics only when their behavior is verified. Current unsupported settings are rejected.
-6. Disk-usage view and selective cleanup preview. No one-click global prune without showing precisely what will be removed.
-7. Complete UI, accessibility, clean-install, upgrade and second-Mac release gates; package app and Apache-2.0 source from the same version.
+- Image startup metadata is shown in creation from the selected local architecture. Ports remain opt-in.
+- Duplicate/recreate separately: inspect the source, review command/resources and optional environment/mounts, then configure a new stopped container. Source configuration/image identity is rechecked before creation. Published ports are cleared. Mounts default read-only; writable sharing requires the source to remain stopped. Writable container-layer changes require Save Container as Image first. This is not automatic cutover or rollback.
+- HTTPS Registry V2 catalog/tag pages, bounded 100-item pagination and deployment of selected tags. Optional session-only Basic credentials, no credential-bearing redirects; no universal bearer challenge handling. Single-label hosts use explicit `:443` to retain the selected origin. For authenticated pulls, log in using that same explicit authority.
+- Actual disk usage and selective image/network/volume cleanup preview; references are rechecked before each deletion. No global prune.
+
+## Remaining scope
+
+1. Full manual accessibility acceptance and broader install/upgrade/device compatibility. Second-Mac testing is explicitly deferred; current evidence is only from the developer's own Mac.
+2. External authenticated HTTPS registry success for a dedicated real account; session Basic catalog browsing is narrower than provider-specific token/OAuth support.
+3. Full Docker data/local-image migration, restart supervision, scaling, recreate/diff and verified cutover/rollback. Existing conversion remains a documented subset.
+4. Optional embedded terminal, remote hosts and advanced registry providers.
+5. Developer ID signing/notarization requires membership and a certificate; the public 0.2.0 download uses ad hoc signing.
 
 ## After the baseline
 
@@ -70,7 +75,7 @@ bash scripts/test-platform.sh --run --registry --push  # disposable projects, fi
 
 Live tests mutate only named disposable resources. The management test requires an existing arm64 Python image. The image test requires the existing builder to be stopped; it temporarily starts that builder for a tiny scratch build, restores it to stopped, downloads a small BusyBox image if absent, and cleans up its own images. It does not stop unrelated running containers. Run these on a suitable test host, never concurrently with another build.
 
-Current source and local development build include Baseline A. Existing `v0.1.2-preview` GitHub assets have not been replaced. Keep the repository private until [the public-release gates](PUBLIC_RELEASE_GATE.md) pass.
+Current source and local development build include Baseline A. Existing `v0.1.2-preview` GitHub assets have not been replaced. The owner authorized public 0.2.0 distribution with the explicit limits in [the current validation record](RELEASE_0.2.0_VALIDATION.md).
 
 ## AI scheduling decision — 2026-10-17
 

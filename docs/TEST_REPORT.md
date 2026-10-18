@@ -1,3 +1,5 @@
+> 0.2.0: report results from your own Mac. The owner deferred second-Mac testing; no second device is required to submit feedback. Do not include private hostnames, paths or credentials.
+
 # Candidate test report / 測試結果表
 
 Decision: **NOT READY**

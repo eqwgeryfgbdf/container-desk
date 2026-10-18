@@ -2,7 +2,7 @@
 """Real foreground SwiftUI regression; generated containers are disposable."""
 import argparse,json,os,pathlib,signal,socket,subprocess,sys,time,uuid
 ROOT=pathlib.Path(__file__).resolve().parents[1]
-p=argparse.ArgumentParser(description=__doc__);p.add_argument('--record',action='store_true');p.add_argument('--out',type=pathlib.Path,default=ROOT.parent/'work/ui-qa');p.add_argument('--app',type=pathlib.Path,default=ROOT.parent/'work/build/Container Desk.app');a=p.parse_args();a.out.mkdir(parents=True,exist_ok=True)
+p=argparse.ArgumentParser(description=__doc__);p.add_argument('--record',action='store_true');p.add_argument('--matrix',action='store_true',help='Also run the three-language/two-theme/two-size native matrix');p.add_argument('--reuse',action='store_true',help='Use the already-running candidate (for a continuous stability run)');p.add_argument('--out',type=pathlib.Path,default=ROOT.parent/'work/ui-qa');p.add_argument('--app',type=pathlib.Path,default=ROOT.parent/'work/build/Container Desk.app');a=p.parse_args();a.out.mkdir(parents=True,exist_ok=True)
 driver=ROOT.parent/'work/tests/UIAutomation';engine=next(x for x in ['/usr/local/bin/container',str(pathlib.Path.home()/'.local/bin/container'),'/opt/homebrew/bin/container'] if os.access(x,os.X_OK))
 def command(*parts):return subprocess.check_output([engine,*parts],text=True,timeout=180)
 def rows():return json.loads(command('list','--all','--format','json'))
@@ -18,25 +18,33 @@ try:
     command('create','--name',web,'--cpus','1','--memory','256M','--publish',f'127.0.0.1:{port}:8000',image,'python3','-u','-m','http.server','8000')
     command('start','--',web)
     command('create','--name',worker,'--cpus','1','--memory','256M',image,'sleep','600')
-    # Terminate only this app before launching temporary language/appearance overrides.
-    old=subprocess.run([str(driver),'metadata'],capture_output=True,text=True,timeout=8)
-    if old.returncode==0:
-        pid=json.loads(old.stdout)['pid'];os.kill(pid,signal.SIGTERM)
-        for _ in range(50):
-            try:os.kill(pid,0)
-            except ProcessLookupError:break
-            time.sleep(.1)
-        else:raise RuntimeError('App did not quit; refusing to launch a second instance')
-    subprocess.run(['open',str(a.app),'--args','-language','en','-appearance','light','-AppleLocale','en_US'],check=True)
-    time.sleep(2)
-    setup=[{'action':'resize','width':1280,'height':800},{'action':'nav','label':'Overview'},{'action':'expect','label':'This Mac'}]
+    if a.reuse:
+        meta=json.loads(subprocess.check_output([str(driver),'metadata'],text=True,timeout=8))
+        launched=subprocess.check_output(['ps','-p',str(meta['pid']),'-o','command='],text=True).strip()
+        if not launched.startswith(str(a.app.resolve()/'Contents/MacOS/ContainerDesk')):
+            raise RuntimeError('Running app is not the requested candidate')
+    else:
+        # Terminate only this app before launching temporary language/appearance overrides.
+        old=subprocess.run([str(driver),'metadata'],capture_output=True,text=True,timeout=8)
+        if old.returncode==0:
+            pid=json.loads(old.stdout)['pid'];os.kill(pid,signal.SIGTERM)
+            for _ in range(50):
+                try:os.kill(pid,0)
+                except ProcessLookupError:break
+                time.sleep(.1)
+            else:raise RuntimeError('App did not quit; refusing to launch a second instance')
+        subprocess.run(['open',str(a.app),'--args','-language','en','-appearance','light','-AppleLanguages','(en)','-AppleLocale','en_US'],check=True)
+        time.sleep(2)
+    setup=[{'action':'resize','width':1280,'height':800},{'action':'nav','label':'Overview'},{'action':'expect','label':'This Mac'},{'action':'key','code':15,'command':True}]
     setup_path=a.out/'setup.json';setup_path.write_text(json.dumps(setup));subprocess.run([str(driver),'run',str(setup_path)],check=True,timeout=30)
+    if a.matrix:
+        subprocess.run([sys.executable,str(ROOT/'scripts/ui-matrix.py'),'--out',str(a.out/'matrix')],check=True,timeout=260)
     scenario=json.loads((ROOT/'Tests/UI/scenario.json').read_text())
-    scenario=json.loads(json.dumps(scenario).replace('$WEB',web).replace('$WORKER',worker).replace('$IMAGE',image))
+    scenario=json.loads(json.dumps(scenario).replace('$WEB',web).replace('$WORKER',worker).replace('$IMAGE',image).replace('$CAPTURE',str(a.out.resolve())))
     scenario_path=a.out/'scenario.json';scenario_path.write_text(json.dumps(scenario,ensure_ascii=False,indent=2))
     if a.record:
         meta=json.loads(subprocess.check_output([str(driver),'metadata'],text=True,timeout=8));(a.out/'window.json').write_text(json.dumps(meta))
-        recording=subprocess.Popen(['/usr/sbin/screencapture','-v','-o','-V','90','-l',str(meta['windowID']),str(a.out/'raw.mov')],stdout=subprocess.DEVNULL,stderr=(a.out/'recording.log').open('w'))
+        recording=subprocess.Popen(['/usr/sbin/screencapture','-v','-o','-V','150','-l',str(meta['windowID']),str(a.out/'raw.mov')],stdout=subprocess.DEVNULL,stderr=(a.out/'recording.log').open('w'))
         time.sleep(1)
     with (a.out/'ui.log').open('w') as log:
         subprocess.run([str(driver),'run',str(scenario_path)],stdout=log,stderr=subprocess.STDOUT,check=True,timeout=150)
@@ -49,7 +57,7 @@ finally:
     if recording:
         # SIGINT cancels macOS screencapture without saving. Let the bounded
         # recording finish normally; the annotator trims only trailing idle time.
-        try:recording.wait(timeout=95)
+        try:recording.wait(timeout=155)
         except subprocess.TimeoutExpired:recording.terminate();recording.wait(timeout=5)
     current={r['id']:r for r in rows()}
     for fixture in [web,worker]:

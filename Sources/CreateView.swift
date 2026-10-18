@@ -6,8 +6,14 @@ struct CreateView:View {
     @Environment(\.dismiss) private var dismiss
     @State private var request:CreateRequest
     @State private var submitting=false
+    @State private var imageDefaults:ImageDefaults?
     @State private var validation:String?
     @State private var memoryText="512"
+    private var origin:CloneOrigin?=nil
+    private var onCreated:(()->Void)?=nil
+    init(initialRequest:CreateRequest,origin:CloneOrigin,onCreated:(()->Void)?=nil) {
+        _request=State(initialValue:initialRequest);_memoryText=State(initialValue:String(initialRequest.memoryMB));self.origin=origin;self.onCreated=onCreated
+    }
     init(initialImage:String="",initialArchitecture:String="arm64") {
         _request=State(initialValue:DeploymentSelection(image:initialImage,architecture:initialArchitecture).createRequest)
     }
@@ -45,6 +51,11 @@ struct CreateView:View {
             }.padding(20)
         }.frame(width:620,height:640)
         .task {request.cpus=min(request.cpus,maxCPUs);await s.refreshResources()}
+        .task(id:request.image+request.architecture) {
+            imageDefaults=nil
+            guard let cli=s.cli,!request.image.isEmpty else{return}
+            if let data=try? await ProcessRunner.checked(cli,["image","inspect","--",request.image]),!Task.isCancelled {imageDefaults=try? ImageDefaults(data.data,architecture:request.architecture)}
+        }
         .onChange(of:s.images.map(\.id)) {_,ids in if !ids.contains(request.image){request.image=""}}
     }
     private func group<Content:View>(_ key:String,@ViewBuilder content:()->Content)->some View {
@@ -59,6 +70,17 @@ struct CreateView:View {
                 Text(s.t("selectImage")).tag("")
                 ForEach(s.images){Text($0.id).tag($0.id)}
             }.pickerStyle(.menu).disabled(s.imagesLoading || s.images.isEmpty)
+            if let defaults=imageDefaults {
+                DisclosureGroup(s.t("imageDefaults")) {
+                    VStack(alignment:.leading,spacing:6) {
+                        Text("Entrypoint: "+defaults.entrypoint.joined(separator:" ")).lineLimit(3)
+                        Text("Cmd: "+defaults.command.joined(separator:" ")).lineLimit(3)
+                        Text("User: "+defaults.user+" · "+defaults.workingDirectory).lineLimit(2)
+                        Text(s.t("ports")+": "+defaults.ports.joined(separator:", "))
+                        Text(s.t("imageDefaultsNote")).foregroundStyle(.secondary)
+                    }.font(.caption).textSelection(.enabled)
+                }
+            }
             LabeledContent(s.t("architecture")){Text(s.t(request.architecture=="amd64" ? "deployAMDTranslated":"deployARMNative"))}
             HStack {
                 Text(s.t("localImagesOnly")).font(.caption).foregroundStyle(.secondary)
@@ -173,6 +195,7 @@ struct CreateView:View {
             Picker(s.t("architecture"),selection:$request.architecture){Text("arm64").tag("arm64");Text("amd64").tag("amd64")}.pickerStyle(.menu)
             if request.architecture == "amd64" {Toggle(s.t("enableRosetta"),isOn:$request.rosetta)}
             TextField(s.t("entrypointOptional"),text:$request.entrypoint).textFieldStyle(.roundedBorder)
+            TextField(s.t("containerUserOptional"),text:$request.user).textFieldStyle(.roundedBorder)
             TextField(s.t("workingDirectoryOptional"),text:$request.workingDirectory).textFieldStyle(.roundedBorder)
             Text(s.t("environment"))
             TextEditor(text:$request.environment).font(.system(.caption,design:.monospaced)).frame(height:70).accessibilityLabel(s.t("environment"))
@@ -193,7 +216,7 @@ struct CreateView:View {
         do {
             guard let memory=Int(memoryText),validMemory else {throw DeskError.message("allocationOutOfRange")}
             request.memoryMB=memory;_=try request.arguments();validation=nil;submitting=true
-            Task {if await s.create(request){dismiss()}else{validation=s.error};submitting=false}
+            Task {if await s.create(request,origin:origin){onCreated?();dismiss()}else{validation=s.error};submitting=false}
         }catch{validation=error.localizedDescription}
     }
 }

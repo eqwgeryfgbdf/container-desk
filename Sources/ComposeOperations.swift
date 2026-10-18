@@ -34,7 +34,7 @@ struct ComposeProjectRecord:Codable,Identifiable,Equatable {
 enum ComposeHosts {
     static func update(_ plan:ComposePlan,rows:[[String:Any]])throws {
         for service in plan.services {
-            let networks=service.createArguments.indices.filter{service.createArguments[$0]=="--network"}.map{service.createArguments[$0+1]}
+            let networks=service.networkAliases.keys.sorted()
             var text="127.0.0.1 localhost\n::1 localhost ip6-localhost\n",claimed=Set<String>()
             for network in networks {
                 for peer in plan.services where peer.networkAliases[network] != nil {
@@ -93,9 +93,8 @@ enum ComposeHosts {
             let before=try await inventory()
             for service in plan.services {
                 try validateContainer(service,before)
-                let args=service.createArguments
-                if let i=args.firstIndex(of:"--cpus"),let cpu=Int(args[i+1]),cpu>(self.host.logicalCores ?? ProcessInfo.processInfo.activeProcessorCount){throw DeskError.message("allocationOutOfRange")}
-                if let i=args.firstIndex(of:"--memory"),let memory=Int64(args[i+1].dropLast()),memory>Int64(self.host.memory/1048576){throw DeskError.message("allocationOutOfRange")}
+                if service.cpus>(self.host.logicalCores ?? ProcessInfo.processInfo.activeProcessorCount){throw DeskError.message("allocationOutOfRange")}
+                if Int64(service.memoryMiB)>Int64(self.host.memory/1048576){throw DeskError.message("allocationOutOfRange")}
             }
             // Preflight every referenced resource before creating the first one.
             for (kind,resources) in [("network",plan.networks),("volume",plan.volumes)] {

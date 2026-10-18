@@ -6,11 +6,13 @@ struct RegistryView:View {
     @State private var loading=false
     @State private var failure:String?
     @State private var login=false
+    @State private var browse=false
+    @State private var browseServer=""
     @State private var submitted:RegistryLogin?
     @State private var logout:String?
     var body:some View {
         VStack(alignment:.leading,spacing:20) {
-            HStack {Text(s.t("registries")).font(.largeTitle).fontWeight(.semibold);Spacer();Button(s.t("refresh")){Task{await refresh()}}.disabled(loading);Button(s.t("registryLogin")){login=true}.buttonStyle(.borderedProminent).disabled(!s.canMutate)}
+            HStack {Text(s.t("registries")).font(.largeTitle).fontWeight(.semibold);Spacer();Button(s.t("catalogTitle")){browseServer="";browse=true};Button(s.t("refresh")){Task{await refresh()}}.disabled(loading);Button(s.t("registryLogin")){login=true}.buttonStyle(.borderedProminent).disabled(!s.canMutate)}
             Text(s.t("registryCredentialNote")).foregroundStyle(.secondary)
             if let failure{Text(s.t(failure)).foregroundStyle(.red)}
             if loading{ProgressView()}
@@ -18,10 +20,12 @@ struct RegistryView:View {
                 HStack {
                     Label(account.name,systemImage:"server.rack").font(.headline)
                     Text(account.username).foregroundStyle(.secondary);Spacer()
+                    Button(s.t("catalogTitle")){browseServer=account.name;browse=true}
                     Button(s.t("registryLogout"),role:.destructive){logout=account.name}.disabled(!s.canMutate)
                 }.padding(.vertical,8)
             }.overlay{if accounts.isEmpty && !loading && failure==nil{ContentUnavailableView(s.t("noRegistries"),systemImage:"server.rack")}}
         }.padding(28)
+        .sheet(isPresented:$browse){RegistryCatalogView(server:browseServer).environmentObject(s)}
         .task{await refresh()}
         .onChange(of:s.operationRunning){_,running in if !running{Task{await refresh()}}}
         .sheet(isPresented:$login,onDismiss:{if let request=submitted{submitted=nil;s.loginRegistry(request)}}){RegistryLoginView{submitted=$0;login=false}.environmentObject(s)}

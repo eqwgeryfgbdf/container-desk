@@ -179,6 +179,7 @@ struct CreateRequest {
     var architecture = "arm64"
     var rosetta = false
     var entrypoint = ""
+    var user = ""
     var workingDirectory = ""
     var commandArguments = ""
     var allMounts:[MountMapping] {
@@ -227,6 +228,10 @@ struct CreateRequest {
         if !network.isEmpty {
             guard network.range(of:"^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,62}$",options:.regularExpression) != nil else {throw DeskError.message("invalidName")}
             a += ["--network",network]
+        }
+        if !user.isEmpty {
+            guard user.range(of:"^[a-zA-Z0-9_][a-zA-Z0-9_.-]*(?::[a-zA-Z0-9_][a-zA-Z0-9_.-]*)?$",options:.regularExpression) != nil else{throw DeskError.message("cloneUnsupported")}
+            a += ["--user",user]
         }
         if !entrypoint.isEmpty {
             guard !entrypoint.contains("\n"),!entrypoint.contains("\0") else {throw DeskError.message("invalidEntrypoint")}
@@ -301,5 +306,104 @@ enum SidebarOrder {
     static func normalized(_ value:String)->[String] {
         var seen=Set<String>()
         return (value.split(separator:",").map(String.init)+defaults).filter{defaults.contains($0) && seen.insert($0).inserted}
+    }
+}
+
+/// The engine reports allocated bytes and estimates; shared layers mean these
+/// totals must not be presented as a guaranteed per-selection reclaimed size.
+struct DiskUsageEntry:Decodable {
+    let active:Int
+    let total:Int
+    let sizeInBytes:Int64
+    let reclaimable:Int64
+}
+
+struct CloneOrigin {
+    let id:String
+    let fingerprint:Data
+    let requireStopped:Bool
+    let imageDigest:String
+    func validate(_ data:Data)throws {
+        guard let row=(try JSONSerialization.jsonObject(with:data) as? [[String:Any]])?.first,
+              let c=row["configuration"] as? [String:Any],c["id"] as? String==id,
+              try JSONSerialization.data(withJSONObject:c,options:.sortedKeys)==fingerprint,
+              !requireStopped || (row["status"] as? [String:Any])?["state"] as? String=="stopped" else {throw DeskError.message("cloneChanged")}
+    }
+}
+struct ContainerClonePlan {
+    let base:CreateRequest
+    let arguments:[String]
+    let environment:[String]
+    let mounts:[MountMapping]
+    let id:String
+    let fingerprint:Data
+    let imageDigest:String
+    init(_ data:Data)throws {
+        func reject() -> DeskError{.message("cloneUnsupported")}
+        guard let rows=try JSONSerialization.jsonObject(with:data) as? [[String:Any]],rows.count==1,
+              let c=rows[0]["configuration"] as? [String:Any],let id=c["id"] as? String,
+              let image=c["image"] as? [String:Any],let reference=image["reference"] as? String,
+              let digest=(image["descriptor"] as? [String:Any])?["digest"] as? String,
+              let resources=c["resources"] as? [String:Any],let cpus=resources["cpus"] as? Int,
+              let memory=(resources["memoryInBytes"] as? NSNumber)?.int64Value,memory%1048576==0,
+              let platform=c["platform"] as? [String:Any],platform["os"] as? String=="linux",let arch=platform["architecture"] as? String,
+              let process=c["initProcess"] as? [String:Any],let executable=process["executable"] as? String,
+              let args=process["arguments"] as? [String],let env=process["environment"] as? [String],
+              let directory=process["workingDirectory"] as? String,
+              let networks=c["networks"] as? [[String:Any]],networks.count<=1,
+              let rawMounts=c["mounts"] as? [[String:Any]] else{throw reject()}
+        for key in ["readOnly","ssh","useInit","virtualization"] {guard c[key] as? Bool != true else{throw reject()}}
+        for key in ["capAdd","capDrop","publishedSockets"] {guard (c[key] as? [Any] ?? []).isEmpty else{throw reject()}}
+        for key in ["labels","sysctls"] {guard (c[key] as? [String:Any] ?? [:]).isEmpty else{throw reject()}}
+        guard c["runtimeHandler"] as? String == "container-runtime-linux",
+              (process["rlimits"] as? [Any] ?? []).isEmpty,(process["supplementalGroups"] as? [Any] ?? []).isEmpty,
+              process["terminal"] as? Bool != true else{throw reject()}
+        if let dns=c["dns"] as? [String:Any] {guard dns.values.allSatisfy({($0 as? [Any])?.isEmpty==true}) else{throw reject()}}
+        if let options=networks.first?["options"] as? [String:Any] {
+            guard Set(options.keys).isSubset(of:["hostname","mtu"]),options["mtu"] as? Int == nil || options["mtu"] as? Int == 1280,
+                  options["hostname"] as? String == nil || options["hostname"] as? String == id else{throw reject()}
+        }
+        var request=CreateRequest();request.name=String(id.prefix(48))+"-copy";request.image=reference;request.cpus=cpus;request.memoryMB=Int(memory/1048576)
+        request.architecture=arch;request.rosetta=c["rosetta"] as? Bool ?? false;request.network=networks.first?["network"] as? String ?? ""
+        request.entrypoint=executable;request.commandArguments=args.joined(separator:"\n");request.workingDirectory=directory
+        guard !args.isEmpty,args.allSatisfy({!$0.isEmpty && !$0.contains(where:{$0.isNewline || $0=="\0"})}),env.allSatisfy({!$0.contains(where:{$0.isNewline || $0=="\0"})}) else{throw reject()}
+        if let user=process["user"] as? [String:Any],let ids=user["id"] as? [String:Any],let uid=ids["uid"] as? Int,let gid=ids["gid"] as? Int {request.user="\(uid):\(gid)"}
+        else if let raw=(process["user"] as? [String:Any])?["raw"] as? [String:Any],let user=raw["userString"] as? String {request.user=user}
+        else{throw reject()}
+        var parsed:[MountMapping]=[]
+        for mount in rawMounts {
+            guard let target=mount["destination"] as? String,let options=mount["options"] as? [String],Set(options).isSubset(of:["ro","rw"]) else{throw reject()}
+            let volume=((mount["type"] as? [String:Any])?["volume"] as? [String:Any])?["name"] as? String
+            if let volume {parsed.append(MountMapping(kind:.volume,source:volume,target:target,readOnly:options.contains("ro")))}
+            else if ((mount["type"] as? [String:Any])?["virtiofs"] as? [String:Any])?.isEmpty==true,let source=mount["source"] as? String {parsed.append(MountMapping(kind:.folder,source:source,target:target,readOnly:options.contains("ro")))}
+            else{throw reject()}
+        }
+        _=try request.arguments()
+        self.base=request;self.arguments=args;self.environment=env;self.mounts=parsed;self.id=id;self.imageDigest=digest
+        self.fingerprint=try JSONSerialization.data(withJSONObject:c,options:.sortedKeys)
+    }
+    func request(environment includeEnvironment:Bool,mounts includeMounts:Bool,writable:Bool)->CreateRequest {
+        var r=base
+        if includeEnvironment {r.environment=environment.joined(separator:"\n")}
+        if includeMounts {r.additionalMounts=mounts.map{var m=$0;if !writable{m.readOnly=true};return m}}
+        return r
+    }
+    func origin(requireStopped:Bool)->CloneOrigin {CloneOrigin(id:id,fingerprint:fingerprint,requireStopped:requireStopped,imageDigest:imageDigest)}
+}
+
+struct ImageDefaults {
+    let entrypoint:[String]
+    let command:[String]
+    let user:String
+    let workingDirectory:String
+    let ports:[String]
+    init(_ data:Data,architecture:String)throws {
+        guard let images=try JSONSerialization.jsonObject(with:data) as? [[String:Any]],images.count==1,
+              let variants=images[0]["variants"] as? [[String:Any]],
+              let variant=variants.first(where:{($0["platform"] as? [String:Any])?["architecture"] as? String==architecture}),
+              let config=(variant["config"] as? [String:Any])?["config"] as? [String:Any] else{throw DeskError.message("imagesUnavailable")}
+        entrypoint=config["Entrypoint"] as? [String] ?? [];command=config["Cmd"] as? [String] ?? []
+        user=config["User"] as? String ?? "0";workingDirectory=config["WorkingDir"] as? String ?? "/"
+        ports=Array((config["ExposedPorts"] as? [String:Any] ?? [:]).keys).sorted()
     }
 }

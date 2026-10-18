@@ -91,11 +91,11 @@ struct PreferencesView:View {
                 Text(s.t("languageNote")).font(.caption).foregroundStyle(.secondary)
             }
             Section(s.t("about")){
-                LabeledContent(s.t("appVersion"),value:"\(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "Development") · Developer Preview")
+                LabeledContent(s.t("appVersion"),value:"\(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "Development")")
                 LabeledContent(s.t("platform"),value:s.host.osVersion+" · "+(s.host.architecture ?? "—"))
                 Link(s.t("officialProject"),destination:URL(string:"https://github.com/apple/container")!)
                 Text(s.t("independentApp")).font(.caption).foregroundStyle(.secondary)
-                Text(s.t(Bundle.main.object(forInfoDictionaryKey:"ContainerDeskDistribution") as? String == "release" ? "releaseBuild":"developmentBuild")).font(.caption).foregroundStyle(.secondary)
+                Text(s.t(Bundle.main.object(forInfoDictionaryKey:"ContainerDeskDistribution") as? String == "release" ? "releaseBuild":(Bundle.main.object(forInfoDictionaryKey:"ContainerDeskDistribution") as? String == "unsigned-release" ? "unsignedRelease":"developmentBuild"))).font(.caption).foregroundStyle(.secondary)
             }
         }.formStyle(.grouped).frame(minWidth:500,idealWidth:660,minHeight:500).padding(16)
     }

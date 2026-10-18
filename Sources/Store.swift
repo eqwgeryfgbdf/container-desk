@@ -34,6 +34,7 @@ import AppKit
     @Published var operationResult:String?
     @Published var fileContainer:String?
     @Published var snapshotSource:String?
+    @Published var cloneSource:String?
     @Published var pendingSnapshotPush:(String,String,Bool)?
     @Published var inspection:InspectionTarget?
     @Published var restartCandidate:ContainerItem?
@@ -160,7 +161,7 @@ import AppKit
             notice=t("operationComplete");error=nil
         }catch{self.error=error.localizedDescription}
     }
-    func create(_ request:CreateRequest) async -> Bool {
+    func create(_ request:CreateRequest,origin:CloneOrigin?=nil) async -> Bool {
         guard canMutate,let cli else{return false}
         busy=true;defer{busy=false;Task{await refresh()}}
         do {
@@ -168,12 +169,18 @@ import AppKit
             try request.validateAllocation(maxCPUs:host.logicalCores ?? ProcessInfo.processInfo.activeProcessorCount,maxMemoryMiB:Int(host.memory/1048576))
             let localImages=try ResourceItem.parseImages((try await ProcessRunner.checked(cli,["image","list","--format","json"])).data)
             guard localImages.contains(where:{$0.id==request.image}) else{throw DeskError.message("selectLocalImage")}
+            if let origin {try origin.validate((try await ProcessRunner.checked(cli,["inspect","--",origin.id])).data)}
             let metadata=try await ProcessRunner.checked(cli,["image","inspect","--",request.image])
+            if let origin {
+                let rows=try ResourceSafety.rows(metadata.data)
+                guard ((rows.first?["configuration"] as? [String:Any])?["descriptor"] as? [String:Any])?["digest"] as? String==origin.imageDigest else{throw DeskError.message("cloneChanged")}
+            }
             guard try ImagePlatform.hasVariant(metadata.data,architecture:request.architecture) else{throw DeskError.message("deployArchitectureMismatch")}
             for (kind,id) in [("network",request.network)] + request.allMounts.filter({$0.kind == .volume}).map({("volume",$0.source)}) where !id.isEmpty {
                 let resources=try ResourceItem.parseResources((try await ProcessRunner.checked(cli,[kind,"list","--format","json"])).data)
                 guard resources.contains(where:{$0.id==id}) else {throw DeskError.message("resourceDisappeared")}
             }
+            if let origin {try origin.validate((try await ProcessRunner.checked(cli,["inspect","--",origin.id])).data)}
             _=try await ProcessRunner.checked(cli,try request.arguments(),timeout:600)
             selected=request.name;notice=t("createdStopped");error=nil;return true
         }catch{self.error=t(error.localizedDescription);return false}

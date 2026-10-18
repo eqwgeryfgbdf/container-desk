@@ -63,6 +63,38 @@ final class PlatformTests:PlatformTestCase {
         ]
         for document in invalid {try XCTAssertThrowsError(try plan(document),document)}
     }
+    func testComposeArgumentIsolationAndExpansionLimits()throws {
+        for tail in [["--publish"],["--publish","x"],["--volume"],["--network"],["--"],["--cpus","9999"]] {
+            let command=["echo"]+tail
+            let document:[String:Any]=["services":["app":["image":"alpine","command":command,"user":"--publish","entrypoint":["--network","--"]]]]
+            let file=try fixture(String(data:JSONSerialization.data(withJSONObject:document),encoding:.utf8)!)
+            let p=try ComposePlanner(file:file,projectID:UUID().uuidString).plan(),service=p.services[0]
+            try XCTAssertEqual(service.command,["--"]+command)
+            try XCTAssertTrue(service.ports.isEmpty);try XCTAssertEqual(service.mounts.count,1)
+            try XCTAssertEqual(service.networkAliases.count,1);try XCTAssertEqual(service.cpus,1)
+            addTeardownBlock{try? FileManager.default.removeItem(at:service.hostsFile.deletingLastPathComponent())}
+            try ComposeHosts.update(p,rows:[])
+        }
+        try XCTAssertThrowsError(try plan("services: {a: {image: alpine, ports: ['08080:80']}, b: {image: alpine, ports: ['8080:81']}}"))
+        func expanded(_ value:String,_ repetitions:Int,_ entries:Int=1)throws {
+            let environment=Dictionary(uniqueKeysWithValues:(0..<entries).map{("V\($0)",String(repeating:"$A",count:repetitions))})
+            let document:[String:Any]=["services":["app":["image":"alpine","environment":environment]]]
+            let file=try fixture(String(data:JSONSerialization.data(withJSONObject:document),encoding:.utf8)!)
+            try ("A="+value+"\n").write(to:file.deletingLastPathComponent().appendingPathComponent(".env"),atomically:true,encoding:.utf8)
+            _=try ComposePlanner(file:file,projectID:UUID().uuidString).plan()
+        }
+        try XCTAssertThrowsError(try expanded(String(repeating:"x",count:32768),17))
+        try XCTAssertThrowsError(try expanded(String(repeating:"界",count:16384),11))
+        try XCTAssertThrowsError(try expanded(String(repeating:"x",count:32768),8,9))
+        try XCTAssertNoThrow(try expanded("ordinary",2))
+        let envFile=try fixture("services: {app: {image: alpine, env_file: [large.env, large.env, large.env, large.env, large.env, large.env, large.env, large.env, large.env]}}")
+        try ("VALUE="+String(repeating:"x",count:250*1024)).write(to:envFile.deletingLastPathComponent().appendingPathComponent("large.env"),atomically:true,encoding:.utf8)
+        try XCTAssertThrowsError(try ComposePlanner(file:envFile,projectID:UUID().uuidString).plan())
+        let file=try fixture("services: {app: {image: alpine, command: [echo, '${UNSET:-ok}', '$$HOME']}}")
+        let planner=try ComposePlanner(file:file,projectID:UUID().uuidString)
+        try XCTAssertEqual(planner.plan().services[0].command,["echo","ok","$HOME"])
+        try XCTAssertEqual(planner.plan().services[0].command,["echo","ok","$HOME"])
+    }
     func testEnvFilesAndInterpolation()throws {
         let file=try fixture("""
         services:

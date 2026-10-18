@@ -1,6 +1,622 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "imageDefaults": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Image Defaults"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "镜像默认配置"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "映像預設設定"
+          }
+        }
+      }
+    },
+    "imageDefaultsNote": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Blank command overrides inherit image defaults. Exposed ports are metadata; publish them explicitly after choosing free host ports."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "命令覆盖留空时继承镜像默认值。暴露端口只是元数据，请选择空闲主机端口后明确发布。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "命令覆寫留空時繼承映像預設值。暴露連接埠只是中繼資料，請選擇空閒主機埠後明確發布。"
+          }
+        }
+      }
+    },
+    "containerUserOptional": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "User / UID:GID (optional)"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用户／UID:GID（可选）"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用者／UID:GID（選用）"
+          }
+        }
+      }
+    },
+    "catalogTitle": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Browse Registry"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "浏览仓库"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "瀏覽倉庫"
+          }
+        }
+      }
+    },
+    "catalogRepository": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Repository path (blank for catalog)"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "仓库路径（留空浏览目录）"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "倉庫路徑（留空瀏覽目錄）"
+          }
+        }
+      }
+    },
+    "catalogScope": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Browse Registry v2 repositories and tags over HTTPS. Some services disable catalog access; enter a known repository path. For Docker Hub, use its dedicated search."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "通过 HTTPS 浏览 Registry v2 目录及标签。部分服务不提供目录，请直接输入已知仓库路径。Docker Hub 请使用专用搜索。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "透過 HTTPS 瀏覽 Registry v2 目錄及標籤。部分服務不提供目錄，請直接輸入已知倉庫路徑。Docker Hub 請使用專用搜尋。"
+          }
+        }
+      }
+    },
+    "catalogSessionAuth": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Optional credentials for this browsing session"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "本次浏览凭据（可选）"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "本次瀏覽憑證（選用）"
+          }
+        }
+      }
+    },
+    "catalogAuthScope": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Basic authentication only. Credentials are sent only to the entered HTTPS server, never across redirects, and are forgotten when this window closes. CLI login is separate; bearer-only services may not support this browser."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "仅支持 Basic 认证。凭据仅发送至输入的 HTTPS 服务器，不跟随重定向，关闭窗口后清除。CLI 登录独立；仅支持 Bearer 的服务可能无法浏览。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "僅支援 Basic 驗證。憑證只送至輸入的 HTTPS 伺服器，不跟隨重新導向，關閉視窗後清除。CLI 登入獨立；僅支援 Bearer 的服務可能無法瀏覽。"
+          }
+        }
+      }
+    },
+    "catalogNext": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Next 100"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下一页（100）"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下一頁（100）"
+          }
+        }
+      }
+    },
+    "catalogTags": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show Tags"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "查看标签"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "查看標籤"
+          }
+        }
+      }
+    },
+    "catalogInvalidRepository": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter a valid repository path."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请输入有效仓库路径。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請輸入有效倉庫路徑。"
+          }
+        }
+      }
+    },
+    "catalogUnavailable": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This registry does not expose a compatible catalog/tag response, or the request failed. Try a known repository path."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "该仓库未提供兼容的目录／标签响应，或请求失败。请尝试已知仓库路径。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "該倉庫未提供相容的目錄／標籤回應，或請求失敗。請嘗試已知倉庫路徑。"
+          }
+        }
+      }
+    },
+    "catalogAuthentication": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registry access was refused. Check credentials and permissions; bearer-only authentication needs the service’s own browser."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "仓库拒绝访问。请检查凭据及权限；仅 Bearer 认证请使用服务自身的浏览界面。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "倉庫拒絕存取。請檢查憑證與權限；僅 Bearer 驗證請使用服務本身的瀏覽介面。"
+          }
+        }
+      }
+    },
+    "cloneContainer": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Duplicate / Recreate Separately…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "复制／独立重建…"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "複製／獨立重建…"
+          }
+        }
+      }
+    },
+    "cloneScope": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Create a new stopped container from the original image and reviewed configuration. The original container and its writable layer remain untouched; writable-layer changes are not copied. Use Save Container as Image first if needed."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用原始镜像和确认的配置创建新的停止容器。保留原容器及可写层，不复制可写层修改；需要时先保存为镜像。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用原始映像與確認的設定建立新的停止容器。保留原容器及可寫層，不複製可寫層變更；需要時先儲存為映像。"
+          }
+        }
+      }
+    },
+    "clonePortsCleared": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not copied; choose unused host ports in the next step."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不复制；下一步选择空闲主机端口。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不複製；下一步選擇空閒主機連接埠。"
+          }
+        }
+      }
+    },
+    "cloneEnvironment": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Include environment variables (may contain secrets)"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "包含环境变量（可能含密钥）"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "包含環境變數（可能含密鑰）"
+          }
+        }
+      }
+    },
+    "cloneMounts": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reuse existing mounts"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "复用现有挂载"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "重用現有掛載"
+          }
+        }
+      }
+    },
+    "cloneWritable": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Retain original writable mount permissions"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "保留原挂载写入权限"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "保留原掛載寫入權限"
+          }
+        }
+      }
+    },
+    "cloneMountWarning": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mounts reference existing data; they are not independent copies. Read-only is the default. Writable reuse requires the source to be stopped when creating the copy. Do not run both writers on the same database."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "挂载指向原有数据，并非独立副本。默认只读。可写复用要求创建时原容器已停止。不要让两个实例同时写入同一数据库。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "掛載指向原有資料，並非獨立副本。預設唯讀。可寫重用要求建立時原容器已停止。不要讓兩個實例同時寫入相同資料庫。"
+          }
+        }
+      }
+    },
+    "cloneConfigure": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Review & Configure…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "检查并配置…"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "檢查並設定…"
+          }
+        }
+      }
+    },
+    "cloneChanged": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Source configuration/image changed, or the source must be stopped for writable mounts. Review it again."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "源配置／镜像已改变，或原容器需先停止才能复用可写挂载。请重新检查。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "來源設定／映像已改變，或原容器需先停止才能重用可寫掛載。請重新檢查。"
+          }
+        }
+      }
+    },
+    "cloneUnsupported": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This configuration cannot be reproduced faithfully by this editor. Use a reviewed project configuration instead."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "此编辑器无法完整重建该配置，请使用经检查的项目配置。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "此編輯器無法完整重建該設定，請使用經檢查的專案設定。"
+          }
+        }
+      }
+    },
+    "diskUsageCleanup": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disk Usage & Cleanup"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "磁盘用量与清理"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "磁碟用量與清理"
+          }
+        }
+      }
+    },
+    "reclaimable": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Potentially reclaimable"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "可能可回收"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "可能可回收"
+          }
+        }
+      }
+    },
+    "cleanupScope": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select unused resources to review. Referenced resources and built-in networks are protected. Engine totals include shared/cached data; the selected space recovered can differ. Containers are never stopped or removed here."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择未使用的资源进行确认。保护被引用资源和内置网络。引擎统计包含共享及缓存数据，实际回收空间可能不同。此处不会停止或删除容器。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "選取未使用的資源進行確認。保護被參照資源與內建網路。引擎統計含共用及快取資料，實際回收空間可能不同。此處不會停止或刪除容器。"
+          }
+        }
+      }
+    },
+    "noCleanupCandidates": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No eligible unused resources"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有可清理的未使用资源"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "沒有可清理的未使用資源"
+          }
+        }
+      }
+    },
+    "reviewCleanup": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Review Selected Cleanup…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "确认所选清理…"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "確認所選清理…"
+          }
+        }
+      }
+    },
     "fileTransferProgress": {
       "localizations": {
         "en": {
@@ -6161,6 +6777,28 @@
         }
       }
     },
+    "unsignedRelease": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Public release, ad hoc signed. No Developer ID signature or Apple notarization."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "公开发行版，采用临时签名，未经 Developer ID 签名及 Apple 公证。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "公開發行版，採用臨時簽章，未經 Developer ID 簽署及 Apple 公證。"
+          }
+        }
+      }
+    },
     "releaseBuild": {
       "localizations": {
         "en": {
@@ -12163,6 +12801,28 @@
           "stringUnit": {
             "state": "translated",
             "value": "請檢查所選項目。使用中或受保護的資源會略過並逐項回報。"
+          }
+        }
+      }
+    },
+    "Expanded configuration exceeds the 512 KiB value or 2 MiB project limit": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Expanded configuration exceeds the 512 KiB value or 2 MiB project limit"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "展开后的配置超出单值 512 KiB 或项目 2 MiB 上限"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "展開後的設定超出單值 512 KiB 或專案 2 MiB 上限"
           }
         }
       }

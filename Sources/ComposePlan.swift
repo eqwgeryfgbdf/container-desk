@@ -26,6 +26,11 @@ struct ComposeService:Identifiable {
     let container:String
     let image:String
     let createArguments:[String]
+    let ports:[PortMapping]
+    let mounts:[MountMapping]
+    let command:[String]
+    let cpus:Int
+    let memoryMiB:Int
     let buildArguments:[String]?
     let dependencies:[String:String]
     let health:ComposeHealth?
@@ -57,6 +62,15 @@ struct ComposePlanner {
     private let resolved:Bool
     private let variables:[String:String]
     private let capacity:Int
+    // Shared by synchronous helper calls; reset for each plan construction.
+    private final class ExpansionBudget { var bytes=0 }
+    private let expansionBudget=ExpansionBudget()
+    private func account(_ bytes:Int,_ path:String)throws {
+        guard bytes<=512*1024,bytes<=2*1024*1024-expansionBudget.bytes else {
+            throw issue(path,"Expanded configuration exceeds the 512 KiB value or 2 MiB project limit")
+        }
+        expansionBudget.bytes+=bytes
+    }
     private func issue(_ path:String,_ reason:String)->ComposeIssue{ComposeIssue(path:path,reason:reason)}
     init(file:URL,projectID:String,volumeGiB:Int=8,sourceData:Data?=nil)throws {
         self.file=file;self.projectID=projectID;self.capacity=volumeGiB
@@ -133,7 +147,8 @@ struct ComposePlanner {
     private func string(_ node:Node?,_ path:String)throws->String {
         guard let scalar=node?.scalar,node?.null==nil else{throw issue(path,"Expected a scalar value")}
         guard !scalar.string.contains("\0") else{throw issue(path,"NUL is not allowed")}
-        return resolved ? scalar.string:try expand(scalar.string,path)
+        if resolved {try account(scalar.string.utf8.count,path);return scalar.string}
+        return try expand(scalar.string,path)
     }
     private func array(_ node:Node?,_ path:String)throws->[Node] {
         guard let seq=node?.sequence else{throw issue(path,"Expected a list")};return Array(seq)
@@ -142,12 +157,17 @@ struct ComposePlanner {
         guard let node else{return fallback};guard let value=node.bool else{throw issue(path,"Expected true or false")};return value
     }
     private func expand(_ input:String,_ path:String)throws->String {
-        var out="",index=input.startIndex
+        var out="",index=input.startIndex,bytes=0
+        func append(_ value:String)throws {
+            let added=value.utf8.count
+            guard added<=512*1024-bytes else{throw issue(path,"Expanded configuration exceeds the 512 KiB value or 2 MiB project limit")}
+            try account(added,path);bytes+=added;out+=value
+        }
         while index<input.endIndex {
-            if input[index] != "$" {out.append(input[index]);index=input.index(after:index);continue}
+            if input[index] != "$" {try append(String(input[index]));index=input.index(after:index);continue}
             index=input.index(after:index)
             guard index<input.endIndex else{throw issue(path,"Escape literal dollar signs as $$")}
-            if input[index]=="$" {out.append("$");index=input.index(after:index);continue}
+            if input[index]=="$" {try append("$");index=input.index(after:index);continue}
             var expression=""
             if input[index]=="{" {
                 let start=input.index(after:index);guard let end=input[start...].firstIndex(of:"}") else{throw issue(path,"Unclosed variable")}
@@ -160,15 +180,16 @@ struct ComposePlanner {
             let parts=expression.components(separatedBy:":-")
             let key=parts[0]
             guard parts.count<=2,key.range(of:"^[A-Za-z_][A-Za-z0-9_]*$",options:.regularExpression) != nil else{throw issue(path,"Supported substitutions: $VAR, ${VAR}, ${VAR:-default}, $$")}
-            if let value=variables[key],!value.isEmpty {out+=value}
-            else if parts.count==2 {guard !parts[1].contains("$") else{throw issue(path,"Nested substitutions are unsupported")};out+=parts[1]}
-            else if let value=variables[key]{out+=value}
+            if let value=variables[key],!value.isEmpty {try append(value)}
+            else if parts.count==2 {guard !parts[1].contains("$") else{throw issue(path,"Nested substitutions are unsupported")};try append(parts[1])}
+            else if let value=variables[key]{try append(value)}
             else{throw issue(path+"."+key,"Missing variable in the adjacent .env file; host environment is not inherited")}
         }
         guard !out.contains("\0") else{throw issue(path,"NUL is not allowed")};return out
     }
     static func envFile(_ file:URL)throws->[String:String] {
-        let data=try Data(contentsOf:file)
+        let handle=try FileHandle(forReadingFrom:file);defer{try? handle.close()}
+        let data=try handle.read(upToCount:256*1024+1) ?? Data()
         guard data.count<=256*1024,let text=String(data:data,encoding:.utf8) else{throw ComposeIssue(path:file.lastPathComponent,reason:"Expected UTF-8 environment file, at most 256 KiB")}
         var result:[String:String]=[:]
         for (index,raw) in text.components(separatedBy:.newlines).enumerated() {
@@ -229,6 +250,7 @@ struct ComposePlanner {
         throw issue(path,"Use a duration in ms, s or m")
     }
     func plan()throws->ComposePlan {
+        expansionBudget.bytes=0
         let document=try map(root,"document")
         try keys(document,["name","version","services","volumes","networks","x-container-desk-resolved"],"document")
         if let marker=document["x-container-desk-resolved"],marker.bool != true {throw issue("x-container-desk-resolved","Expected true or false")}
@@ -282,7 +304,11 @@ struct ComposePlanner {
             var env:[String:String]=[:]
             if let node=values["env_file"] {
                 let paths=node.scalar != nil ? [node]:try array(node,path+".env_file")
-                for item in paths {env.merge(try Self.envFile(local(try string(item,path+".env_file"),path+".env_file"))){_,new in new}}
+                for item in paths {
+                    let values=try Self.envFile(local(try string(item,path+".env_file"),path+".env_file"))
+                    for (key,value) in values {try account(key.utf8.count+value.utf8.count,path+".env_file")}
+                    env.merge(values){_,new in new}
+                }
             }
             if let node=values["environment"] {
                 if node.sequence != nil {
@@ -386,7 +412,7 @@ struct ComposePlanner {
             }
             let fingerprint=SHA256.hash(data:try JSONSerialization.data(withJSONObject:["args":args+["--",request.image]+command,"build":build ?? [],"dependencies":dependencies,"health":health.map{["command":$0.command,"interval":$0.interval,"timeout":$0.timeout,"retries":$0.retries,"startPeriod":$0.startPeriod] as [String:Any]} ?? [:],"aliases":networkAliases],options:.sortedKeys)).map{String(format:"%02x",$0)}.joined()
             args += ["--label",ComposePlan.configLabel+"="+fingerprint,"--",request.image]+command
-            services[service]=ComposeService(name:service,container:request.name,image:request.image,createArguments:args,buildArguments:build,dependencies:dependencies,health:health,fingerprint:fingerprint,hostsFile:hostsFile,networkAliases:networkAliases)
+            services[service]=ComposeService(name:service,container:request.name,image:request.image,createArguments:args,ports:request.additionalPorts,mounts:request.allMounts+[MountMapping(source:hostsFile.path,target:"/etc/hosts",readOnly:true)],command:command,cpus:request.cpus,memoryMiB:request.memoryMB,buildArguments:build,dependencies:dependencies,health:health,fingerprint:fingerprint,hostsFile:hostsFile,networkAliases:networkAliases)
         }
         var claimedAliases:[String:String]=[:]
         for service in services.values {
@@ -412,9 +438,9 @@ struct ComposePlanner {
         // Check port collisions across services, before creating any resources.
         var ports=Set<String>()
         for service in order {
-            for (i,arg) in service.createArguments.enumerated() where arg=="--publish" {
-                let value=service.createArguments[i+1],parts=value.components(separatedBy:":")
-                let key=parts[1]+"/"+(value.hasSuffix("/udp") ? "udp":"tcp")
+            for port in service.ports {
+                guard let number=Int(port.host) else{throw issue("services."+service.name+".ports","Invalid port protocol")}
+                let key=String(number)+"/"+port.transport
                 guard ports.insert(key).inserted else{throw issue("services."+service.name+".ports","Host port/protocol is used by another service")}
             }
         }

@@ -1,30 +1,30 @@
-# Quick start — Container Desk 0.1.3 preview
+# Quick start — Container Desk 0.2.0 public release
 
 [English](QUICK_START.md) · [中文（繁體）](QUICK_START.zh-Hant.md) · [中文（简体）](QUICK_START.zh-Hans.md)
 
-Try a real local service without compiling the app. The repository is currently private: testers need repository access and must sign in to GitHub. A 404 usually means the account lacks access, not that the download has disappeared.
+Try a real local service without compiling the app. Release 0.2.0 is intended for public distribution. Tests ran only on the developer’s own M4 Mac mini (16 GiB, macOS 26.7.1), with Apple Container 1.5.0; second-Mac testing was deferred by the owner.
 
 ## 1. Choose your download
 
-Open [v0.1.3-preview](https://github.com/eqwgeryfgbdf/container-desk/releases/tag/v0.1.3-preview).
+Open [v0.2.0](https://github.com/eqwgeryfgbdf/container-desk/releases/tag/v0.2.0).
 
 | Asset | Use |
 |---|---|
-| `Container-Desk-0.1.3-arm64-preview.dmg` | Install the Mac app; no Xcode needed. |
-| `Container-Desk-0.1.3-Quick-Start.zip` | Optional small bundle: this guide in three languages, `quick-test.sh`, read-only `Check-Mac.command`, opt-in `Run-Quick-Test.command` and example project. No duplicate DMG. |
-| `Container-Desk-0.1.3-preview-source.zip` | Matching Apache-2.0 source, build scripts and complete automated QA. |
-| `Container-Desk-0.1.3-preview-manifest.json` | Exact source commit/tree and primary artifact hashes. |
+| `Container-Desk-0.2.0-arm64.dmg` | Install the Mac app; no Xcode needed. |
+| `Container-Desk-0.2.0-Quick-Start.zip` | Optional small bundle: this guide in three languages, `quick-test.sh`, read-only `Check-Mac.command`, opt-in `Run-Quick-Test.command` and example project. No duplicate DMG. |
+| `Container-Desk-0.2.0-source.zip` | Matching Apache-2.0 source, build scripts and complete automated QA. |
+| `Container-Desk-0.2.0-manifest.json` | Exact source commit/tree and primary artifact hashes. |
 | `SHA256SUMS.txt` | SHA-256 for all attached deliverables except this checksum file. |
-| `Container-Desk-Overview-zh-Hant.mp4` | 58.5-second actual walkthrough with Traditional Chinese captions. Recorded from the preceding QA build; it is not an install/upgrade acceptance video. |
+| `Container-Desk-Overview-zh-Hant.mp4` | Actual 0.2.0 app footage / 0.2.0 實機操作 / 0.2.0 实机操作；繁體字幕。 |
 
 Requirements: Apple Silicon, macOS 26+, Internet for image downloads, and Apple Container **1.5.0**. Intel Macs are unsupported. Only source builds/full QA require Xcode or Command Line Tools 26 and Python 3; the quick test uses built-in Bash/curl and the installed engine.
 
-If you download all listed assets into one folder, run `shasum -a 256 -c SHA256SUMS.txt` there. If you only download the DMG, run `shasum -a 256 Container-Desk-0.1.3-arm64-preview.dmg` and compare its full digest with the matching checksum line; missing optional files are not DMG corruption.
+If you download all listed assets into one folder, run `shasum -a 256 -c SHA256SUMS.txt` there. If you only download the DMG, run `shasum -a 256 Container-Desk-0.2.0-arm64.dmg` and compare its full digest with the matching checksum line; missing optional files are not DMG corruption.
 
 ## 2. Install and connect
 
 1. Open the DMG, drag **Container Desk** to **Applications**, then launch it from Applications. When replacing an old app, quit that app first. Eject the DMG afterward.
-2. This preview is ad hoc signed, without Developer ID or Apple notarization. macOS may block first launch. If you trust this exact download, review Apple's [per-app opening instructions](https://support.apple.com/en-nz/102445); the relevant control may appear under System Settings → Privacy & Security → Open Anyway. Do not disable Gatekeeper globally. If no per-app option is available, report the exact alert.
+2. This release is ad hoc signed, without Developer ID or Apple notarization. macOS may block first launch. If you trust this exact download, review Apple's [per-app opening instructions](https://support.apple.com/en-nz/102445); the relevant control may appear under System Settings → Privacy & Security → Open Anyway. Do not disable Gatekeeper globally. If no per-app option is available, report the exact alert.
 3. Open **Container Engine**. If the engine is missing, use the app's official-source installation flow, or install the supported release from [Apple Container](https://github.com/apple/container). Review any macOS administrator prompt yourself. The app and engine are separate installations.
 4. Start the engine if needed. Wait for **Connected**, then verify Overview shows your real CPU/memory/system version. Do not reinstall over an unrecognized custom setup; follow the displayed explanation.
 5. In Settings choose English, Traditional Chinese or Simplified Chinese. CPU counts/memory limits come from the actual host.
@@ -74,15 +74,22 @@ http.server
 
 ## 5. Try Projects, Registry and files
 
-- **Projects:** import the bundled `examples/quick-web.yaml` (or [repository example](examples/quick-web.yaml)). Review the validation/compatibility report, then start the project. It uses a loopback port (18082), no bind mounts and a small BusyBox web server. Open `http://127.0.0.1:18082/`; expected text: `Container Desk project works`. Stop/remove the project afterward and inspect retained resources. Docker conversion supports a documented subset; unsupported fields are reported, not silently discarded. See [conversion guide](DOCKER_CONVERSION.md).
+- **Projects:** import the bundled `docs/examples/quick-web.yaml` (or [repository example](examples/quick-web.yaml)). Review the validation/compatibility report, then start the project. It uses a loopback port (18082), no bind mounts and a small BusyBox web server. Open `http://127.0.0.1:18082/`; expected text: `Container Desk project works`. Stop/remove the project afterward and inspect retained resources. Docker conversion supports a documented subset; unsupported fields are reported, not silently discarded. See [conversion guide](DOCKER_CONVERSION.md).
 - **Registry:** use your own authorized test repository. Login stores credentials through the official CLI; never paste tokens into bug reports. Tag/push are explicit actions. Public search does not grant push access to Docker Hub. Private HTTPS login success still needs account-specific acceptance.
 - **Files:** browse a test container first. Transfers enforce a 4 GiB/10,000-entry limit and ordinary uncompressed tar formats; unusual compression/sparse/metadata extensions are refused. Test downloads in a new empty destination; existing destination files are protected. See [files/projects guide](COMPOSE_AND_FILES.md).
+
+## 6. New convenience workflows
+
+- **Duplicate:** Containers → select a container → More Actions → Duplicate / Recreate Separately. Review the source settings, opt into environment/mounts only when needed, then Configure. Assign a new name and any free ports. The original is retained. Writable mounts require a stopped source; volume contents are shared, not copied. Save Container as Image first if you need writable-layer changes.
+- **Disk usage:** Images/Networks/Volumes → Disk Usage & Cleanup. Refresh, choose the resource kind and review individual candidates. Resources that become referenced are refused at deletion time. Containers are not removed by this cleanup screen.
+- **Registry browsing:** Registries → Browse Catalog. Enter an HTTPS registry host and optionally a repository when `_catalog` is disabled. Open tags, then deploy the selected tag. Catalog browsing uses optional session-only Basic authentication; CLI login for pull/push is separate. Some hosted registries do not expose catalogs or require unsupported bearer-token flows. Single-label hosts become `host:443`; log in under the same authority for authenticated pulls.
+- **Image defaults:** In Create, select a downloaded image and architecture, then expand Image Defaults to inspect command/user/workdir/exposed-port metadata. These ports are not automatically published.
 
 ## Troubleshooting and reporting
 
 | Symptom | Next step |
 |---|---|
-| GitHub 404 | Sign in with an account invited to this private repository. |
+| GitHub 404 | Check the exact release URL and network connection. No invitation is needed once the repository is public. |
 | Cannot launch app | Confirm Apple Silicon/macOS 26 and the full DMG checksum; capture the exact macOS alert. |
 | Disconnected / CLI not found | Use Container Engine to inspect the installed official engine and start it; do not erase its data. |
 | Port in use | Pick 18081/another unused port; do not stop an unrelated service. |
@@ -93,4 +100,4 @@ http.server
 
 Report app version, macOS/chip, engine version, exact steps, expected/actual result and the `PASS`/`FAIL` output. Remove hostnames, private paths, environment values, passwords and tokens before sharing. Reports remain local unless you choose to send them.
 
-For developers: build with `bash scripts/build.sh`, then run `python3 scripts/qa.py --live --ui`. Read [Automated QA](AUTOMATED_QA.md) first: it downloads fixtures and operates the foreground app, so leave the desktop idle. Current baseline: 17 groups passed/0 failed, 56 UI steps passed. This is a private preview; second-Mac installation/upgrade, full accessibility/visual review and the 60-minute stability gate remain pending. AI models are deferred.
+Developer QA: build with `bash scripts/build.sh`, then run `python3 scripts/qa.py --live --ui`. Read [Automated QA](AUTOMATED_QA.md); leave the Mac unlocked and do not operate the desktop during UI tests. See [0.2.0 validation](RELEASE_0.2.0_VALIDATION.md) for results. Clean installation, genuine engine upgrades, external private HTTPS registry success and full manual accessibility remain unverified. AI models are deferred.

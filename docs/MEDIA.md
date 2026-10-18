@@ -1,29 +1,18 @@
-# README media
+# Actual app media — 0.2.0
 
-Use actual app captures. No AI-generated mockups or fabricated runtime data as product evidence.
+README screenshots and the current release video were captured from Container Desk **0.2.0, build 5**, on the developer's own M4 Mac mini (16 GiB, macOS 26.7.1, Apple Container 1.5.0), on 2026-10-18. No second Mac was used. These are real native SwiftUI windows and disposable engine containers, not mockups or sample-mode data.
 
-## Captured
+| Asset | What it shows |
+|---|---|
+| `images/overview-en.png` | Real host specifications and one running / one stopped disposable container. |
+| `images/containers-en.jpg` | Actual search, batch controls, states and resource measurements. |
+| `images/create-en.png` | Downloaded-image selector, image metadata disclosure, CPU menu and memory slider/numeric input set to 768 MiB. Creation is cancelled after this capture. |
+| `Container-Desk-Overview-zh-Hant.mp4` in the release | Native scripted navigation, selection/filtering, expanded details, zoom, logs, file browsing, clone review, disk-usage review and download-to-configuration. 67.3 seconds, 1280×800, Traditional Chinese captions. |
 
-| File | Provenance | What it proves / does not prove |
-| --- | --- | --- |
-| `images/overview-en.png` | 0.1.2 QA bundle, macOS 26.7.1, 2026-10-16; native window capture using the macOS CLI. | Actual hardware and live totals. Computer name covered by an explicit redaction; all other displayed values retained. |
-| `images/containers-en.jpg` | Same QA bundle/date; native screenshot, sidebar hidden and search filter applied. | Actual stopped `cd-qa-readme-01933495` container created through the official CLI with 2 CPUs/768 MiB and a locally downloaded Python image. No mounts/ports/secrets. Removed after capture; all 8 pre-existing container states verified unchanged. |
-| `images/settings-en.jpg` | Container Desk 0.1.2 QA bundle (`local.containerdesk.qa`), macOS 26.7.1, captured 2026-10-16; native sidebar hidden before capture. | Real English Settings rendering and preview disclosure. QA build capture, not a certification of the downloadable DMG or complete UI acceptance. |
+Host-name pixels are explicitly masked in screenshots and recording. Other runtime values are retained. The macOS recording indicator may appear in the title bar. The clip is actual captured app output with caption overlays; only trailing idle footage is trimmed. It does not claim to demonstrate actual clone creation, cleanup deletion, installation, updates or registry publishing end to end. Those operations have separate tests or explicit remaining acceptance limits.
 
-The Settings and management images are unmodified native-window screenshots. The overview has only its computer-name value visibly covered for privacy. Sidebar visibility and management search use normal app controls. No runtime values were replaced with sample data. Overview and management are the README's primary images; Settings remains a secondary reference.
+Recording uses `scripts/test-ui.sh --matrix --record`; the annotator refuses a failed scenario and adds conservative privacy masks around transitions. Raw footage, raw language/theme screenshots and UI logs remain private local evidence. Only reviewed, masked screenshots and the annotated video are published.
 
-## Current recording workflow
+The three-language, light/dark, two-size matrix captures real creation sheets at 1320×860 and 1100×692. Its 170 AX/keyboard steps check navigation and reachable creation controls; visual review checks these captures for obvious clipping. It is not a full VoiceOver/contrast certification. The older `images/settings-en.jpg` is historical 0.1.2 QA evidence and is not a primary README screenshot.
 
-The current source has scripted native UI regression and actual window recording. See [AUTOMATED_QA.md](AUTOMATED_QA.md) for the commands and [QA_RESULTS.md](QA_RESULTS.md) for the latest evidence. The original macOS 26 creation-sheet layout problem (UI-001, discrete slider marks) was fixed earlier; the current native creation form is exercised at both 16 GiB and 1 TiB host ranges. A later automation-only input issue was separately fixed by sending real keyboard input instead of only assigning AX text values.
-
-The walkthrough uses disposable, real Python containers and the official Python image. It shows selection/filtering, expanded details, logs, file browsing, download-to-configuration, and navigation. Configuration is canceled after entering values; the video does not claim to demonstrate creation, installation, registry publishing or project conversion end to end. Those paths have separate backend tests and acceptance requirements.
-
-Only the annotated MP4 is suitable for sharing after review. Host-name regions are covered, Traditional Chinese chapter captions identify each step, and a persistent footer identifies development-preview footage. Only trailing idle footage is trimmed. The recording contains real operation timing; no generated UI or invented runtime values are inserted. Raw footage remains local private evidence. Repository visibility and GitHub release assets are not changed by recording.
-
-## Remaining media acceptance
-
-- Dark appearance and representative Simplified/Traditional Chinese views at supported sizes.
-- Candidate creation screenshot and second-Mac release verification.
-- Review the full exported video, captions and privacy masking before public publication.
-
-The earlier screenshots remain historical QA evidence; they do not certify the newest downloadable DMG. A video does not replace the public release gates.
+The video and screenshots demonstrate app workflows on this one device. They do not establish downloaded-DMG Gatekeeper, clean-install, engine-upgrade or second-device acceptance. See [current validation](RELEASE_0.2.0_VALIDATION.md).

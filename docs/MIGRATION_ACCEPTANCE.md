@@ -1,3 +1,5 @@
+> 0.2.0 publication does not mean this full-migration target has passed. The owner deferred second-Mac testing; all current tests run only on the developer’s own Mac. Local-image/data bridging, supervision and cutover/rollback remain future work.
+
 # Migration and quick-deployment acceptance
 
 The product target is a practical migration workflow for ordinary Web/API/database projects. **The current source has not met the complete migration target.** Passing configuration conversion or one fixture must not be called painless migration.
