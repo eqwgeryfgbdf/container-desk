@@ -91,7 +91,7 @@ struct PreferencesView:View {
                 Text(s.t("languageNote")).font(.caption).foregroundStyle(.secondary)
             }
             Section(s.t("about")){
-                LabeledContent(s.t("appVersion"),value:"0.1.2 · Developer Preview")
+                LabeledContent(s.t("appVersion"),value:"\(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "Development") · Developer Preview")
                 LabeledContent(s.t("platform"),value:s.host.osVersion+" · "+(s.host.architecture ?? "—"))
                 Link(s.t("officialProject"),destination:URL(string:"https://github.com/apple/container")!)
                 Text(s.t("independentApp")).font(.caption).foregroundStyle(.secondary)

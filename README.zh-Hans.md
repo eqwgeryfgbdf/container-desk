@@ -1,125 +1,72 @@
-# Container Desk 0.1.2 — 开发预览版
+# Container Desk 0.1.3 — 开发者预览版
 
-[English](README.md) · [中文（繁體）](README.zh-Hant.md) · **中文（简体）**
+[English](README.md) · [中文（繁體）](README.zh-Hant.md) · [中文（简体）](README.zh-Hans.md)
 
-使用 macOS 26 SDK 构建的原生 SwiftUI **本机 Apple Container** 管理工具。需要搭载 Apple Silicon、运行 macOS 26 或更新版本的 Mac。本项目独立开发，并非 Apple 产品。
+使用 macOS 26 SDK 制作的原生 SwiftUI **本机 Apple Container** 管理工具。需要 Apple Silicon、macOS 26 以上，以及已测试的引擎 **1.5.0**。这是独立开发的应用，并非 Apple 产品。
 
-[下载开发预览版](https://github.com/eqwgeryfgbdf/container-desk/releases/tag/v0.1.2-preview) · [公开验收标准（英文）](docs/PUBLIC_RELEASE_GATE.md) · [测试报告模板（英文）](docs/TEST_REPORT.md)
+[下载 0.1.3 预览版](https://github.com/eqwgeryfgbdf/container-desk/releases/tag/v0.1.3-preview) · [完整快速上手教程](docs/QUICK_START.zh-Hans.md) · [三语版本说明](RELEASE_NOTES.md)
 
-**公开状态：尚未达标。** 仓库保持私有，直到全部 14 项必要验收通过且附有证据，并且没有未解决的严重或重大问题。以下自动化与基本流程测试仅覆盖部分验收要求。
+**仓库保持私有。** 测试者需要仓库访问权限并登录 GitHub。通过[公开验收标准](docs/PUBLIC_RELEASE_GATE.md)前不会公开；此版本仍为预览版。
 
-## 界面截图
+## 五分钟开始体验
 
-### 概览
+1. 从 Release 下载 DMG 和可选的 `Container-Desk-0.1.3-Quick-Start.zip`，使用 `SHA256SUMS.txt` 核对文件。
+2. 将 **Container Desk.app** 拖入“应用程序”。本版仅有 ad hoc 签名，没有 Developer ID 或 Apple 公证；遇到 macOS 阻止时，参照[安装教程](docs/QUICK_START.zh-Hans.md)。
+3. 在“容器引擎”连接或安装受支持的官方 Apple Container。App 与引擎分别下载，管理员授权由 macOS 处理。
+4. 解压入门包，在该文件夹打开终端：
 
-![概览：实际 Mac 配置与实时容器数量](docs/images/overview-en.png)
+```sh
+bash quick-test.sh --check
+bash quick-test.sh --run
+```
+
+第一个命令只读。第二个使用专用 BusyBox 容器在 `127.0.0.1:18080` 提供网页，验证 HTTP、exec／日志访问、停止重启和文件保留，再清理自己创建的资源。不需要 Xcode、Python 或 sudo。使用 `--run --keep` 可保留容器，在 App 中体验后按输出命令清理。教程还提供纯界面的 Python 网页服务及简单项目导入示例；快速测试不代表全部界面或安装流程已验收。
+
+## 常用界面与操作视频
+
+### 总览
+
+![真实 Mac 规格与实时容器统计](docs/images/overview-en.png)
 
 ### 容器管理
 
-![容器管理：搜索、状态及 CPU 与内存配额](docs/images/containers-en.jpg)
+![容器搜索、状态与资源配置](docs/images/containers-en.jpg)
 
-以上为 macOS 26.7.1 上 0.1.2 QA 应用的实际英文界面。概览仅明确遮盖计算机名称；管理页面筛选出真实的临时测试容器，截图后已删除。硬件与容器数值并非模拟数据。截图不代表下载版 DMG 已通过验收，也不代表完整验收完成。[截图来源说明（英文）](docs/MEDIA.md)。
+[观看／下载 58.5 秒实机介绍视频](https://github.com/eqwgeryfgbdf/container-desk/releases/download/v0.1.3-preview/Container-Desk-Overview-zh-Hant.mp4)（繁体字幕）。截图与视频来自此前的 0.1.2 QA 构建及 macOS 26.7.1，使用真实的临时测试资源，主机名称已遮挡；不代表 0.1.3 的全新安装或升级验收。[媒体来源](docs/MEDIA.md)。
 
-## GitHub 发布
+## 0.1.3 包含的功能
 
-仓库包含源代码、本地化资源、构建脚本与测试。DMG 下载文件放在 GitHub Releases，不纳入 Git 历史。0.1.2 的全新安装、升级与完整界面交互验收仍待完成，因此应标记为 **Pre-release（预览版）**。在 GitHub 发布不代表获得 Apple 认可或公证。
+- **容器管理：** 创建、启动、停止、重启、检查与删除；批量选择和操作确认；CPU 下拉菜单、内存滑块／数字输入、已下载镜像选择。新容器先创建为停止状态。
+- **完整信息：** 双击展开、实时 CPU／内存／进程／网络摘要、会话图表、日志搜索和导出、可点击的 TCP 地址与复制网址。不模拟缺失数据；网络数字为累计流量。
+- **镜像与部署：** Docker Hub 搜索、仓库镜像引用、架构检查、下载并配置、ARM64 或 AMD64／Rosetta 选择、Dockerfile 构建、标签／删除、OCI 导入导出。切换架构不等于转换二进制文件。
+- **文件与快照：** 浏览容器文件、不覆盖的传输、将容器保存为镜像。快照不包含挂载数据，环境变量需要主动选择纳入。[范围说明](docs/CONTAINER_SNAPSHOTS.md)。
+- **仓库、网络与存储卷：** 登录／退出、推送镜像、搜索、创建、引用保护与批量删除确认。[使用说明](docs/COMPOSE_AND_FILES.md)。
+- **项目与 Docker 迁移：** 检查并导入受支持的 Compose 配置，将 Docker 项目转换为独立配置文件，可选用已安装的官方 Compose CLI 解析覆盖配置，再启动／停止／移除服务。不支持的字段会阻止导入；Docker 本地镜像和存储卷数据需要单独迁移。[转换教程](docs/DOCKER_CONVERSION.md)。
+- **原生界面：** 保存侧栏顺序、80–150% 内容缩放（⌘+、⌘−、⌘0）、遵循减少动态效果、真实主机规格、英文／繁中／简中，没有演示模式。
+- **引擎：** 官方来源安装、手动及选择启用的自动更新，含工作负载检查。安装仅限已测试版本并需要系统授权；App 打开时才进行更新。
 
-预览版打包先运行 `bash scripts/test.sh` 与 `bash scripts/package.sh`，再将生成的 DMG、同版本源代码 ZIP、版本清单与 SHA-256 校验和一起附加到对应源代码标签的 Release。此流程不需要 Apple Developer 账号或签名密钥。三语发布说明见 [RELEASE_NOTES.md](RELEASE_NOTES.md)。
+## 测试结果与待完成事项
 
-新的打包流程会生成配对的源代码 ZIP、记录源代码提交的清单与 SHA-256 校验和。打包要求 Git 工作目录没有未提交修改；构建期间如果源代码改变，就会拒绝生成配对结果。上传时应提供完整组合，Release 标签必须指向清单记录的提交。源代码 ZIP 包含 Apache-2.0 许可证、程序、资源、构建脚本与测试，不含 Git 内部数据及已忽略的构建产物。
+此前完整自动化基线为 **17 组通过、0 失败**，含 **56 个原生界面步骤**；另有 5 组依赖外部环境的测试跳过。核心、管理、工作流、安装模拟及平台测试均可通过脚本重跑；已实测 ARM64 与 AMD64／Rosetta。创建容器窗口的布局卡死问题已修复。本版新增免编译快速测试，并同步显示打包版本。[自动化教程](docs/AUTOMATED_QA.md) · [本版验证记录](docs/RELEASE_0.1.3_VALIDATION.md)。
 
-| 发布方式 | 应用 | 同版本源代码 |
-| --- | --- | --- |
-| 开发预览版 | `Container-Desk-VERSION-arm64-preview.dmg` | `Container-Desk-VERSION-preview-source.zip` |
-| 签名与公证发布流程 | `Container-Desk-VERSION-arm64.dmg` | `Container-Desk-VERSION-source.zip` |
+第二台 Mac 全新安装／升级、完整无障碍验收、60 分钟长时间运行和真实私有仓库验收仍待完成。短时间基本检查不等于长时间验收。AI 模型集成延后；尚无远程主机管理、内嵌交互终端、App 关闭后更新或独立客户机内核更新器。文件解压仅接受限制大小的普通 tar，拒绝压缩、稀疏及超限归档。安全审查在覆盖范围内未确认高／严重漏洞，但不保证完全不存在漏洞。[功能状态](docs/FEATURE_ROADMAP.md) · [测试反馈模板](docs/TEST_REPORT.md)。
 
-签名流程已准备，但尚未生成正式版本：目前没有 Developer ID 证书，必要验收也尚未完成。文件名或打包成功本身不代表稳定版本。现有 0.1.2 Release 附件保持原样；配对产物流程适用于新打包的文件。
+## 源码、打包与许可
 
-## 许可证
+DMG、`preview-source.zip` 及 manifest 对应同一个版本提交。源码包含 **Apache-2.0** 许可、资源、脚本和测试。`SHA256SUMS.txt` 覆盖上传附件，入门包中的 `BUILD.json` 记录来源提交。入门包不重复包含 DMG；0.1.2 历史附件保留以便追溯。
 
-Container Desk 采用 [Apache-2.0](LICENSE)。Apple Container 是独立依赖项，适用其自身许可证；需要时才下载官方安装程序，本项目不内置该软件包。许可证完整条文以英文 LICENSE 为准。
-
-## 安装
-
-打开 `Container-Desk-0.1.2-arm64-preview.dmg`，将 **Container Desk.app** 拖到 **Applications（应用程序）**。此开发版使用 ad hoc 签名，没有 Developer ID 证书或 Apple 公证。不加入 Apple Developer Program 仍可通过 GitHub Releases 分享预览版，但 GitHub 不会改变 macOS Gatekeeper 检查：下载后可能无法打开。Developer ID 签名与公证可作为后续发布改进。
-
-应用会连接到现有引擎。如果尚未安装，打开 **Container Engine（容器引擎）**，检查官方版本，再选择 **Install Apple Container（安装 Apple Container）**。管理员授权由 macOS 处理，应用不收集管理员密码。首次安装也会由 Apple CLI 下载其推荐的 Kata Containers Linux 客体内核。此 DMG 不内置官方引擎软件包。
-
-## 0.1.2 更新内容
-
-- 新增明确的迁移流程：将已识别的个人用户安装转换为 `/usr/local` 下的**相同官方版本**，保留原始文件与默认用户数据目录。需要引擎空闲、`/usr/local` 尚未安装、源可执行文件具有 Apple 签名，且版本已通过兼容性验证。不支持任意自定义配置，也不修改终端 PATH。
-- 安装顺序已独立测试：停止引擎前先验证下载，变更前再次检查工作负载，失败时尝试恢复服务，不将验证失败显示为成功。服务恢复不等于可执行文件或数据回滚到旧版本。
-- 处理引擎已停止的状态、拒绝降级、区分管理员取消授权，避免在已授权安装程序写入文件时将其终止。
-- 新增 `scripts/release.sh`，包含 Developer ID 签名、强化运行时、时间戳、公证、公证票据附加及挂载后的 Gatekeeper 检查。`--check` 仅检查本机条件，不上传。没有签名证书时无法生成签名与公证版本，但仍可创建 GitHub 预览版。
-- 保留 0.1.1 控件：CPU 下拉菜单、同步的内存滑块与整数输入框、已下载镜像下拉菜单。已移除演示模式。
-
-## 验收证据
-
-已通过 29 项核心检查、13 项隔离的安装顺序与恢复场景，以及 179 组三语文案检查。实际 `Store.create` 使用选定的本机镜像、2 个 CPU 与 768 MiB 内存创建停止状态的容器，随后删除。创建、启动、日志、资源统计、停止及删除的基本流程已通过。真实官方版本预检查识别出本机迁移需求，并在有工作负载运行时拒绝执行。现有 8 个工作负载状态均保持不变。
-
-官方签名软件包只在工作目录解包，没有执行系统安装。包内 CLI 哈希与当前自定义配置中的 CLI 相同，Apple 指定签名验证通过，解包的 CLI 报告版本 1.5.0。这是软件包内容验证，不代表全新安装或实际迁移已通过。
-
-## 功能
-
-当前源代码新增容器文件浏览、拒绝覆盖的上传下载、Registry 登录／退出和镜像推送，以及可预览确认的 Compose 项目导入、启动、停止和移除。Compose 支持明确列出的子集，包括依赖服务就绪检查、保留命名卷和托管的服务名称映射；不支持的字段会直接拒绝。[操作与兼容范围](docs/COMPOSE_AND_FILES.md)。现有下载文件尚未包含这些功能。
-
-当前源代码也加入「**转换 Docker 项目…**」：选择 Compose、Dockerfile 或项目文件夹，检查兼容性后另存配置并导入。不支持的需求会阻止转换；将自动重启改为手动管理须明确勾选。保留原文件与 Docker 工作负载；卷数据及仅存在 Docker 的本地镜像需要另外迁移。[转换指南与限制](docs/DOCKER_CONVERSION.md)。现有下载文件保持原样。
-
-Docker 转换现在可使用已安装的官方 Compose CLI 解析覆盖文件、YAML 模板与环境文件，并支持多网络／别名、构建参数及目标。**镜像 → 下载与部署…** 可粘贴 Docker Hub 链接或 Registry 镜像名称，验证 arm64 镜像后进入配置。完整保留数据的无痛转移仍未完成，详见[转移验收条件](docs/MIGRATION_ACCEPTANCE.md)。
-
-**统一下载与部署：** 镜像页面改用单一“**下载与部署…**”入口。搜索仓库、查看可用平台，选择 ARM64（优先）或 AMD64／Rosetta，再选择仅下载或下载并配置。所选架构会带入容器配置。切换版本不是二进制转换；原生 ARM64 重建需要源码与 Dockerfile。
-
-**批量选择：** 容器、映像、网络和存储卷加入逐行复选框、全选当前结果和取消选择；也支持 Command / Shift 点选。选择范围跟随当前筛选结果。容器可批量启动、停止、重启或删除；资源删除前列出全部所选项目，逐项检查使用状态和保护规则，并报告结果。
-
-**导航与容器快照：** 侧边栏改名为“项目”，可拖动排序并保存顺序，右键可移动或恢复；项目空白提示已居中。容器操作新增“将容器保存为映像…”，可先保存容器内的文件修改，再选择推送到自己的仓库。不包含挂载数据，环境变量需主动勾选。详见[快照范围](docs/CONTAINER_SNAPSHOTS.md)。
-
-当前源代码新增镜像下载／构建／标签／删除与 OCI 归档导入导出、网络／存储卷创建与受保护删除、容器重启、JSON 配置检查及外部终端入口。创建容器可选择网络／存储卷并设置高级命令。长时间操作有实时输出，可在后台继续或取消；同时修复了内存滑块导致的窗口卡住问题。详见[功能状态与后续基本功能](docs/FEATURE_ROADMAP.md)。这些变更**尚未包含在现有 `v0.1.2-preview` 下载文件中**。
-
-当前源代码也加入多选容器批量操作（先确认清单）、多组 TCP／UDP 端口与文件夹／存储卷挂载，以及可搜索、切换应用程序／启动来源、复制和导出的日志快照。批量任务会逐项报告结果，拒绝状态已改变或不适用的操作。现有下载文件尚未包含这些新增功能。
-
-页面与信息／日志标签页采用短暂淡入淡出；展开详情及缩放使用可中断的平滑过渡。自定义动画遵循 macOS「减少动态效果」，定期指标／日志更新不触发动画。这些源代码更新尚未包含在现有 `v0.1.2-preview` 下载文件中。
-
-当前源代码支持主内容区 80%～150% 缩放：**⌘+**（也支持 **⌘=**）放大、**⌘−** 缩小、**⌘0** 还原到 100%。也可使用「显示」菜单或右下角比例菜单；应用会记住比例，较窄的窗口可水平滚动。原生侧边栏、工具栏及对话框保持标准尺寸。现有 `v0.1.2-preview` 下载文件尚未包含此功能。
-
-当前源代码的展开页已加入实时 CPU、内存、进程与网络摘要、单个容器趋势图（本次 App 会话最近 120 次实际采样）、端口／配置／挂载分区及全宽日志视图。缺少的数据不补为零；网络数值为累计流量而非带宽。现有 `v0.1.2-preview` 下载文件尚未包含此仪表板。
-
-当前源代码支持双击容器行，或从右键菜单选择「展开容器详情」，在整个窗口内容区显示信息与日志。点击「返回容器列表」或按 Esc 可恢复列表、选中项与原先的侧边栏显示状态。现有 `v0.1.2-preview` 下载文件尚未包含此功能。
-
-当前源代码新增可点击的 TCP 端口映射，在默认浏览器打开主机端网址，并提供右键「复制网址」。默认使用 HTTP；容器端 443 使用 HTTPS。绑定所有接口的地址会转换为本机回环地址，UDP 保持文本。服务本身须支持 HTTP／HTTPS。现有 `v0.1.2-preview` 下载文件尚未包含此功能。
-
-- 原生侧边栏、容器表格、详情面板、搜索与状态筛选、分组表单、工具栏及系统外观。
-- 真实本机容器状态、创建／启动／停止／删除、日志、CPU 差值采样与内存用量。发布的端口默认仅绑定本机回环地址；新容器创建后保持停止。
-- 实际 Mac 配置：机型、芯片、CPU 核心、物理内存、macOS 与构建版本、架构，以及主目录所在磁盘容量与可用空间。无法获取的值保持不可用，不保留硬件序列号或 UUID。
-- 镜像、网络与存储卷：可搜索的管理列表、配置检查与删除前引用检查（当前源代码）。
-- 以英文为基础，提供简体中文及繁体中文；切换后即时更新应用内容。系统管理的菜单遵循 macOS 设置。
-- 主机及容器数据均来自实际环境，已移除演示模式与示例数据。
-- 检查官方稳定版；安装前验证签名软件包 URL、大小、SHA-256、Apple Containerization 安装程序身份与 macOS 软件包评估结果。
-- 应用打开时提供手动更新及自行启用的自动更新。默认开启自动检查、关闭自动安装。安装要求版本已验证且没有运行中的容器，仍需系统授权。
-
-## 预览版限制
-
-目前仅将 Container **1.5.0** 列为兼容版本。较新版本会显示信息，但通过测试前不安装；自动模式不代表无条件支持未来版本。不覆盖自定义文件。已识别的 `~/.local/bin/container` 包装脚本可在空闲时明确迁移到相同官方版本，保留原安装。其他自定义配置仍须使用原安装方式。目前没有特权后台辅助程序、关闭应用后的调度、远程主机管理、内嵌终端、完整资源编辑器、跳过版本偏好或独立客体内核更新器。
-
-自动化测试已整合为单一入口：`python3 scripts/qa.py --live --ui`，生成 JSON、JUnit、日志与资源前后对比，涵盖真实引擎测试及原生界面回归。详见[自动化指南](docs/AUTOMATED_QA.md)与[本次测试结果](docs/QA_RESULTS.md)。第二台 Mac 的全新安装、真实升级、私有仓库登录成功、完整无障碍／视觉验收及 60 分钟稳定性门槛仍待完成。AI 模型部署延后，下一阶段先以轻量本地模型试验。现有下载文件保留此前限制。
-
-## 构建与测试
-
-构建现使用 Swift Package Manager 和固定版本 Yams 6.2.2，首次构建会下载此依赖包。必要许可声明随 App 和 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) 一并提供。
-
-安装 Apple Xcode 26 或 Command Line Tools 26（含 macOS 26 SDK），以及 Python 3。Yams 是固定版本的 Swift 软件包依赖项。
+开发者需要 Command Line Tools／Xcode 26 和 Python 3：
 
 ```sh
 bash scripts/test.sh
 bash scripts/build.sh
-bash scripts/package.sh
+# 先提交所有源码变更，再生成同版产物：
+bash scripts/package.sh ../outputs
+python3 scripts/make-quick-start.py --output ../outputs
 ```
 
-应用输出到 `../work/build/Container Desk.app`，DMG 输出到 `../outputs`。`Package.swift` 可供 Xcode 浏览源代码；完整 `.app`（含 Info.plist 与本地化资源）请使用构建脚本。`Resources/Localizable.xcstrings` 由 `scripts/make_catalog.py` 生成，打包时转换为 `.strings` 资源；修改翻译后须重新生成。
+打包要求干净的 Git 工作目录，Release 标签必须对应 manifest 的提交。可选的 Developer ID／公证流程已准备，但尚未产出签名的稳定版。[Apache-2.0 许可](LICENSE) · [公开门槛](docs/PUBLIC_RELEASE_GATE.md)。
 
-如需自行重新运行集成基本流程测试，一起编译 `Sources/Models.swift`、`Sources/ProcessRunner.swift` 与 `Tests/IntegrationSmoke.swift`，再传入 CLI 路径及**现有且含 `/bin/sh` 的本机镜像**。测试只创建及删除 UUID 命名的测试容器。
+## 官方依赖
 
-如需 Developer ID 签名与公证版本，将 `SIGNING_IDENTITY` 设为已安装的 Developer ID Application 证书身份，并将 `NOTARY_PROFILE` 设为现有的 notarytool 钥匙串配置名称，再运行 `bash scripts/release.sh`。不要把密码、私钥或 API 密钥写入源代码。脚本仅在公证通过、附加票据、DMG 验证及 Gatekeeper 检查成功后报告完成。发布前仍须完成全新安装、更新、无障碍与视觉验收。
-
-## 引用
-
-- [Apple Container](https://github.com/apple/container)
+[Apple Container](https://github.com/apple/container) 为独立依赖，有自己的许可。官方安装包按需下载，未内嵌在 App 中。

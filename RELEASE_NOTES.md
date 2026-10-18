@@ -1,100 +1,89 @@
-# Container Desk 0.1.2 — Developer Preview
+# Container Desk 0.1.3 — Developer Preview
 
 [English](#english) · [中文（繁體）](#繁體中文) · [中文（简体）](#简体中文)
 
 ## English
 
-Native SwiftUI manager for local **Apple Container** on Apple Silicon Macs running macOS 26 or later. This is an independent developer preview, not an Apple product or a verified stable release.
+A native SwiftUI manager for **local Apple Container** on Apple Silicon, macOS 26+. This independent preview is tested with Apple Container **1.5.0**.
 
-### Features
+**Start here:** [English quick start](https://github.com/eqwgeryfgbdf/container-desk/blob/v0.1.3-preview/docs/QUICK_START.md). Install the DMG, connect the engine, then try the optional no-compiler Quick Start bundle:
 
-- Actual Mac specifications and live container status, metrics and logs.
-- Create, start, stop and delete containers; CPU dropdown, synchronized memory slider/numeric input, and downloaded-image dropdown.
-- English, Simplified Chinese and Traditional Chinese interfaces; no demo mode.
-- Official engine installation/update workflow with workload protection and explicit same-version migration for recognized per-user installations.
-- Read-only image, network and volume inventories.
+```sh
+bash quick-test.sh --check
+bash quick-test.sh --run
+```
 
-### Verification and limitations
+The first command is read-only. The second tests a temporary loopback HTTP container, exec/log access and stop/start persistence, then cleans up its own container and newly downloaded image. Use `--run --keep` to explore it in the app; follow the printed cleanup commands afterwards. No Xcode, Python or sudo is required. This is an engine smoke test, not complete UI/install acceptance.
 
-29 core checks, 13 isolated installer workflow tests, real container allocation and lifecycle smoke tests passed. The isolated installer tests simulate external operations; they do not prove a completed clean system install. Clean installation, upgrade and full interactive UI/accessibility acceptance remain pending. Suspected major issue **UI-001**: the QA creation sheet became unresponsive with the main thread in SwiftUI layout. Only Apple Container **1.5.0** is on the tested compatibility list; other updates are deferred.
+### What's new since the previous downloadable preview
 
-**Ad hoc signed; no Developer ID or Apple notarization. macOS may block the downloaded app.** There is no remote-host management, interactive terminal, closed-app updater or independent guest-kernel updater. The repository remains private until all required acceptance gates pass with no unresolved critical/major defects. This Release stays marked **Pre-release**.
+- Full image/network/volume management, reviewed batch actions and richer full-window container details with clickable TCP web links, logs and live resource charts.
+- Unified Docker Hub search, architecture inspection, download and deployment; ARM64 and AMD64/Rosetta paths; Dockerfile builds and OCI archives.
+- Container file browsing/transfers, snapshots, Registry login/logout and image push, Projects import/lifecycle and reviewed Docker conversion. Unsupported Compose fields are rejected; Docker volume data needs separate migration.
+- Saved sidebar order, content zoom, Reduce Motion-aware transitions, three interface languages, and the creation-sheet layout hang fix.
+- Bounded process output and safer bounded tar extraction; automatic app-version display. Matching Apache-2.0 source, manifest, checksums and a three-language quick-start guide are now included.
 
-### Downloads and testing
+### Downloads
 
-- `Container-Desk-0.1.2-arm64-preview.dmg`: application installer image.
-- `Container-Desk-0.1.2-Test-Kit.zip`: the same DMG, an older source snapshot, `Check-Mac.command`, testing instructions and checksums. The script inspects the Mac and writes a local report; it does not install software, stop services or upload reports. It is optional for normal installation and may be removed from Releases after acceptance evidence is saved.
-- `SHA256SUMS.txt`: checksums for the DMG and Test Kit ZIP.
-- GitHub-generated source archives correspond to the `v0.1.2-preview` tag, not current `main`.
+| File | Purpose |
+|---|---|
+| `Container-Desk-0.1.3-arm64-preview.dmg` | Install the app. |
+| `Container-Desk-0.1.3-Quick-Start.zip` | Optional guides, launchers, smoke script and example project; no duplicated DMG. |
+| `Container-Desk-0.1.3-preview-source.zip` | Exact matching Apache-2.0 source, resources, scripts and tests. |
+| `Container-Desk-0.1.3-preview-manifest.json` | Source commit/tree and primary artifact hashes. |
+| `SHA256SUMS.txt` | SHA-256 checksums of all uploaded attachments except itself. |
+| `Container-Desk-Overview-zh-Hant.mp4` | 58.5-second real-app walkthrough with Traditional Chinese captions, recorded on the preceding QA build. |
 
-On the second test Mac, read `先讀我.md` in the Test Kit before running `Check-Mac.command`; report the result and any failed step without passwords or private keys. The Test Kit instructions are currently in Traditional Chinese.
+Verify downloaded files with `shasum -a 256 -c SHA256SUMS.txt` if all assets are in the same folder; for DMG only, compare `shasum -a 256 Container-Desk-0.1.3-arm64-preview.dmg` against its entry.
 
-Current `main` uses **Apache-2.0** and includes updated screenshots and multilingual READMEs. The existing source tag and Test Kit predate the license/documentation additions; their archives have not been replaced. New packaging produces a matching source ZIP, source-commit manifest and checksums alongside the DMG. These new paired packages are not assets of this existing Release.
+### Test status and limits
 
-[English README](https://github.com/eqwgeryfgbdf/container-desk/blob/main/README.md) · [Acceptance criteria](https://github.com/eqwgeryfgbdf/container-desk/blob/main/docs/PUBLIC_RELEASE_GATE.md)
+Prior full baseline: **17 groups passed, 0 failed, 5 environment-dependent groups skipped**, including **56 native UI steps**. The new quick-test script and release build have separate [validation notes](https://github.com/eqwgeryfgbdf/container-desk/blob/v0.1.3-preview/docs/RELEASE_0.1.3_VALIDATION.md). Media is real QA footage, not clean-install or upgrade proof. Second-Mac install/upgrade, full accessibility, 60-minute soak and real private-registry acceptance remain pending. AI integration is deferred.
+
+**Ad hoc signed; no Developer ID or Apple notarization.** macOS may block opening; follow the quick-start guide's per-app instructions. The repository remains **private**: testers need repository access and GitHub sign-in. This is a **pre-release**, not a stable/public launch. Historical 0.1.2 assets are preserved.
 
 ## 繁體中文
 
-原生 SwiftUI **本機 Apple Container** 管理工具，適用於 Apple Silicon、macOS 26 或更新版本。這是獨立開發的預覽版，並非 Apple 產品或已驗收的穩定版。
+原生 SwiftUI **本機 Apple Container** 管理工具，適用於 Apple Silicon、macOS 26 以上。此獨立預覽版已測試的引擎版本為 **1.5.0**。
 
-### 功能
+**從這裡開始：** [繁體中文快速上手](https://github.com/eqwgeryfgbdf/container-desk/blob/v0.1.3-preview/docs/QUICK_START.zh-Hant.md)。安裝 DMG、連接引擎後，解壓選用的 Quick Start 入門包：
 
-- 實際 Mac 規格與即時容器狀態、資源統計及日誌。
-- 建立、啟動、停止及刪除容器；CPU 下拉選單、同步的記憶體滑桿與數字輸入、已下載映像檔下拉選單。
-- 英文、簡體中文與繁體中文介面；已移除演示模式。
-- 官方引擎安裝與更新流程，包含工作負載保護，以及已識別個人使用者安裝的明確同版遷移。
-- 映像檔、網路與磁碟區唯讀清單。
+```sh
+bash quick-test.sh --check
+bash quick-test.sh --run
+```
 
-### 驗證與限制
+第一個命令唯讀；第二個建立只開放本機的網頁容器，驗證 HTTP、exec／日誌與停止重啟後的檔案保留，再清理自己建立的容器及新下載映像。加上 `--run --keep` 可在 App 裡繼續操作，完成後依輸出清理。不需要 Xcode、Python 或 sudo；這是引擎基本流程測試，不代表全部介面／安裝驗收。
 
-已通過 29 項核心檢查、13 項隔離的安裝流程測試、實際容器配額與生命週期基本流程測試。隔離安裝測試模擬外部操作，不代表已完成乾淨系統安裝。乾淨安裝、升級與完整介面互動／無障礙驗收仍待完成。疑似重大問題 **UI-001**：QA 建立容器視窗無回應，主執行緒停留在 SwiftUI 排版。目前相容性測試清單僅含 Apple Container **1.5.0**，其他版本更新暫緩。
+**相較上次可下載版本：** 補齊映像、網路、儲存卷與批量管理；全視窗容器資訊、即時圖表及可點擊網址；整合搜尋、架構檢查、下載部署；加入檔案管理、容器快照、倉庫推送、專案與 Docker 轉換；新增側欄排序、縮放和減少動態效果支援，修正建立容器視窗卡住。程序輸出與 tar 解壓增加容量限制，並附同版 Apache-2.0 原始碼及三語教學。不支援的 Compose 欄位會阻擋匯入，Docker 儲存卷資料需另行遷移。
 
-**僅有 ad hoc 簽章，沒有 Developer ID 或 Apple 公證；下載後可能被 macOS 阻擋。** 尚未提供遠端主機管理、互動終端機、關閉應用程式後的更新或獨立客體核心更新器。全部必要驗收通過且沒有未解決的嚴重／重大問題前，儲存庫保持私人；此 Release 維持 **Pre-release（預覽版）**。
+**下載：** DMG 用於安裝；Quick Start ZIP 是選用教學／測試包，不重複包含 DMG；source ZIP 是同版開源檔；manifest 記錄來源與雜湊；`SHA256SUMS.txt` 可核對附件。MP4 是 58.5 秒真實操作影片、繁體字幕，來自先前 QA 建置。
 
-### 下載與測試
+**驗證與限制：** 先前完整基準為 **17 組通過、0 失敗、5 組依賴外部環境的測試略過**，含 **56 個原生介面步驟**。本版快速腳本與建置另有[驗證紀錄](https://github.com/eqwgeryfgbdf/container-desk/blob/v0.1.3-preview/docs/RELEASE_0.1.3_VALIDATION.md)。第二台 Mac 安裝／升級、完整無障礙、60 分鐘長跑與真實私人倉庫驗收仍待完成；AI 整合延後。影片不代表安裝／升級通過。
 
-- `Container-Desk-0.1.2-arm64-preview.dmg`：應用程式安裝映像檔。
-- `Container-Desk-0.1.2-Test-Kit.zip`：相同 DMG、較早的原始碼快照、`Check-Mac.command`、測試說明與校驗碼。腳本檢查 Mac 並產生本機報告，不會安裝軟體、停止服務或上傳報告。一般安裝不需要測試包；驗收證據保存後可從 Releases 移除。
-- `SHA256SUMS.txt`：DMG 與 Test Kit ZIP 的校驗碼。
-- GitHub 自動產生的原始碼壓縮檔對應 `v0.1.2-preview` 標籤，並非目前的 `main`。
-
-在第二台測試 Mac 上，先閱讀測試包的 `先讀我.md`，再執行 `Check-Mac.command`；回報結果與失敗步驟即可，不提供密碼或私鑰。測試包內的說明目前使用繁體中文。
-
-目前 `main` 採用 **Apache-2.0**，並包含更新的截圖與多語言 README。既有原始碼標籤及 Test Kit 早於這些授權與文件更新，壓縮檔尚未替換。新的打包流程會隨 DMG 產生同版原始碼 ZIP、原始碼提交清單與校驗碼；新的配對包尚未附加至本 Release。
-
-[繁體中文 README](https://github.com/eqwgeryfgbdf/container-desk/blob/main/README.zh-Hant.md) · [驗收標準（英文）](https://github.com/eqwgeryfgbdf/container-desk/blob/main/docs/PUBLIC_RELEASE_GATE.md)
+**僅 ad hoc 簽章，沒有 Developer ID／Apple 公證；macOS 可能阻擋開啟，請依教學處理單一 App。儲存庫維持私人，測試者需有權限並登入 GitHub。** 本次是預覽版，並非公開穩定版；0.1.2 歷史附件保留。
 
 ## 简体中文
 
-原生 SwiftUI **本机 Apple Container** 管理工具，适用于 Apple Silicon、macOS 26 或更新版本。这是独立开发的预览版，并非 Apple 产品或已验收的稳定版。
+原生 SwiftUI **本机 Apple Container** 管理工具，适用于 Apple Silicon、macOS 26 以上。此独立预览版已测试的引擎版本为 **1.5.0**。
 
-### 功能
+**从这里开始：** [简体中文快速上手](https://github.com/eqwgeryfgbdf/container-desk/blob/v0.1.3-preview/docs/QUICK_START.zh-Hans.md)。安装 DMG、连接引擎后，解压可选的 Quick Start 入门包：
 
-- 实际 Mac 配置与实时容器状态、资源统计及日志。
-- 创建、启动、停止及删除容器；CPU 下拉菜单、同步的内存滑块与数字输入、已下载镜像下拉菜单。
-- 英文、简体中文与繁体中文界面；已移除演示模式。
-- 官方引擎安装与更新流程，包含工作负载保护，以及已识别个人用户安装的明确同版本迁移。
-- 镜像、网络与卷的只读列表。
+```sh
+bash quick-test.sh --check
+bash quick-test.sh --run
+```
 
-### 验证与限制
+第一个命令只读；第二个创建仅本机可访问的网页容器，验证 HTTP、exec／日志及停止重启后的文件保留，再清理自己创建的容器与新下载镜像。添加 `--run --keep` 可继续在 App 中体验，完成后按输出清理。不需要 Xcode、Python 或 sudo；这是引擎基本流程测试，不代表全部界面／安装验收。
 
-已通过 29 项核心检查、13 项隔离的安装流程测试、实际容器配额与生命周期基本流程测试。隔离安装测试模拟外部操作，不代表已完成全新系统安装。全新安装、升级与完整界面交互／无障碍验收仍待完成。疑似重大问题 **UI-001**：QA 创建容器窗口无响应，主线程停留在 SwiftUI 布局。目前兼容性测试列表仅含 Apple Container **1.5.0**，其他版本更新暂缓。
+**相比上次可下载版本：** 补齐镜像、网络、存储卷及批量管理；全窗口容器详情、实时图表和可点击网址；整合搜索、架构检查、下载部署；新增文件管理、容器快照、仓库推送、项目与 Docker 转换；加入侧栏排序、缩放及减少动态效果支持，修复创建容器窗口卡死。进程输出和 tar 解压增加容量限制，并附同版 Apache-2.0 源码与三语教程。不支持的 Compose 字段会阻止导入，Docker 存储卷数据需要单独迁移。
 
-**仅有 ad hoc 签名，没有 Developer ID 或 Apple 公证；下载后可能被 macOS 阻止。** 尚未提供远程主机管理、交互终端、关闭应用后的更新或独立客体内核更新器。全部必要验收通过且没有未解决的严重／重大问题前，仓库保持私有；此 Release 保持 **Pre-release（预览版）**。
+**下载：** DMG 用于安装；Quick Start ZIP 是可选教程／测试包，不重复包含 DMG；source ZIP 是同版开源文件；manifest 记录来源及哈希；`SHA256SUMS.txt` 可校验附件。MP4 是 58.5 秒实机操作视频、繁体字幕，来自此前 QA 构建。
 
-### 下载与测试
+**验证与限制：** 此前完整基线为 **17 组通过、0 失败、5 组依赖外部环境的测试跳过**，含 **56 个原生界面步骤**。本版快速脚本及构建另有[验证记录](https://github.com/eqwgeryfgbdf/container-desk/blob/v0.1.3-preview/docs/RELEASE_0.1.3_VALIDATION.md)。第二台 Mac 安装／升级、完整无障碍、60 分钟长时间运行和真实私有仓库验收仍待完成；AI 集成延后。视频不代表安装／升级通过。
 
-- `Container-Desk-0.1.2-arm64-preview.dmg`：应用安装镜像文件。
-- `Container-Desk-0.1.2-Test-Kit.zip`：相同 DMG、较早的源代码快照、`Check-Mac.command`、测试说明与校验和。脚本检查 Mac 并生成本机报告，不会安装软件、停止服务或上传报告。一般安装不需要测试包；验收证据保存后可从 Releases 删除。
-- `SHA256SUMS.txt`：DMG 与 Test Kit ZIP 的校验和。
-- GitHub 自动生成的源代码压缩包对应 `v0.1.2-preview` 标签，并非当前的 `main`。
+**仅 ad hoc 签名，没有 Developer ID／Apple 公证；macOS 可能阻止打开，请按教程处理单个 App。仓库保持私有，测试者需要权限并登录 GitHub。** 本次为预览版，并非公开稳定版；0.1.2 历史附件保留。
 
-在第二台测试 Mac 上，先阅读测试包中的 `先讀我.md`，再运行 `Check-Mac.command`；报告结果与失败步骤即可，不提供密码或私钥。测试包内的说明目前使用繁体中文。
+## Official dependency / 官方依賴 / 官方依赖
 
-当前 `main` 采用 **Apache-2.0**，并包含更新的截图与多语言 README。现有源代码标签及 Test Kit 早于这些许可证与文档更新，压缩包尚未替换。新的打包流程会随 DMG 生成同版本源代码 ZIP、源代码提交清单与校验和；新的配对包尚未附加到本 Release。
-
-[简体中文 README](https://github.com/eqwgeryfgbdf/container-desk/blob/main/README.zh-Hans.md) · [验收标准（英文）](https://github.com/eqwgeryfgbdf/container-desk/blob/main/docs/PUBLIC_RELEASE_GATE.md)
-
-## Reference / 引用
-
-- [Apple Container](https://github.com/apple/container)
+[Apple Container](https://github.com/apple/container)

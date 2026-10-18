@@ -1,125 +1,72 @@
-# Container Desk 0.1.2 — Developer Preview
+# Container Desk 0.1.3 — Developer Preview
 
-**English** · [中文（繁體）](README.zh-Hant.md) · [中文（简体）](README.zh-Hans.md)
+[English](README.md) · [中文（繁體）](README.zh-Hant.md) · [中文（简体）](README.zh-Hans.md)
 
-Native SwiftUI manager for **local Apple Container**, built with the macOS 26 SDK. Requires an Apple Silicon Mac running macOS 26 or later. This is an independent application, not an Apple product.
+Native SwiftUI manager for **local Apple Container**, built with the macOS 26 SDK. Requires Apple Silicon, macOS 26 or later, and tested engine **1.5.0**. This is an independent application, not an Apple product.
 
-[Download developer preview](https://github.com/eqwgeryfgbdf/container-desk/releases/tag/v0.1.2-preview) · [Public release criteria](docs/PUBLIC_RELEASE_GATE.md) · [Test report template](docs/TEST_REPORT.md)
+[Download 0.1.3 preview](https://github.com/eqwgeryfgbdf/container-desk/releases/tag/v0.1.3-preview) · [Detailed quick start](docs/QUICK_START.md) · [Release notes](RELEASE_NOTES.md)
 
-**Release readiness: NOT READY for public visibility.** The repository stays private until all 14 required acceptance gates pass with evidence and no critical/major defects remain. Automated and smoke-test results below cover only part of that contract.
+**The repository remains private.** Testers need repository access and GitHub sign-in. Public visibility waits for the [acceptance gates](docs/PUBLIC_RELEASE_GATE.md); this preview is not a verified stable release.
 
-## Screenshots
+## Try it in five minutes
+
+1. Download the DMG and optional `Container-Desk-0.1.3-Quick-Start.zip` from the release. Verify them using `SHA256SUMS.txt`.
+2. Drag **Container Desk.app** to **Applications**. This build is ad hoc signed, without Developer ID or Apple notarization; see the [installation guide](docs/QUICK_START.md#2-install-and-connect) if macOS blocks opening it.
+3. Open **Container Engine** to connect to or install the supported official Apple Container engine. The app and engine are separate downloads; administrator authorization belongs to macOS.
+4. Unzip the Quick Start bundle, open Terminal in its folder, and run:
+
+```sh
+bash quick-test.sh --check
+bash quick-test.sh --run
+```
+
+The check is read-only. The test uses one temporary BusyBox HTTP container on `127.0.0.1:18080`, verifies HTTP, exec/log access and stop/start persistence, then removes its own resources. No Xcode, Python or sudo is needed. Use `--run --keep` to explore that container in the app and follow the printed cleanup commands. The guide also walks through a GUI-only Python web server and a small imported project. This smoke test does not certify every UI or installation path.
+
+## Screenshots and video
 
 ### Overview
 
-![Overview with actual Mac specifications and live container totals](docs/images/overview-en.png)
+![Actual Mac specifications and live container totals](docs/images/overview-en.png)
 
 ### Container management
 
-![Container management with search, status and CPU and memory allocation](docs/images/containers-en.jpg)
+![Container management, search, status and resource allocation](docs/images/containers-en.jpg)
 
-Actual macOS 26.7.1 captures from the 0.1.2 QA app. The overview's computer name is visibly redacted; the management page is filtered to a real disposable test container, removed after capture. Hardware and container values are not simulated. Screenshots do not certify the downloadable DMG or complete acceptance. [Capture provenance](docs/MEDIA.md).
+[Watch or download the 58.5-second walkthrough](https://github.com/eqwgeryfgbdf/container-desk/releases/download/v0.1.3-preview/Container-Desk-Overview-zh-Hant.mp4) (Traditional Chinese captions). Screenshots and video come from the preceding 0.1.2 QA build on macOS 26.7.1; they show real disposable fixtures, with host identity redacted. They are not evidence of a clean 0.1.3 installation or upgrade. [Media provenance](docs/MEDIA.md).
 
-## GitHub distribution
+## What is included in 0.1.3
 
-The repository contains source, localized resources, build scripts and tests. Downloadable DMGs belong in GitHub Releases, not Git history. Version 0.1.2 should be marked **pre-release** because clean-install/upgrade and final interactive UI acceptance are still pending. Publishing on GitHub does not imply Apple endorsement or notarization.
+- **Containers:** create, start, stop, restart, inspect and delete; reviewed batch selection/actions; CPU menu, synchronized memory slider/number field, and downloaded-image selector. New containers start stopped.
+- **Details:** double-click to expand, live CPU/memory/process/network summaries, session charts, searchable/exportable logs, clickable TCP web links and Copy URL. Missing measurements remain unavailable; network totals are cumulative traffic.
+- **Images and deployment:** Docker Hub search, registry references, platform inspection, download-and-configure, ARM64 or AMD64/Rosetta selection, Dockerfile builds, tag/delete, OCI import/export. Architecture selection is not binary conversion.
+- **Files and snapshots:** container file browsing, non-overwriting transfers, and Save Container as Image. Mounted data is excluded from snapshots; environment variables require opt-in. [Scope and limits](docs/CONTAINER_SNAPSHOTS.md).
+- **Registry, networks and volumes:** login/logout and image push, searchable inventories, creation, protected deletion and batch review. [Usage](docs/COMPOSE_AND_FILES.md).
+- **Projects and Docker migration:** review/import supported Compose configurations, convert a Docker project into a separate configuration, optionally resolve Compose overrides with the installed official Compose CLI, then start/stop/remove managed services. Unsupported fields block import; local Docker images and volume data need separate migration. [Conversion guide](docs/DOCKER_CONVERSION.md).
+- **Native interface:** saved sidebar ordering, 80–150% content zoom (⌘+, ⌘−, ⌘0), Reduce Motion-aware transitions, actual host hardware, English/Traditional Chinese/Simplified Chinese, and no demo mode.
+- **Engine:** official-source installation and manual/opt-in automatic updates with workload checks. Installation requires a tested release and system authorization. Updates run only while the app is open.
 
-For a GitHub preview release, run `bash scripts/test.sh` and `bash scripts/package.sh`, then attach the resulting DMG, matching source ZIP, manifest and SHA-256 checksums to the corresponding source tag. No Apple Developer account or signing secret is required for this preview workflow. See `RELEASE_NOTES.md` for the release description.
+## Verification and remaining work
 
-Every package now includes a matching source ZIP, a source-commit manifest and SHA-256 checksums. Packaging requires a clean Git checkout and refuses source changes made during the build. Upload the complete set together; keep the release tag on the manifest's source commit. The source ZIP includes Apache-2.0 licensing, sources, resources, build scripts and tests; it excludes Git internals and ignored build output.
+The preceding automated baseline passed **17 groups, 0 failures**, including **56 native UI steps**; 5 environment-dependent groups were skipped. Core, management, workflow, installer simulation and platform suites are repeatable from scripts. Real ARM64 and AMD64/Rosetta paths were exercised. The creation-sheet layout hang was fixed. This release adds a no-compiler smoke test and synchronized packaged-app version reporting. [Automation guide](docs/AUTOMATED_QA.md) · [Release validation](docs/RELEASE_0.1.3_VALIDATION.md).
 
-| Distribution | App | Matching source |
-| --- | --- | --- |
-| Developer preview | `Container-Desk-VERSION-arm64-preview.dmg` | `Container-Desk-VERSION-preview-source.zip` |
-| Signed/notarized release pipeline | `Container-Desk-VERSION-arm64.dmg` | `Container-Desk-VERSION-source.zip` |
+Clean installation/upgrade on the second Mac, complete accessibility acceptance, a 60-minute soak and real private-registry acceptance remain pending. The short soak smoke is not the long-run acceptance test. AI model integration is deferred. There is no remote-host management, embedded interactive terminal, closed-app updater or independent guest-kernel updater. File extraction accepts bounded ordinary tar archives; compressed/sparse or oversized archives are refused. The security review found no validated high/critical findings within its scope; this is not a guarantee of absence. [Feature status](docs/FEATURE_ROADMAP.md) · [Report a test result](docs/TEST_REPORT.md).
 
-The signed pipeline is prepared but has not produced a release: Developer ID credentials are unavailable, and the acceptance gates are incomplete. A filename or successful package build alone does not make a version stable. Existing 0.1.2 release assets remain unchanged; this paired-artifact workflow applies to newly built packages.
+## Source, packaging and license
 
-## License
+The DMG, `preview-source.zip` and manifest are built from the same release commit. The source ZIP contains **Apache-2.0** licensing, resources, scripts and tests. `SHA256SUMS.txt` covers the uploaded files; `BUILD.json` in the optional Quick Start ZIP records its source commit. The Quick Start ZIP does not duplicate the DMG. Historical 0.1.2 assets remain available for traceability.
 
-Container Desk is licensed under [Apache-2.0](LICENSE). Apple Container is a separate dependency with its own license; its official installer is downloaded when needed and is not bundled here.
-
-## Install
-
-Open `Container-Desk-0.1.2-arm64-preview.dmg` and drag **Container Desk.app** to **Applications**. This development build is ad hoc signed, without a Developer ID certificate or Apple notarization. This preview can be shared through GitHub Releases without joining Apple Developer Program. GitHub hosting does not change macOS Gatekeeper checks: macOS may prevent this preview from opening after download. Developer ID signing and notarization are an optional future distribution improvement.
-
-The app connects to an existing engine when available. Otherwise open **Container Engine**, check the official release, and choose **Install Apple Container**. macOS performs administrator authorization; the app does not collect an administrator password. The first installation also lets Apple's CLI download its recommended Linux guest kernel from the Kata Containers project. The official engine package is not bundled in this DMG.
-
-## Changes in 0.1.2
-
-- Added explicit migration of the recognized per-user installation to the **same** official release under `/usr/local`, retaining original files and the default user data directory. This requires an idle engine, no existing `/usr/local` installation, Apple-signed source executable, and a matching tested version. Arbitrary custom layouts remain unsupported. Terminal PATH is not changed.
-- Installation sequencing now has a separately tested workflow: verify download before stopping, recheck workloads before mutation, recover service on failure, never report failed validation as success. This is service recovery, not binary/data rollback.
-- Handle stopped-engine status, reject downgrades, distinguish canceled administrator authorization, and avoid terminating an authorized installer while it is writing files.
-- Added `scripts/release.sh`: Developer ID signing, hardened runtime, timestamp, notarization, stapling and mounted-app Gatekeeper assessment. `--check` verifies local prerequisites without uploading. The optional signed/notarized distribution remains unavailable without signing credentials; GitHub preview releases are not blocked.
-- Retained 0.1.1 controls: CPU dropdown, synchronized memory slider/integer field and downloaded-image dropdown. No demo mode.
-
-## Acceptance evidence
-
-29 core checks, 13 isolated installer sequencing/recovery scenarios and 179 three-language entries passed. Real Store.create produced a stopped container with the selected local image, 2 CPUs and 768 MiB, then removed the temporary container. Full create/start/logs/stats/stop/delete smoke passed. Real official-release preflight recognized this host's migration and refused it while a workload runs. All 8 existing workload states were preserved.
-
-The official signed package was expanded into the workspace without installation; its CLI hash matches the currently installed custom-layout CLI, the CLI's Apple designated signature verifies, and the extracted CLI reports 1.5.0. This is payload verification, not proof of a clean installation or real migration.
-
-## Included
-
-Current source adds a container file browser with non-overwriting transfers, Registry login/logout and image push, and reviewed Compose project import/start/stop/removal. Compose supports a documented subset with dependency readiness, named-volume retention and managed service-name mappings. Unsupported fields are rejected. [Usage and compatibility](docs/COMPOSE_AND_FILES.md). These features are not included in the existing download.
-
-Current source also adds **Convert Docker Project…**: select a Compose file, Dockerfile or project folder, review compatibility, then save a separate configuration and import it. Unsupported requirements block conversion; replacing automatic restart with manual control requires an explicit choice. Original files and Docker workloads are preserved; volume data and local-only Docker images need separate migration. [Conversion guide and limits](docs/DOCKER_CONVERSION.md). The existing download is unchanged.
-
-Docker conversion now optionally uses the installed official Compose CLI to resolve overrides, YAML templates and environment files. The adapter adds multiple networks/aliases and build args/targets. **Images → Download & Deploy…** accepts Docker Hub links or registry image references, verifies an arm64 image and opens configuration. Complete data-preserving migration is still pending: see [migration acceptance](docs/MIGRATION_ACCEPTANCE.md).
-
-**Unified download and deployment:** Images now has one **Download & Deploy…** entry. Search a repository, review its available platforms, choose ARM64 (preferred) or AMD64/Rosetta, then Download Only or Download & Configure. The selected architecture is preserved into configuration. Switching variants is not binary conversion; native ARM64 rebuilding needs source and a Dockerfile.
-
-**Batch selection:** Containers, images, networks and volumes have per-row checkboxes, Select All Results and Clear Selection. Command-click and Shift-click remain available. Selection follows the current filter. Container actions reuse batch start/stop/restart/delete review; resource deletion lists every selected target before running, rechecks usage/protection and reports each result.
-
-**Navigation and container snapshots:** The sidebar now uses **Projects**, supports drag reordering with saved order and right-click reset/move commands, and centers the project empty state. Container actions include **Save Container as Image…** to capture filesystem changes locally, then optionally push to your own registry. Mounted data is excluded; environment variables are opt-in. See [snapshot scope](docs/CONTAINER_SNAPSHOTS.md).
-
-Current source adds image pull/build/tag/delete and OCI archive import/export, network/volume creation and protected deletion, container restart, inspect JSON and an external Terminal action. Creation now offers network/volume selection and advanced command settings. Long operations show live output and can continue in the background or be cancelled. The memory-slider layout hang has been fixed. See the [feature status and remaining baseline](docs/FEATURE_ROADMAP.md). These changes are **not included in the existing `v0.1.2-preview` assets**.
-
-Current source also adds reviewed multi-selection lifecycle actions, multiple TCP/UDP port and bind/volume mappings, and searchable log snapshots with application/boot selection, copy and export. Batch failures are reported per container; changed or ineligible states are refused. These additions are not in the existing download.
-
-Navigation and Info/Logs tabs use brief fades; opening details and changing zoom use smooth, interruptible transitions. Custom motion follows macOS Reduce Motion, and periodic metrics/log updates do not trigger animations. These source changes are not in the existing `v0.1.2-preview` download.
-
-The current source supports content zoom from 80% to 150%: **⌘+** (also **⌘=**) zooms in, **⌘−** zooms out, and **⌘0** resets to 100%. Use the View menu or the percentage menu at the bottom right. The app remembers the selected scale; narrow windows allow horizontal scrolling. The native sidebar, toolbar and dialogs keep their standard size. This addition is not in the existing `v0.1.2-preview` download.
-
-The expanded detail view in current source includes live CPU/memory/process/network summaries, per-container CPU and memory charts (latest 120 actual samples in this app session), grouped connection/configuration/mount details, and a full-width log viewer. Missing samples remain unavailable; network values are cumulative traffic, not bandwidth. This dashboard is not in the existing `v0.1.2-preview` download.
-
-In current source, double-click a container row (or choose Expand Container Details from its context menu) to show its information and logs across the window content area. Back to Containers or Esc restores the list, selection and previous sidebar visibility. This addition is not in the existing `v0.1.2-preview` download.
-
-Current source adds clickable TCP port mappings in the container inspector, opening the published host address in the default browser, plus a Copy URL context action. HTTP is the default; container port 443 uses HTTPS. Wildcard bind addresses open through loopback; UDP mappings stay as text. The service must actually serve HTTP/HTTPS. This addition is not in the existing `v0.1.2-preview` download.
-
-- Native sidebar, container table, inspector, searchable status filters, grouped forms, toolbar and system appearance.
-- Actual local container status, create/start/stop/delete, logs, CPU delta samples and memory usage. Published ports default to loopback. New containers start stopped.
-- Actual Mac specifications: model, chip, CPU cores, physical memory, macOS/build, architecture and home volume capacity/free space. Unknown values remain unavailable. No hardware serial number or UUID is retained.
-- Images, networks and volumes: searchable management with configuration inspection and reference checks before deletion (current source).
-- English base, Simplified Chinese and Traditional Chinese, with immediate app-content language switching. System-owned menus follow macOS settings.
-- All displayed container and host data is live; demo mode and sample data have been removed.
-- Official stable release checks. Signed package URL, size, SHA-256 digest, Apple Containerization installer identity and macOS package assessment are checked before installation.
-- Manual updates and opt-in automatic updates while the app is open; automatic checking defaults on, installation defaults off. Installs require a tested release and no running containers; system authorization still applies.
-
-## Preview limits
-
-Only Container **1.5.0** is currently marked compatible. Newer releases are displayed but installation is deferred until tested; automatic mode does not imply unconditional future-version support. Custom files are not overwritten. The recognized `~/.local/bin/container` wrapper can explicitly migrate to the same official version when idle; the original installation is preserved. Other custom layouts still use their original installation method. There is no privileged background helper, closed-app scheduler, remote host management, embedded terminal, full resource editor, skip-version preference or separate guest-kernel updater yet.
-
-Automation now has one entry point: `python3 scripts/qa.py --live --ui`. It produces JSON, JUnit, logs and inventory comparisons for disposable real-engine tests plus native UI regression. See the [automation guide](docs/AUTOMATED_QA.md) and [current QA results](docs/QA_RESULTS.md). Clean-Mac installation, genuine upgrade, private-registry success, complete accessibility/visual acceptance and the 60-minute stability gate remain pending. AI model deployment is deferred; the next trial will use a lightweight local model. Existing release downloads retain their earlier limitations.
-
-## Build and test
-
-Builds now use Swift Package Manager with pinned Yams 6.2.2; the first build downloads this dependency. Its required license notices are bundled in the app and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
-
-Install Apple's Xcode 26 or Command Line Tools 26 with a macOS 26 SDK, plus Python 3. Yams is the pinned Swift package dependency.
+For contributors with Command Line Tools/Xcode 26 and Python 3:
 
 ```sh
 bash scripts/test.sh
 bash scripts/build.sh
-bash scripts/package.sh
+# Commit all source changes before pairing release artifacts:
+bash scripts/package.sh ../outputs
+python3 scripts/make-quick-start.py --output ../outputs
 ```
 
-The app bundle is written to `../work/build/Container Desk.app`; DMG to `../outputs`. `Package.swift` supports source browsing in Xcode, but use the build script for the complete `.app` with Info.plist and localized resources. `Resources/Localizable.xcstrings` is generated from `scripts/make_catalog.py`; the bundler converts its translations into `.strings` resources. Regenerate it after changing localization entries.
+Packaging refuses a dirty checkout. Keep the GitHub release tag on the manifest's source commit. The optional Developer ID/notarization pipeline is prepared but has not produced a signed stable release. [Apache-2.0 license](LICENSE) · [Release gates](docs/PUBLIC_RELEASE_GATE.md).
 
-To rerun the opt-in integration smoke test, compile `Sources/Models.swift`, `Sources/ProcessRunner.swift`, and `Tests/IntegrationSmoke.swift` together, then pass the CLI path and an **existing local image with `/bin/sh`**. This creates and removes only a UUID-named test container.
+## Official dependency
 
-For an optional Developer ID signed and notarized release, set `SIGNING_IDENTITY` to an installed Developer ID Application identity and `NOTARY_PROFILE` to an existing notarytool Keychain profile, then run `bash scripts/release.sh`. Do not put passwords, private keys or API secrets in source files. The script only reports success after notarization acceptance, stapling, DMG verification and Gatekeeper assessment. Complete the pending clean-install, update, accessibility and visual acceptance checks before distributing.
-
-## Reference
-
-- [Apple Container](https://github.com/apple/container)
+[Apple Container](https://github.com/apple/container) is a separate dependency with its own license. Its official installer is downloaded when needed and is not bundled in this app.
