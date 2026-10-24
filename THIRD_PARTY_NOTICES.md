@@ -50,3 +50,20 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+## Optional AI downloads (not bundled)
+
+The local AI feature downloads the official llama.cpp container separately:
+https://github.com/ggml-org/llama.cpp (MIT license).
+
+The curated Qwen2.5 0.5B/1.5B Instruct GGUF models are optional separate downloads
+under Apache-2.0. Each download is pinned to a revision and SHA-256 in AIModels.swift.
+https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF
+https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct-GGUF
+
+User-selected models and installed MCP servers retain their own licenses.
+
+Hugging Face search uses its public model metadata API. Search results are third-party
+models with their own licenses, not necessarily Apache-2.0. The app displays the
+repository-provided license and model-card link; unknown licenses are not inferred.
+Models are never bundled in Container Desk.

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Pair a DMG with the exact clean Git checkout used to build it."""
+"""Keep local build provenance; GitHub Release attachments contain only the DMG."""
 import argparse
 import hashlib
 import json
@@ -9,6 +9,7 @@ import subprocess
 parser = argparse.ArgumentParser()
 parser.add_argument("dmg", type=pathlib.Path)
 parser.add_argument("commit", help="commit captured before building")
+parser.add_argument("--source-archive", action="store_true", help="Create an optional local source archive (never a release attachment)")
 args = parser.parse_args()
 root = pathlib.Path(__file__).resolve().parents[1]
 
@@ -24,15 +25,19 @@ if not args.dmg.is_file() or args.dmg.suffix != ".dmg":
 stem = args.dmg.stem.removesuffix("-arm64-preview").removesuffix("-arm64")
 if args.dmg.stem.endswith("-preview"):
     stem += "-preview"
-out = args.dmg.resolve().parent
-archive = out / (stem + "-source.zip")
-temporary = archive.with_suffix(".zip.tmp")
-try:
-    subprocess.run(["git", "-C", str(root), "archive", "--format=zip",
-                    "--prefix=ContainerDesk/", "-o", str(temporary), commit], check=True)
-    temporary.replace(archive)
-finally:
-    temporary.unlink(missing_ok=True)
+out = root.parent / "work" / "release-metadata" / stem
+out.mkdir(parents=True, exist_ok=True)
+artifacts = [args.dmg]
+if args.source_archive:
+    archive = out / (stem + "-source.zip")
+    temporary = archive.with_suffix(".zip.tmp")
+    try:
+        subprocess.run(["git", "-C", str(root), "archive", "--format=zip",
+                        "--prefix=ContainerDesk/", "-o", str(temporary), commit], check=True)
+        temporary.replace(archive)
+        artifacts.append(archive)
+    finally:
+        temporary.unlink(missing_ok=True)
 
 def digest(path):
     result = hashlib.sha256()
@@ -48,8 +53,8 @@ manifest.write_text(json.dumps({
     "channel": "preview" if args.dmg.stem.endswith("-preview") else "release",
     "license_file_included": (root / "LICENSE").is_file(),
     "artifacts": [{"name": p.name, "size": p.stat().st_size, "sha256": digest(p)}
-                  for p in (args.dmg, archive)],
+                  for p in artifacts],
 }, indent=2) + "\n")
 checksums = out / (stem + "-SHA256SUMS.txt")
-checksums.write_text("".join(f"{digest(p)}  {p.name}\n" for p in (args.dmg, archive, manifest)))
-print(f"Source: {archive}\nManifest: {manifest}\nChecksums: {checksums}")
+checksums.write_text("".join(f"{digest(p)}  {p.name}\n" for p in [*artifacts, manifest]))
+print(f"Release attachment: {args.dmg}\nLocal provenance only: {manifest}\nLocal checksums only: {checksums}")

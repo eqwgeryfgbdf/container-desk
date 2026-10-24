@@ -12826,6 +12826,3020 @@
           }
         }
       }
+    },
+    "aiWorkspace": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Local AI"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "本機 AI"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "本地 AI"
+          }
+        }
+      }
+    },
+    "aiSubtitle": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a model, run llama.cpp in Apple Container, and connect your MCP tools."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "挑選模型，在 Apple Container 執行 llama.cpp，並連接 MCP 工具。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择模型，在 Apple Container 运行 llama.cpp，并连接 MCP 工具。"
+          }
+        }
+      }
+    },
+    "aiModelSection": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1. Model and container"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1. 模型與容器"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1. 模型与容器"
+          }
+        }
+      }
+    },
+    "aiRecommendedModel": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download selection"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下載選項"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下载选项"
+          }
+        }
+      }
+    },
+    "aiModelCard": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Model card and license"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "模型介紹與授權"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "模型介绍与许可"
+          }
+        }
+      }
+    },
+    "aiDownloadModel": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download selected model"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下載所選模型"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下载所选模型"
+          }
+        }
+      }
+    },
+    "aiChooseGGUF": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose local GGUF…"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "挑選本機 GGUF…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择本地 GGUF…"
+          }
+        }
+      }
+    },
+    "aiNoModel": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a single GGUF file to begin."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請先挑選單一 GGUF 模型檔。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请先选择单个 GGUF 模型文件。"
+          }
+        }
+      }
+    },
+    "aiCPUOnly": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CPU inference in a Linux VM; no Metal GPU acceleration. Start with 0.5B, 2 CPUs, 2 GiB RAM and 2K context. Only the selected model file is mounted, read-only."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Linux VM 內使用 CPU 推論，沒有 Metal GPU 加速。建議先用 0.5B、2 核心、2 GiB 記憶體及 2K 上下文。只掛載所選模型檔，且為唯讀。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Linux VM 内使用 CPU 推理，没有 Metal GPU 加速。建议先用 0.5B、2 核心、2 GiB 内存及 2K 上下文。仅挂载所选模型文件，且为只读。"
+          }
+        }
+      }
+    },
+    "aiContext": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Context tokens"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "上下文長度"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "上下文长度"
+          }
+        }
+      }
+    },
+    "aiDeploy": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Create and start llama.cpp"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "建立並啟動 llama.cpp"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "创建并启动 llama.cpp"
+          }
+        }
+      }
+    },
+    "aiTestModel": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test model and tool calling"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "測試模型與工具呼叫"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "测试模型与工具调用"
+          }
+        }
+      }
+    },
+    "aiModelReady": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Model ready"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "模型已就緒"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "模型已就绪"
+          }
+        }
+      }
+    },
+    "aiModelUnchecked": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Model not verified"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "模型尚未驗證"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "模型尚未验证"
+          }
+        }
+      }
+    },
+    "aiManageContainer": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Manage container"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "管理容器"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "管理容器"
+          }
+        }
+      }
+    },
+    "aiExistingDeploymentNote": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use Containers to stop, restart or delete this service. Delete it before deploying a replacement; model files are retained."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請在「容器」停止、重啟或刪除此服務。部署替代模型前先刪除舊容器；模型檔案會保留。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请在“容器”停止、重启或删除此服务。部署替代模型前先删除旧容器；模型文件会保留。"
+          }
+        }
+      }
+    },
+    "aiDeploymentLog": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deployment output"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "部署輸出"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "部署输出"
+          }
+        }
+      }
+    },
+    "aiMCPSection": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "2. MCP tools"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "2. MCP 工具"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "2. MCP 工具"
+          }
+        }
+      }
+    },
+    "aiMCPIntro": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import an existing mcpServers JSON configuration, or add a Streamable HTTP endpoint. Connect and test lists tools without executing them. One server per conversation."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "匯入既有 mcpServers JSON 設定，或新增 Streamable HTTP 端點。「連接與測試」只列出工具，不會執行。每段對話連接一個伺服器。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "导入现有 mcpServers JSON 配置，或添加 Streamable HTTP 端点。“连接与测试”只列出工具，不会执行。每段对话连接一个服务器。"
+          }
+        }
+      }
+    },
+    "aiImportMCP": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import MCP configuration…"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "匯入 MCP 設定…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "导入 MCP 配置…"
+          }
+        }
+      }
+    },
+    "aiMCPServer": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MCP server"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MCP 伺服器"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MCP 服务器"
+          }
+        }
+      }
+    },
+    "aiConnect": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connect and test"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "連接與測試"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "连接与测试"
+          }
+        }
+      }
+    },
+    "aiConnectReview": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Review MCP connection"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "檢查 MCP 連接"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "检查 MCP 连接"
+          }
+        }
+      }
+    },
+    "aiStdioConnectNote": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This starts the displayed command on your Mac with your user permissions. Connect only software you trust. Import does not install packages; package launchers may download code. Environment values stay in memory and are not displayed."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "這會以你的使用者權限在 Mac 執行上方命令。只連接你信任的軟體。匯入不會安裝套件，但套件啟動器可能下載程式碼。環境變數值只保留在記憶體，不會顯示。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "这会以你的用户权限在 Mac 执行上方命令。仅连接你信任的软件。导入不会安装软件包，但包启动器可能下载代码。环境变量值只保留在内存，不会显示。"
+          }
+        }
+      }
+    },
+    "aiHTTPConnectNote": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connect only an endpoint you trust. Selected tool arguments will be sent to this server after you approve each call. HTTPS is required except for loopback."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "只連接你信任的端點。每次確認工具呼叫後，參數會傳送至此伺服器。除本機迴路外必須使用 HTTPS。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "仅连接你信任的端点。每次确认工具调用后，参数会发送至此服务器。除本地回环外必须使用 HTTPS。"
+          }
+        }
+      }
+    },
+    "aiAddHTTP": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add HTTP MCP endpoint"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "新增 HTTP MCP 端點"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "添加 HTTP MCP 端点"
+          }
+        }
+      }
+    },
+    "aiBearer": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bearer token (optional)"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bearer Token（選填）"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bearer Token（选填）"
+          }
+        }
+      }
+    },
+    "aiCredentialNote": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tokens and imported MCP settings are kept in memory for this app session. No OAuth sign-in or legacy SSE endpoint support."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Token 與匯入的 MCP 設定只保留於本次 App 工作階段記憶體。不支援 OAuth 登入及舊式 SSE 端點。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Token 与导入的 MCP 配置仅保留于本次 App 会话内存。不支持 OAuth 登录及旧式 SSE 端点。"
+          }
+        }
+      }
+    },
+    "aiDisconnect": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disconnect"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "中斷連線"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "断开连接"
+          }
+        }
+      }
+    },
+    "aiSelectTools": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enable tools for the model. Changing the selection clears the conversation. Tool descriptions are supplied by the server."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "勾選模型可用的工具。變更選取會清除對話。工具說明由伺服器提供。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "勾选模型可用的工具。更改选择会清除对话。工具说明由服务器提供。"
+          }
+        }
+      }
+    },
+    "aiChatSection": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3. Try the model"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3. 試用模型"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3. 试用模型"
+          }
+        }
+      }
+    },
+    "aiChatNote": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Run the model test first. A passed synthetic tool-call test is not a guarantee for every tool. Conversations stay in memory; approved MCP calls may affect files or external services."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請先測試模型。模擬工具呼叫通過不代表所有工具皆可靠。對話只留在記憶體；確認的 MCP 呼叫可能影響檔案或外部服務。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请先测试模型。模拟工具调用通过不代表所有工具都可靠。对话仅留在内存；确认的 MCP 调用可能影响文件或外部服务。"
+          }
+        }
+      }
+    },
+    "aiToolReview": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tool call review"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "工具呼叫檢查"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "工具调用检查"
+          }
+        }
+      }
+    },
+    "aiToolReviewNote": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Review the tool names and exact arguments above. Approval executes this batch once; further calls require another review."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請檢查上方工具名稱與完整參數。確認後只執行這一批，後續呼叫需要再次檢查。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请检查上方工具名称与完整参数。确认后仅执行这一批，后续调用需要再次检查。"
+          }
+        }
+      }
+    },
+    "aiDeclineTools": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Decline"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "拒絕執行"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "拒绝执行"
+          }
+        }
+      }
+    },
+    "aiApproveTools": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Run reviewed tools"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "執行已檢查的工具"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "执行已检查的工具"
+          }
+        }
+      }
+    },
+    "aiPrompt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ask your local model…"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "向本機模型提問…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "向本地模型提问…"
+          }
+        }
+      }
+    },
+    "aiSend": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Send"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "傳送"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "发送"
+          }
+        }
+      }
+    },
+    "aiClearChat": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear conversation"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "清除對話"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "清除对话"
+          }
+        }
+      }
+    },
+    "aiDownloading": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Downloading and verifying model…"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在下載並驗證模型…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在下载并验证模型…"
+          }
+        }
+      }
+    },
+    "aiDeploying": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pulling image and starting container…"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在下載映像並啟動容器…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在下载镜像并启动容器…"
+          }
+        }
+      }
+    },
+    "aiTestingModel": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Testing model and tool-call format…"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在測試模型與工具呼叫格式…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在测试模型与工具调用格式…"
+          }
+        }
+      }
+    },
+    "aiConnectingMCP": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connecting and reading tools…"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在連接並讀取工具…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在连接并读取工具…"
+          }
+        }
+      }
+    },
+    "aiThinking": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Model is responding…"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "模型正在回覆…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "模型正在回复…"
+          }
+        }
+      }
+    },
+    "aiCallingTools": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Executing approved tools…"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在執行已確認的工具…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在执行已确认的工具…"
+          }
+        }
+      }
+    },
+    "aiToolsUnknown": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tool calling has not been verified."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "尚未驗證工具呼叫能力。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "尚未验证工具调用能力。"
+          }
+        }
+      }
+    },
+    "aiToolsPassed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Structured tool-call probe passed."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "結構化工具呼叫測試通過。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "结构化工具调用测试通过。"
+          }
+        }
+      }
+    },
+    "aiToolsFailed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tool calling did not pass the test."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "工具呼叫未通過測試。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "工具调用未通过测试。"
+          }
+        }
+      }
+    },
+    "aiToolsFailedDetail": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This model/template did not produce a valid tool call. It may not support reliable tool use. You can still chat without tools, choose another model, or check the llama.cpp logs. The test executes no MCP tools."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "此模型或模板未產生有效的工具呼叫，可能不支援可靠的工具使用。仍可關閉工具進行聊天、改用其他模型，或檢查 llama.cpp 日誌。測試不會執行 MCP 工具。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "此模型或模板未生成有效的工具调用，可能不支持可靠的工具使用。仍可关闭工具聊天、改用其他模型，或检查 llama.cpp 日志。测试不会执行 MCP 工具。"
+          }
+        }
+      }
+    },
+    "aiCompatibilityTitle": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Model tool compatibility"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "模型工具相容性"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "模型工具兼容性"
+          }
+        }
+      }
+    },
+    "aiInvalidEndpoint": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use HTTPS, or HTTP on localhost/127.0.0.1. Credentials, query strings and fragments are not allowed in the URL."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請使用 HTTPS，或 localhost／127.0.0.1 的 HTTP。網址不可包含帳密、查詢字串或片段。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请使用 HTTPS，或 localhost／127.0.0.1 的 HTTP。网址不可包含凭据、查询字符串或片段。"
+          }
+        }
+      }
+    },
+    "aiInvalidResources": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check the port, memory and context settings."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請檢查連接埠、記憶體及上下文設定。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请检查端口、内存及上下文设置。"
+          }
+        }
+      }
+    },
+    "aiInvalidModel": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a valid single-file GGUF model. Split model shards are not supported yet."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請挑選有效的單檔 GGUF 模型。尚不支援分片模型。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请选择有效的单文件 GGUF 模型。尚不支持分片模型。"
+          }
+        }
+      }
+    },
+    "aiMCPConfigInvalid": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unsupported or invalid MCP configuration. Use mcpServers with command/args/env or url and optional Bearer Authorization."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MCP 設定無效或不支援。請使用 mcpServers 的 command／args／env 或 url，可選填 Bearer Authorization。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MCP 配置无效或不支持。请使用 mcpServers 的 command／args／env 或 url，可选填 Bearer Authorization。"
+          }
+        }
+      }
+    },
+    "aiMCPExecutableMissing": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The configured MCP executable is not installed or cannot be found. Use an absolute executable path."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "找不到設定的 MCP 執行檔，或尚未安裝。請使用執行檔的完整路徑。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "找不到配置的 MCP 可执行文件，或尚未安装。请使用可执行文件的完整路径。"
+          }
+        }
+      }
+    },
+    "aiMCPInvalidReply": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The MCP server returned an invalid or incomplete protocol response."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MCP 伺服器回傳無效或不完整的協定回覆。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MCP 服务器返回无效或不完整的协议回复。"
+          }
+        }
+      }
+    },
+    "aiMCPTooManyTools": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MCP returned too many tools, or duplicate tool names (limit: 128)."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MCP 工具過多或名稱重複（上限 128 個）。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MCP 工具过多或名称重复（上限 128 个）。"
+          }
+        }
+      }
+    },
+    "aiModelInvalidReply": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The model returned an invalid response."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "模型回傳無效回覆。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "模型返回无效回复。"
+          }
+        }
+      }
+    },
+    "aiToolCallRejected": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rejected an unknown tool or malformed tool arguments. Nothing was executed."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "工具名稱未知或參數格式錯誤，已拒絕呼叫，未執行工具。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "工具名称未知或参数格式错误，已拒绝调用，未执行工具。"
+          }
+        }
+      }
+    },
+    "aiRequestTooLarge": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The conversation or request is too large. Clear the conversation and retry."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "對話或請求過大，請清除對話後重試。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "对话或请求过大，请清除对话后重试。"
+          }
+        }
+      }
+    },
+    "aiMCPDisconnected": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MCP is disconnected or its process exited. Reconnect before using tools."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MCP 已中斷或程序已結束。使用工具前請重新連接。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MCP 已断开或进程已结束。使用工具前请重新连接。"
+          }
+        }
+      }
+    },
+    "aiMCPVersionUnsupported": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This MCP protocol version is not supported."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不支援此 MCP 協定版本。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不支持此 MCP 协议版本。"
+          }
+        }
+      }
+    },
+    "aiMCPCapabilityUnsupported": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This tool requires an MCP capability not supported yet (header projection, tasks or input requests)."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "此工具需要尚未支援的 MCP 能力（標頭投射、任務或輸入請求）。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "此工具需要尚未支持的 MCP 能力（标头投射、任务或输入请求）。"
+          }
+        }
+      }
+    },
+    "aiModelNotReady": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The model is not ready. Check the container state and logs; a large model may need more RAM or startup time."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "模型尚未就緒。請檢查容器狀態與日誌；較大模型可能需要更多記憶體或啟動時間。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "模型尚未就绪。请检查容器状态与日志；较大模型可能需要更多内存或启动时间。"
+          }
+        }
+      }
+    },
+    "aiModelChecksum": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Model size or SHA-256 verification failed. Existing files were not replaced."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "模型大小或 SHA-256 驗證失敗，未覆蓋既有檔案。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "模型大小或 SHA-256 验证失败，未覆盖现有文件。"
+          }
+        }
+      }
+    },
+    "aiModelDiskSpace": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not enough free disk space for this model."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "磁碟可用空間不足，無法下載此模型。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "磁盘可用空间不足，无法下载此模型。"
+          }
+        }
+      }
+    },
+    "aiModelDownloadFailed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Model download failed. Check connectivity and try again."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "模型下載失敗，請檢查網路後重試。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "模型下载失败，请检查网络后重试。"
+          }
+        }
+      }
+    },
+    "aiImagePullFailed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unable to pull the official llama.cpp image. Check deployment output."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "無法下載官方 llama.cpp 映像，請檢查部署輸出。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法下载官方 llama.cpp 镜像，请检查部署输出。"
+          }
+        }
+      }
+    },
+    "aiConversationLimit": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Conversation limit reached. Clear it before starting another request."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已達對話上限，請清除後重新開始。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已达对话上限，请清除后重新开始。"
+          }
+        }
+      }
+    },
+    "aiToolsDeclined": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tool calls declined; no tool was executed."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已拒絕工具呼叫，未執行工具。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已拒绝工具调用，未执行工具。"
+          }
+        }
+      }
+    },
+    "aiToolOutcomeUnknown": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The tool sequence stopped. A tool may already have completed; inspect its result before retrying. Conversation context was reset to prevent an automatic retry."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "工具流程已停止。部分操作可能已完成，請檢查結果後再決定是否重試。已重設對話上下文，避免自動重試。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "工具流程已停止。部分操作可能已完成，请检查结果后再决定是否重试。已重置对话上下文，避免自动重试。"
+          }
+        }
+      }
+    },
+    "aiToolResultTooLarge": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tool output exceeded the 64 KiB conversation limit. The tool may have completed; no automatic retry."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "工具輸出超過對話的 64 KiB 上限。操作可能已完成，不會自動重試。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "工具输出超过对话的 64 KiB 上限。操作可能已完成，不会自动重试。"
+          }
+        }
+      }
+    },
+    "user": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "你"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "你"
+          }
+        }
+      }
+    },
+    "assistant": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Model"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "模型"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "模型"
+          }
+        }
+      }
+    },
+    "add": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "新增"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "添加"
+          }
+        }
+      }
+    },
+    "aiMCPAuthentication": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MCP authentication was refused. Check the token or use a server that does not require OAuth."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MCP 認證遭拒。請檢查 Token，或使用不需要 OAuth 的伺服器。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MCP 认证被拒。请检查 Token，或使用不需要 OAuth 的服务器。"
+          }
+        }
+      }
+    },
+    "aiHTTPRedirect": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The endpoint redirects to another URL. Enter the final trusted URL explicitly."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "端點重新導向至另一個網址，請明確填入最終可信任網址。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "端点重定向至另一个网址，请明确填写最终可信任网址。"
+          }
+        }
+      }
+    },
+    "aiHTTPUnavailable": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The HTTP request failed. Check the endpoint and service logs."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "HTTP 請求失敗，請檢查端點與服務日誌。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "HTTP 请求失败，请检查端点与服务日志。"
+          }
+        }
+      }
+    },
+    "aiMCPArgumentsInvalid": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MCP rejected the tool arguments. Check the schema and request."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MCP 拒絕工具參數，請檢查結構與請求內容。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MCP 拒绝工具参数，请检查结构与请求内容。"
+          }
+        }
+      }
+    },
+    "aiMCPRemoteError": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MCP returned a protocol error. Check the server configuration and logs."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MCP 回傳協定錯誤，請檢查伺服器設定與日誌。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MCP 返回协议错误，请检查服务器配置与日志。"
+          }
+        }
+      }
+    },
+    "imageUpdateStatus": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Update status"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "更新状态"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "更新狀態"
+          }
+        }
+      }
+    },
+    "imageUpdateUnchecked": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not checked"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "尚未检查"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "尚未檢查"
+          }
+        }
+      }
+    },
+    "imageUpdateMenu": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Update…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "更新…"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "更新…"
+          }
+        }
+      }
+    },
+    "imageUpdateDownload": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check & Download Latest Image"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "检查并下载最新镜像"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "檢查並下載最新映像檔"
+          }
+        }
+      }
+    },
+    "imageUpdateChecking": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checking / downloading…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "检查／下载中…"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "檢查／下載中…"
+          }
+        }
+      }
+    },
+    "imageUpdateCurrent": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Image matches registry. Existing containers unchanged."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "镜像与仓库一致。现有容器未更改。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "映像檔與倉庫一致。現有容器未變更。"
+          }
+        }
+      }
+    },
+    "imageUpdateDownloaded": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New image verified. Apply it to containers separately."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "新镜像已验证，请另行套用至容器。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "新映像檔已驗證，請另行套用至容器。"
+          }
+        }
+      }
+    },
+    "imageUpdateBackup": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Retained image reference"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "保留的镜像引用"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "保留的映像檔參照"
+          }
+        }
+      }
+    },
+    "imageUpdateInvalid": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invalid image metadata or missing Linux architecture."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "镜像资料无效或缺少 Linux 架构。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "映像檔資料無效或缺少 Linux 架構。"
+          }
+        }
+      }
+    },
+    "imageUpdatePinned": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Digest-pinned images cannot track tag updates."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "固定摘要的镜像不会跟随标签更新。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "固定摘要的映像檔不會跟隨標籤更新。"
+          }
+        }
+      }
+    },
+    "imageUpdateChanged": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Container or image changed. Refresh and review again."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "容器或镜像已改变，请刷新并重新审核。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "容器或映像檔已改變，請重新整理並確認。"
+          }
+        }
+      }
+    },
+    "imageUpdatePullFailed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download failed; previous image reference restored. Check registry login and network."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下载失败；已恢复旧镜像引用。请检查仓库登录和网络。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下載失敗；已還原舊映像檔參照。請檢查倉庫登入及網路。"
+          }
+        }
+      }
+    },
+    "imageUpdateRecoveryFailed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recovery unconfirmed. Inspect both containers and retained images before starting either container."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法确认恢复完成。启动前请检查两个容器及保留的镜像。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "無法確認回復完成。啟動前請檢查兩個容器及保留的映像檔。"
+          }
+        }
+      }
+    },
+    "containerUpdateNotNeeded": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Same digest, or image/architecture does not match."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "摘要相同，或镜像／架构不匹配。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "摘要相同，或映像檔／架構不符。"
+          }
+        }
+      }
+    },
+    "imageUpdateHealthURL": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use HTTP(S) on this container's published TCP address and port, without credentials or fragments."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请使用此容器发布的 TCP 地址及端口，网址不可含凭据或片段。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請使用此容器發布的 TCP 位址及連接埠，網址不可含憑證或片段。"
+          }
+        }
+      }
+    },
+    "imageUpdateCommandFailed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Container update command failed. Check engine, registry login and storage."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Container 更新命令失败，请检查引擎、仓库登录及空间。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Container 更新命令失敗，請檢查引擎、倉庫登入及空間。"
+          }
+        }
+      }
+    },
+    "imageUpdateUnhealthy": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Replacement failed startup or HTTP validation."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "替代容器未通过启动或 HTTP 验证。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "替代容器未通過啟動或 HTTP 驗證。"
+          }
+        }
+      }
+    },
+    "imageUpdateRolledBack": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Update failed or cancelled; original container state restored. Any replacement is stopped. No containers were deleted."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "更新失败或已取消；原容器状态已恢复，替代容器已停止。没有删除容器。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "更新失敗或已取消；原容器狀態已還原，替代容器已停止。沒有刪除容器。"
+          }
+        }
+      }
+    },
+    "containerUpdateApply": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apply Image to Container…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "将镜像套用至容器…"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "將映像檔套用至容器…"
+          }
+        }
+      }
+    },
+    "imageUpdateHistoryFailed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cannot read/save update history. Inspect containers; do not assume the update was reverted."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法读写更新记录。请检查容器，勿假设更新已回滚。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "無法讀寫更新紀錄。請檢查容器，勿假設更新已回復。"
+          }
+        }
+      }
+    },
+    "imageUpdateVerifying": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Applying image and verifying replacement…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在套用镜像并验证替代容器…"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在套用映像檔並驗證替代容器…"
+          }
+        }
+      }
+    },
+    "imageUpdateRunningVerified": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Digest verified; running across 3 observations. Application health was NOT checked."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "摘要已验证；连续 3 次检查均在运行。未检查应用健康状态。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "摘要已驗證；連續 3 次檢查均在執行。未檢查應用程式健康狀態。"
+          }
+        }
+      }
+    },
+    "imageUpdateHTTPVerified": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Digest and running state verified; configured HTTP endpoint returned 2xx."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "摘要及运行状态已验证；指定 HTTP 端点返回 2xx。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "摘要及執行狀態已驗證；指定 HTTP 端點回傳 2xx。"
+          }
+        }
+      }
+    },
+    "imageUpdateStoppedVerified": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Digest verified; replacement left stopped. Startup and application health NOT tested."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "摘要已验证；替代容器保持停止。未测试启动及应用健康状态。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "摘要已驗證；替代容器保持停止。未測試啟動及應用程式健康狀態。"
+          }
+        }
+      }
+    },
+    "imageUpdateRetained": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Original container retained. Revert from the Images page."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "原容器已保留，可从镜像页面恢复。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "原容器已保留，可從映像檔頁面回復。"
+          }
+        }
+      }
+    },
+    "imageUpdateRollback": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Revert Container Update"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "恢复容器更新"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "回復容器更新"
+          }
+        }
+      }
+    },
+    "imageUpdateRollbackDone": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Original state restored. Shared data was not reverted."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "原状态已恢复。共享资料未回滚。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "原狀態已還原。共用資料未回復。"
+          }
+        }
+      }
+    },
+    "imageUpdateRollbackWarning": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stop replacement and restore original state? Mounted data and database migrations cannot be undone."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "停止替代容器并恢复原状态？无法撤销挂载资料及数据库迁移。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "停止替代容器並還原原狀態？無法撤銷掛載資料及資料庫遷移。"
+          }
+        }
+      }
+    },
+    "imageUpdateNoContainers": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No outdated containers reference this image. Download the latest image first."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有引用此镜像的过期容器。请先下载最新镜像。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "沒有參照此映像檔的過期容器。請先下載最新映像檔。"
+          }
+        }
+      }
+    },
+    "imageUpdateReplacement": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New container name"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "新容器名称"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "新容器名稱"
+          }
+        }
+      }
+    },
+    "imageUpdateImpact": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Original container stops and is retained. Replacement preserves supported CPU, memory, command, environment, ports and mounts. Name and internal IP change; update clients using the old name/IP. Files only inside the old container are NOT copied. Mounted data is shared, NOT backed up or reverted. Back up application data first."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "原容器停止并保留。替代容器保留支持的 CPU、内存、命令、环境变量、端口及挂载。名称与内部 IP 会改变，请调整客户端。不会复制原容器内部文件。挂载资料是共享资料，不会备份或回滚。请先备份应用资料。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "原容器停止並保留。替代容器保留支援的 CPU、記憶體、命令、環境變數、連接埠及掛載。名稱與內部 IP 會改變，請調整用戶端。不會複製原容器內部檔案。掛載資料是共用資料，不會備份或回復。請先備份應用程式資料。"
+          }
+        }
+      }
+    },
+    "imageUpdateHealthLabel": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Optional HTTP health URL"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选填 HTTP 健康检查网址"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "選填 HTTP 健康檢查網址"
+          }
+        }
+      }
+    },
+    "imageUpdateHealthNote": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Empty: digest and running/stopped state only. HTTP: require 2xx, no redirects, retry during startup."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "留空仅检查摘要与运行状态。HTTP 要求 2xx，不跟随重定向，启动期间会重试。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "留空僅檢查摘要與執行狀態。HTTP 要求 2xx，不跟隨重新導向，啟動期間會重試。"
+          }
+        }
+      }
+    },
+    "imageUpdateAcknowledge": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I reviewed downtime, changed name/IP and data backup requirements."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "我已确认停机、名称／IP 变化及备份要求。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "我已確認停機、名稱／IP 變化及備份要求。"
+          }
+        }
+      }
+    },
+    "imageUpdatePlanInvalid": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Configuration cannot be reproduced safely or health URL is invalid. Nothing will change."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法安全重建配置或网址无效，不会更改容器。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "無法安全重建設定或網址無效，不會變更容器。"
+          }
+        }
+      }
+    },
+    "aiHFSearch": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search Hugging Face"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "搜索 Hugging Face"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "搜尋 Hugging Face"
+          }
+        }
+      }
+    },
+    "aiHFIntro": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Find public GGUF language models for llama.cpp. Choose a repository, then a quantization file."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "搜索适用于 llama.cpp 的公开 GGUF 语言模型，选择仓库后再挑选量化文件。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "搜尋適用於 llama.cpp 的公開 GGUF 語言模型，選擇倉庫後再挑選量化檔案。"
+          }
+        }
+      }
+    },
+    "aiHFQuery": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Model name or publisher"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "模型名称或发布者"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "模型名稱或發布者"
+          }
+        }
+      }
+    },
+    "aiHFQuickSearch": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Small models"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "轻量模型"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "輕量模型"
+          }
+        }
+      }
+    },
+    "aiHFRepositories": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Models · most downloaded first"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "模型 · 按下载量排序"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "模型 · 依下載量排序"
+          }
+        }
+      }
+    },
+    "aiHFFiles": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GGUF files · smallest first"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GGUF 文件 · 从小到大"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GGUF 檔案 · 由小到大"
+          }
+        }
+      }
+    },
+    "aiHFChooseRepository": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a model"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择模型"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "選擇模型"
+          }
+        }
+      }
+    },
+    "aiHFNoResults": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No matching language models. Try a different name."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有找到语言模型，请尝试其他名称。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "找不到符合的語言模型，請嘗試其他名稱。"
+          }
+        }
+      }
+    },
+    "aiHFNoFiles": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No supported single-file GGUF with verified download metadata was found."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有找到具备完整校验信息的单文件 GGUF。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "找不到具備完整校驗資訊的單檔 GGUF。"
+          }
+        }
+      }
+    },
+    "aiHFOmitted": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Split GGUFs, projectors, adapters and files without complete checksums are hidden."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已隐藏分割 GGUF、投影器、适配器及缺少完整校验信息的文件。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已隱藏分割 GGUF、投影器、轉接器及缺少完整校驗資訊的檔案。"
+          }
+        }
+      }
+    },
+    "aiHFLicenseUnknown": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "License not specified — check model card"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未注明授权 — 请查看模型说明"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未註明授權 — 請查看模型說明"
+          }
+        }
+      }
+    },
+    "aiHFMemoryEstimate": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Estimated minimum memory"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "估计最低内存"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "估計最低記憶體"
+          }
+        }
+      }
+    },
+    "aiHFMemoryWarning": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This estimate exceeds your Mac’s physical memory. Choose a smaller file; this model may not start."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "估计内存超过此 Mac 的物理内存。建议选择更小的文件，此模型可能无法启动。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "估計記憶體超過此 Mac 的實體記憶體。建議選擇更小的檔案，此模型可能無法啟動。"
+          }
+        }
+      }
+    },
+    "aiHFCompatibilityNote": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GGUF format does not guarantee support by the bundled llama.cpp engine or MCP tool calling. Memory varies with context length. Review the model license, then deploy and test compatibility. Downloading does not start a container."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GGUF 格式不保证当前 llama.cpp 引擎兼容或支持 MCP 工具调用；内存随上下文长度变化。请查阅模型授权，部署后测试兼容性。下载不会自动启动容器。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GGUF 格式不保證目前 llama.cpp 引擎相容或支援 MCP 工具呼叫；記憶體隨上下文長度變化。請查閱模型授權，部署後測試相容性。下載不會自動啟動容器。"
+          }
+        }
+      }
+    },
+    "aiHFSelectDownload": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select & Download"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择并下载"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "選擇並下載"
+          }
+        }
+      }
+    },
+    "aiHFInvalidMetadata": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hugging Face returned incomplete or unsupported model metadata."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hugging Face 返回的模型信息不完整或不受支持。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hugging Face 回傳的模型資訊不完整或不受支援。"
+          }
+        }
+      }
+    },
+    "aiHFUnavailable": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hugging Face is unavailable or this repository no longer exists. Try again later."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hugging Face 暂不可用或仓库已不存在，请稍后重试。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hugging Face 暫時無法使用或倉庫已不存在，請稍後重試。"
+          }
+        }
+      }
+    },
+    "aiHFRateLimit": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hugging Face request limit reached. Please try again later."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已达到 Hugging Face 请求限制，请稍后重试。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已達到 Hugging Face 請求限制，請稍後重試。"
+          }
+        }
+      }
+    },
+    "aiHFGated": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This model requires Hugging Face access approval or sign-in. Use its model page to obtain access, download a single GGUF, then choose the local file."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "此模型需要 Hugging Face 授权或登录。请在模型页面取得权限，下载单个 GGUF 后选择本地文件。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "此模型需要 Hugging Face 授權或登入。請在模型頁面取得權限，下載單個 GGUF 後選擇本機檔案。"
+          }
+        }
+      }
+    },
+    "aiHFRunSearch": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "搜索"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "搜尋"
+          }
+        }
+      }
+    },
+    "aiHFFileFilter": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Filter files, e.g. Q4_K_M"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "筛选文件，例如 Q4_K_M"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "篩選檔案，例如 Q4_K_M"
+          }
+        }
+      }
+    },
+    "aiHFNoMatchingFile": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No matching quantization file."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有符合条件的量化文件。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "沒有符合條件的量化檔案。"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

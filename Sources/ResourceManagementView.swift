@@ -11,6 +11,9 @@ struct ResourceManagementView: View {
     @State private var submitted:ResourceRequest?
     @State private var deleting:ResourceBatchDeletion?
     @State private var submittedDeletion:ResourceBatchDeletion?
+    @State private var updateImage:String?
+    @State private var updateSubmission:ContainerUpdatePlan?
+    @State private var rollback:ContainerUpdateReceipt?
     @State private var quickDeploy=false
     @State private var diskUsage=false
     @State private var createImage:String?
@@ -47,10 +50,14 @@ struct ResourceManagementView: View {
                 Button(s.t("deleteSelected"),role:.destructive){deleting=ResourceBatchDeletion(kind:kind,ids:selection.sorted())}
                     .disabled(selection.isEmpty || !s.canMutate)
             }
+            if kind == .image,!s.containerUpdateReceipts.isEmpty {
+                Menu(s.t("imageUpdateRollback")){ForEach(s.containerUpdateReceipts){receipt in Button(receipt.replacement+" → "+receipt.original){rollback=receipt}}}.disabled(!s.canMutate)
+            }
             Table(filtered,selection:$selection) {
                 TableColumn(s.t("select")){item in SelectionCheckbox(id:item.id,label:s.t("select")+" "+item.id,selection:$selection)}.width(36)
                 TableColumn(s.t("name")){item in Label(item.id,systemImage:kind.icon).help(item.id)}.width(min:220,ideal:380)
                 TableColumn(s.t("details"),value:\.detail)
+                if kind == .image {TableColumn(s.t("imageUpdateStatus")){item in Text(s.t(s.imageUpdateStatus[item.id] ?? "imageUpdateUnchecked")).font(.caption).lineLimit(1).help(s.t(s.imageUpdateStatus[item.id] ?? "imageUpdateUnchecked"))}}
                 TableColumn(s.t(kind == .network ? "type":"size"),value:\.extra)
             }
             .contextMenu(forSelectionType:String.self) { ids in
@@ -67,7 +74,16 @@ struct ResourceManagementView: View {
         }.padding(28)
         .onChange(of:filtered.map(\.id)){_,ids in selection.formIntersection(Set(ids))}
         .onChange(of:kind){_,_ in selection=[];query=""}
-        .task {await s.refreshResources()}
+        .task {
+            await s.refreshResources()
+            do{s.containerUpdateReceipts=try ContainerUpdateHistory.read()}catch{s.error=s.t("imageUpdateHistoryFailed")}
+        }
+        .confirmationDialog(s.t("imageUpdateRollback"),isPresented:Binding(get:{rollback != nil},set:{if !$0{rollback=nil}}),titleVisibility:.visible) {
+            if let receipt=rollback {Button(s.t("imageUpdateRollback")){s.rollbackImageUpdate(receipt);rollback=nil}}
+        } message:{Text(s.t("imageUpdateRollbackWarning"))}
+        .sheet(isPresented:Binding(get:{updateImage != nil},set:{if !$0{updateImage=nil}}),onDismiss:{if let plan=updateSubmission{updateSubmission=nil;s.applyImageUpdate(plan)}}) {
+            ImageUpdateView(image:updateImage ?? ""){updateSubmission=$0}.environmentObject(s)
+        }
         .sheet(isPresented:$diskUsage){DiskUsageView().environmentObject(s)}
         .sheet(isPresented:$quickDeploy) {
             QuickDeployView().environmentObject(s)
@@ -91,6 +107,10 @@ struct ResourceManagementView: View {
         Button(s.t("inspect")){s.inspection=InspectionTarget(kind:kind,name:id)}
         Button(s.t("copyName")){Clipboard.copy(id)}
         if kind == .image {
+            Menu(s.t("imageUpdateMenu")) {
+                Button(s.t("imageUpdateDownload")){s.refreshImageVersion(id)}.disabled(id.contains("@"))
+                Button(s.t("containerUpdateApply")){updateImage=id}
+            }.disabled(!s.canMutate)
             Button(s.t("createContainer")){createImage=id}.disabled(!s.canMutate)
             Button(s.t("tag")){var request=ResourceRequest(operation:.tag);request.source=id;editor=request}.disabled(!s.canMutate)
             Button(s.t("pushImage")){pushSource=id}.disabled(!s.canMutate)

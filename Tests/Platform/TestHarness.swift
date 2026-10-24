@@ -20,6 +20,7 @@ func XCTUnwrap<T>(_ value:T?)throws->T{guard let value else{throw DeskError.mess
         setbuf(stdout,nil)
         do {
         let unit=PlatformTests();defer{unit.clean()}
+        try await unit.testAIWorkspaceState()
         try unit.testDockerMigration()
         try unit.testDockerCompatibility()
         try await unit.testHubSearch()
@@ -36,7 +37,7 @@ func XCTUnwrap<T>(_ value:T?)throws->T{guard let value else{throw DeskError.mess
         try await unit.testCredentialPipeAndSuppressedOutput()
         try await unit.testArchiveTraversalAndCancellation()
         try await unit.testArchiveBudgets()
-        print("PASS: 16 platform suites (Hub search, Compose semantics and rejection cases, env interpolation, file safety, registry validation, credential pipe)")
+        print("PASS: 17 platform suites (Hub search, Compose semantics and rejection cases, env interpolation, file safety, registry validation, credential pipe)")
         if CommandLine.arguments.contains("--clone"){try await unit.testCloneLive()}
         if CommandLine.arguments.contains("--resource-batch"){try await unit.testResourceBatchLive()}
         if CommandLine.arguments.contains("--snapshot"){try await unit.testContainerSnapshotLive()}

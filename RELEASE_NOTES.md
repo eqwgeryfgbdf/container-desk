@@ -1,77 +1,72 @@
-# Container Desk 0.2.0
+# Container Desk 0.3.0 Preview — Hugging Face, Local AI & Image Updates
 
-[English](#english) · [中文（繁體）](#繁體中文) · [中文（简体）](#简体中文)
+[English](#english) · [繁體中文](#繁體中文) · [简体中文](#简体中文)
 
 ## English
 
-A regular public release of the native SwiftUI manager for **local Apple Container**. Requires Apple Silicon and macOS 26+. Tested engine: **1.5.0**. Independent app; not an Apple product.
+Search and download public Hugging Face GGUF language models directly in **Local AI**, then run the selected model with llama.cpp in Apple Container. This is a **preview**, not a notarized or broadly hardware-certified stable release. Requires Apple Silicon and macOS 26+; tested with Apple Container 1.5.0 on one M4 Mac mini (16 GiB, macOS 26.7.1).
 
-**Tested only on the developer's own M4 Mac mini, 16 GiB, macOS 26.7.1. Second-Mac testing was explicitly deferred.** Public release status does not imply broad hardware certification or Apple notarization.
+### Quick start
 
-New in 0.2.0:
+1. Download the single `Container-Desk-0.3.0-arm64-preview.dmg` asset and install the app. It is **ad hoc signed, without Developer ID or Apple notarization**. If macOS blocks it, use Apple's per-app Privacy & Security opening flow after verifying the download; do not disable Gatekeeper globally.
+2. Connect/start the official Apple Container engine. Open **Local AI → Search Hugging Face**, enter a name/publisher or use the small-model shortcut.
+3. Choose `bartowski/SmolLM2-135M-Instruct-GGUF`, filter filenames with `Q4_K_M`, then select `SmolLM2-135M-Instruct-Q4_K_M.gguf` (105,454,432 bytes at the tested revision).
+4. Review file size, license/model card and estimated memory; click **Select & Download**. The app pins the commit and verifies exact size, GGUF header and SHA-256. No container starts merely by downloading.
+5. Try 2 CPUs, 1 GiB and 1,024 context; create/start llama.cpp and test the model. The server image is a separate download (~296 MB compressed for the tested ARM64 image). Inference uses CPU inside the Linux VM, without Metal.
+6. For MCP, import an existing server configuration, review its command/URL, connect and choose tools. Run the model compatibility test first, then approve individual proposed tool-call batches. The 135M test model completed text inference but did **not** pass tool calling; the warning is expected.
 
-- Duplicate a container into a separate stopped instance, with source identity rechecks, cleared ports, optional environment/mounts and read-only mounts by default. The original stays intact; mounted data is shared, not copied.
-- Inspect local image command, user, working directory and exposed-port defaults before creation.
-- Browse HTTPS Registry V2 repository/tag pages and deploy a selected tag. Optional catalog Basic credentials are session-only; CLI pull/push login remains separate. Some hosted registries do not expose catalogs or use unsupported bearer authentication.
-- Read actual disk usage and selectively review image/network/volume cleanup, with reference checks before each deletion. No global prune.
-- Repair three medium-severity security issues: Compose option-like guest arguments could crash preview/hosts processing, environment expansion lacked memory budgets, and a single-label catalog host could be interpreted as a Docker Hub namespace. Added regression tests and independent patch review.
-- Expanded English, Traditional Chinese and Simplified Chinese onboarding, repeatable QA and native UI test diagnostics for locked screens.
+[Full English tutorial](https://github.com/eqwgeryfgbdf/container-desk/blob/v0.3.0-preview/docs/AI_QUICK_START.md) · [Validation](https://github.com/eqwgeryfgbdf/container-desk/blob/v0.3.0-preview/docs/AI_VALIDATION.md)
 
-Existing workflows include lifecycle/batch operations, full-window details/charts, clickable TCP links, searchable logs, files, snapshots, Docker Hub search/download/configuration, ARM64/AMD64 selection, OCI archives, Dockerfile builds, projects and reviewed Docker conversion. Unsupported project settings are rejected. Full Docker data/local-image transfer, restart supervision and cutover/rollback remain future work.
+### Also included
 
-### Try it
+- Check/download a new image version from **Images**, review affected containers, replace a selected container with preserved supported settings, optionally check HTTP health and roll back failed updates. The original container is retained. Replacement names/IPs change, there is downtime, and rollback does not undo writes to mounted data. [Update guide](https://github.com/eqwgeryfgbdf/container-desk/blob/v0.3.0-preview/docs/IMAGE_UPDATES.md).
+- Search results show licenses and model-card links; GGUF files can be filtered by quantization. Same-named models with different content use separate caches. Restricted models require manual Hugging Face access and local-file selection. Split GGUFs, projectors/adapters and files without complete checksums are omitted. GGUF does not guarantee support by the pinned engine or MCP capability.
+- Fixed MCP process shutdown hanging; expanded regression, real small-model testing and three-language native UI automation. Tests ran on the owner's device only; second-Mac testing remains deferred.
 
-[English quick start](https://github.com/eqwgeryfgbdf/container-desk/blob/v0.2.0/docs/QUICK_START.md). Download the DMG and optional Quick Start ZIP, verify checksums, install the app, connect the official Apple Container engine, then run from the unzipped Quick Start directory:
-
-```sh
-bash quick-test.sh --check
-bash quick-test.sh --run
-```
-
-The first command is read-only. The second runs a disposable loopback HTTP container, verifies exec/log access and stop/start persistence, then removes its own resources. Add `--keep` to explore it in the app and follow the printed cleanup instructions. No compiler or sudo needed.
-
-| Asset | Purpose |
-|---|---|
-| `Container-Desk-0.2.0-arm64.dmg` | Install the app. Ad hoc signed; **no Developer ID or Apple notarization**. |
-| `Container-Desk-0.2.0-source.zip` | Matching Apache-2.0 source, resources, scripts and tests. |
-| `Container-Desk-0.2.0-manifest.json` | Exact source commit/tree and primary artifact hashes. |
-| `Container-Desk-0.2.0-Quick-Start.zip` | Three-language guide, smoke test, launchers and sample project; no duplicate DMG. |
-| `Container-Desk-Overview-zh-Hant.mp4` | Actual app walkthrough with Traditional Chinese captions; not installation/upgrade proof. |
-| `Container-Desk-0.2.0-Validation.json` | Final own-Mac QA/stability summary and artifact verification. |
-| `SHA256SUMS.txt` | Checksums for every other attached asset. |
-
-For all files in one folder: `shasum -a 256 -c SHA256SUMS.txt`. For DMG only, compare its full SHA-256 with the matching line. Follow the guide's per-app macOS opening instructions; do not disable Gatekeeper globally.
-
-[Verification details and remaining limits](https://github.com/eqwgeryfgbdf/container-desk/blob/v0.2.0/docs/RELEASE_0.2.0_VALIDATION.md). Clean engine installation, genuine engine upgrades, external private HTTPS registry success and complete manual VoiceOver acceptance are not verified. AI models are deferred. Historical preview releases remain for traceability.
+The Release has **one uploaded asset: the DMG**. Three-language guides, tests and Apache-2.0 source remain in the repository. GitHub's automatic source ZIP/tar archives may also appear; no test ZIP, checksum file or video is uploaded for this version. Previous releases remain unchanged. SHA-256 is included below on the GitHub Release page.
 
 ## 繁體中文
 
-原生 SwiftUI **本機 Apple Container** 管理工具的 0.2.0 正式公開發行。需要 Apple Silicon、macOS 26 以上；已測試引擎為 **1.5.0**。這是獨立 App，並非 Apple 產品。
+在「**本機 AI**」直接搜尋、挑選並下載 Hugging Face 公開 GGUF 語言模型，再透過 Apple Container 執行 llama.cpp。本版為**預覽版**，並非已公證或經多設備驗證的正式版。需要 Apple Silicon、macOS 26 以上；僅在擁有者的 M4 Mac mini（16 GiB、macOS 26.7.1、Apple Container 1.5.0）測試。
 
-**僅在開發者自己的 M4 Mac mini（16 GiB、macOS 26.7.1）測試；第二台 Mac 測試依擁有者決定暫不執行。** 正式公開不代表所有設備皆經驗證，也不代表已通過 Apple 公證。
+### 快速開始
 
-本版新增安全複製容器、映像啟動預設資訊、HTTPS Registry V2 專案／標籤瀏覽與部署、真實磁碟用量及逐項清理確認。複製保留原容器、清除連接埠，環境變數與掛載需主動加入，掛載預設唯讀；儲存卷為共用，不會複製資料。倉庫目錄使用暫存 Basic 認證，拉取／推送另外登入，不保證支援每個服務的 Bearer 流程。
+1. 下載唯一安裝附件 `Container-Desk-0.3.0-arm64-preview.dmg`。只有 **ad hoc 簽章，沒有 Developer ID／Apple 公證**；若被 macOS 阻擋，確認下載來源後使用「隱私權與安全性」的單一 App 開啟流程，不要全域關閉 Gatekeeper。
+2. 連接／啟動 Apple 官方容器引擎，進入「**本機 AI → 搜尋 Hugging Face**」，輸入名稱或發布者，也可點選輕量模型快捷鍵。
+3. 選擇 `bartowski/SmolLM2-135M-Instruct-GGUF`，輸入 `Q4_K_M` 篩選，選 `SmolLM2-135M-Instruct-Q4_K_M.gguf`（受測版本 105,454,432 bytes，約 105 MB）。
+4. 查看容量、授權／模型說明與估計記憶體後按「**選擇並下載**」。會固定 commit 並驗證大小、GGUF 標頭及 SHA-256，下載不會自動啟動容器。
+5. 輕量測試使用 2 CPU、1 GiB、1,024 上下文，建立並啟動 llama.cpp，再測試模型。伺服器映像另行下載，受測 ARM64 映像壓縮後約 296 MB；Linux VM 內使用 CPU，不支援 Metal。
+6. 使用 MCP 時匯入已安裝伺服器的設定，檢查命令／網址，連接並挑選工具。先測試模型相容性，之後逐批確認提議的工具呼叫。此次 135M 模型可完成文字推論，**未通過工具呼叫測試**，出現提示是預期結果。
 
-修復三項中度安全問題：Compose 指令參數混淆造成預覽／主機名稱處理崩潰、環境變數展開無記憶體上限、簡短倉庫主機名誤導向 Docker Hub。已加入回歸測試及獨立複核。三語教學與自動化也同步更新。
+[完整繁體教學](https://github.com/eqwgeryfgbdf/container-desk/blob/v0.3.0-preview/docs/AI_QUICK_START.zh-Hant.md) · [測試紀錄](https://github.com/eqwgeryfgbdf/container-desk/blob/v0.3.0-preview/docs/AI_VALIDATION.md)
 
-[繁體快速上手](https://github.com/eqwgeryfgbdf/container-desk/blob/v0.2.0/docs/QUICK_START.zh-Hant.md)：下載 DMG 安裝，連接官方引擎；選用 Quick Start ZIP 解壓後先執行 `bash quick-test.sh --check`（唯讀），再執行 `bash quick-test.sh --run`（建立、驗證並清理專用測試容器）。加上 `--keep` 可留在 App 中操作，完成後依輸出清理。不需要編譯器或 sudo。
+同時加入映像更新、經確認的容器替換、HTTP 健康檢查及失敗回復。原容器會保留，但替換容器的名稱／IP 會改變且有停機時間；回復不會還原掛載資料。修復 MCP 結束程序卡住，補齊三語介面與腳本測試。[映像更新說明](https://github.com/eqwgeryfgbdf/container-desk/blob/v0.3.0-preview/docs/IMAGE_UPDATES.md)。
 
-DMG 是安裝檔；source ZIP 是同版 **Apache-2.0** 原始碼；manifest 與 `SHA256SUMS.txt` 可核對提交與檔案；入門包不重複包含 DMG。Validation.json 記錄本機最終測試與穩定性結果。MP4 為真實操作錄影、繁體字幕，不代表安裝／升級驗收。
+GGUF 格式不保證引擎或 MCP 相容。受限制模型需自行取得 Hugging Face 權限後選擇本機檔案；目前不提供分割 GGUF、投影器、轉接器及缺少完整校驗資訊的下載。僅在自己的設備測試，第二台 Mac 仍延後。
 
-**只有 ad hoc 簽章，沒有 Developer ID／Apple 公證。** macOS 可能阻擋首次開啟，請依教學處理單一 App。全新引擎安裝、真實舊版升級、外部私人 HTTPS 倉庫成功流程及完整 VoiceOver 人工驗收仍未驗證。完整 Docker 資料／本機映像遷移、重啟監督與切換／回滾尚未完成；AI 延後。[本版驗證與限制](https://github.com/eqwgeryfgbdf/container-desk/blob/v0.2.0/docs/RELEASE_0.2.0_VALIDATION.md)。
+本版**手動上傳附件只有 DMG**；三語教學、測試與 Apache-2.0 原始碼留在儲存庫。GitHub 自動產生的 source ZIP／tar 仍可能顯示；不另附測試包、校驗檔或影片。舊版本附件不變，DMG 的 SHA-256 直接列在本 Release 下方。
 
 ## 简体中文
 
-原生 SwiftUI **本机 Apple Container** 管理工具的 0.2.0 正式公开发行。需要 Apple Silicon、macOS 26 以上；已测试引擎为 **1.5.0**。这是独立 App，并非 Apple 产品。
+在“**本地 AI**”直接搜索、选择并下载 Hugging Face 公开 GGUF 语言模型，再通过 Apple Container 运行 llama.cpp。本版为**预览版**，不是已公证或经过多设备验证的正式版。需要 Apple Silicon、macOS 26 以上；仅在拥有者的 M4 Mac mini（16 GiB、macOS 26.7.1、Apple Container 1.5.0）测试。
 
-**仅在开发者自己的 M4 Mac mini（16 GiB、macOS 26.7.1）测试；第二台 Mac 测试按所有者决定暂不执行。** 正式公开不代表全部设备均经验证，也不代表已通过 Apple 公证。
+### 快速开始
 
-本版新增安全复制容器、镜像启动默认信息、HTTPS Registry V2 项目／标签浏览与部署、真实磁盘用量及逐项清理确认。复制保留源容器、清除端口，环境变量与挂载需主动加入，挂载默认只读；卷为共享，不会复制数据。仓库目录使用临时 Basic 认证，拉取／推送另外登录，不保证支持每个服务的 Bearer 流程。
+1. 下载唯一安装附件 `Container-Desk-0.3.0-arm64-preview.dmg`。只有 **ad hoc 签名，没有 Developer ID／Apple 公证**；若被 macOS 阻止，确认下载来源后使用“隐私与安全性”的单个 App 打开流程，不要全局关闭 Gatekeeper。
+2. 连接／启动 Apple 官方容器引擎，进入“**本地 AI → 搜索 Hugging Face**”，输入名称或发布者，也可点击轻量模型快捷键。
+3. 选择 `bartowski/SmolLM2-135M-Instruct-GGUF`，输入 `Q4_K_M` 筛选，选择 `SmolLM2-135M-Instruct-Q4_K_M.gguf`（测试版本 105,454,432 bytes，约 105 MB）。
+4. 查看容量、授权／模型说明与估计内存后点击“**选择并下载**”。会固定 commit 并验证大小、GGUF 标头及 SHA-256，下载不会自动启动容器。
+5. 轻量测试使用 2 CPU、1 GiB、1,024 上下文，创建并启动 llama.cpp，再测试模型。服务器镜像单独下载，测试的 ARM64 镜像压缩后约 296 MB；Linux VM 内使用 CPU，不支持 Metal。
+6. 使用 MCP 时导入已安装服务器的设置，检查命令／网址，连接并选择工具。先测试模型兼容性，之后逐批确认提议的工具调用。此次 135M 模型可完成文字推理，**未通过工具调用测试**，出现提示是预期结果。
 
-修复三项中度安全问题：Compose 命令参数混淆导致预览／主机名处理崩溃、环境变量展开没有内存上限、简短仓库主机名误导向 Docker Hub。已添加回归测试及独立复核。三语教程与自动化也同步更新。
+[完整简体教程](https://github.com/eqwgeryfgbdf/container-desk/blob/v0.3.0-preview/docs/AI_QUICK_START.zh-Hans.md) · [测试记录](https://github.com/eqwgeryfgbdf/container-desk/blob/v0.3.0-preview/docs/AI_VALIDATION.md)
 
-[简体快速上手](https://github.com/eqwgeryfgbdf/container-desk/blob/v0.2.0/docs/QUICK_START.zh-Hans.md)：下载 DMG 安装，连接官方引擎；可选 Quick Start ZIP 解压后先运行 `bash quick-test.sh --check`（只读），再运行 `bash quick-test.sh --run`（创建、验证并清理专用测试容器）。添加 `--keep` 可留在 App 中操作，结束后按输出清理。不需要编译器或 sudo。
+同时加入镜像更新、经确认的容器替换、HTTP 健康检查及失败恢复。原容器会保留，但替换容器的名称／IP 会改变且有停机时间；恢复不会还原挂载数据。修复 MCP 结束进程卡住，补齐三语界面与脚本测试。[镜像更新说明](https://github.com/eqwgeryfgbdf/container-desk/blob/v0.3.0-preview/docs/IMAGE_UPDATES.md)。
 
-DMG 是安装文件；source ZIP 是同版 **Apache-2.0** 源代码；manifest 与 `SHA256SUMS.txt` 可核对提交和文件；入门包不重复包含 DMG。Validation.json 记录本机最终测试及稳定性结果。MP4 是真实操作录屏、繁体字幕，不代表安装／升级验收。
+GGUF 格式不保证引擎或 MCP 兼容。受限制模型需自行取得 Hugging Face 权限后选择本地文件；目前不提供分割 GGUF、投影器、适配器及缺少完整校验信息的下载。仅在自己的设备测试，第二台 Mac 仍延后。
 
-**只有 ad hoc 签名，没有 Developer ID／Apple 公证。** macOS 可能阻止首次打开，请按教程处理单个 App。全新引擎安装、真实旧版升级、外部私有 HTTPS 仓库成功流程及完整 VoiceOver 人工验收仍未验证。完整 Docker 数据／本地镜像迁移、重启监督与切换／回滚尚未完成；AI 延后。[本版验证与限制](https://github.com/eqwgeryfgbdf/container-desk/blob/v0.2.0/docs/RELEASE_0.2.0_VALIDATION.md)。
+本版**手动上传附件只有 DMG**；三语教程、测试与 Apache-2.0 源码保留在仓库。GitHub 自动生成的 source ZIP／tar 仍可能显示；不另附测试包、校验文件或视频。旧版本附件不变，DMG 的 SHA-256 直接列在本 Release 下方。
+
+---
+
+[0.2.0 release notes](docs/RELEASE_NOTES_0.2.0.md)

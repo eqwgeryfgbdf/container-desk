@@ -23,7 +23,11 @@ if (CGSessionCopyCurrentDictionary() as? [String:Any])?["CGSSessionScreenIsLocke
     fputs("BLOCKED: unlock this Mac before native UI testing or recording.\n",stderr);exit(2)
 }
 let args=CommandLine.arguments
-let running=NSWorkspace.shared.runningApplications.first{$0.localizedName=="Container Desk"}
+let targetBundle=ProcessInfo.processInfo.environment["CONTAINERDESK_UI_BUNDLE_ID"]
+let running=NSWorkspace.shared.runningApplications.first{ app in
+    if let targetBundle{return app.bundleIdentifier==targetBundle}
+    return app.localizedName=="Container Desk"
+}
 guard AXIsProcessTrusted(),let running else{fputs("BLOCKED: launch Container Desk and grant Accessibility to the test runner.\n",stderr);exit(2)}
 let app=AXUIElementCreateApplication(running.processIdentifier)
 AXUIElementSetMessagingTimeout(app,2)

@@ -1,5 +1,7 @@
 # 快速上手 — Container Desk 0.2.0 公開版
 
+> 本頁保留 0.2.0 的歷史附件與教學。0.3.0 預覽版只上傳 DMG；請看[新版首頁](../README.zh-Hant.md)及 [Hugging Face 教學](AI_QUICK_START.zh-Hant.md)。下方單一 App 安裝說明仍適用。
+
 [English](QUICK_START.md) · **中文（繁體）** · [中文（简体）](QUICK_START.zh-Hans.md)
 
 不需編譯即可嘗試真實本機服務。0.2.0 將公開發行，僅在開發者自己的 M4 Mac mini（16 GiB、macOS 26.7.1、Apple Container 1.5.0）測試；依擁有者決定暫不測試第二台 Mac。

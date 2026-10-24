@@ -14,7 +14,7 @@ extension PlatformTests {
         try XCTAssertEqual(included.configuration["Env"] as? [String],["TOKEN=do-not-copy"])
         try XCTAssertThrowsError(try ContainerSnapshotPlan(fixture(user:["unexpected":true]),includeEnvironment:false))
         try XCTAssertThrowsError(try ContainerSnapshotPlan(fixture(state:"starting"),includeEnvironment:false))
-        try XCTAssertEqual(SidebarOrder.normalized("images,images,unknown,overview"),["images","overview","containers","networks","volumes","registries","composeProjects","core","settings"])
+        try XCTAssertEqual(SidebarOrder.normalized("images,images,unknown,overview"),["images","overview","containers","networks","volumes","registries","composeProjects","aiWorkspace","core","settings"])
     }
     @MainActor func testContainerSnapshotLive()async throws {
         let store=Store();await store.start();let cli=try XCTUnwrap(store.cli)

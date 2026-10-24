@@ -1,5 +1,7 @@
 # Quick start — Container Desk 0.2.0 public release
 
+> This guide describes historical 0.2.0 assets. For the new DMG-only 0.3.0 preview and Hugging Face steps, use the [current README](../README.md) and [AI tutorial](AI_QUICK_START.md). The per-app installation instructions below still apply.
+
 [English](QUICK_START.md) · [中文（繁體）](QUICK_START.zh-Hant.md) · [中文（简体）](QUICK_START.zh-Hans.md)
 
 Try a real local service without compiling the app. Release 0.2.0 is intended for public distribution. Tests ran only on the developer’s own M4 Mac mini (16 GiB, macOS 26.7.1), with Apple Container 1.5.0; second-Mac testing was deferred by the owner.

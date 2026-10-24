@@ -1,26 +1,32 @@
-# Container Desk 0.2.0 — 公开版
+# Container Desk 0.3.0 — 预览版
 
 [English](README.md) · [中文（繁體）](README.zh-Hant.md) · [中文（简体）](README.zh-Hans.md)
 
-使用 macOS 26 SDK 制作的原生 SwiftUI **本机 Apple Container** 管理工具。需要 Apple Silicon、macOS 26 以上，以及已测试的引擎 **1.5.0**。这是独立开发的应用，并非 Apple 产品。
+原生 SwiftUI **本机 Apple Container** 管理工具，支持 Apple Silicon 与 macOS 26 以上。独立开发，并非 Apple 产品；已测试引擎 **1.5.0**。
 
-[下载 0.2.0 公开版](https://github.com/eqwgeryfgbdf/container-desk/releases/tag/v0.2.0) · [完整快速上手教程](docs/QUICK_START.zh-Hans.md) · [三语版本说明](RELEASE_NOTES.md)
+[下载 0.3.0 预览版 DMG](https://github.com/eqwgeryfgbdf/container-desk/releases/download/v0.3.0-preview/Container-Desk-0.3.0-arm64-preview.dmg) · [版本说明](https://github.com/eqwgeryfgbdf/container-desk/releases/tag/v0.3.0-preview) · [Hugging Face 与本地 AI 教程](docs/AI_QUICK_START.zh-Hans.md) · [上一版 0.2.0](https://github.com/eqwgeryfgbdf/container-desk/releases/tag/v0.2.0)
 
-**公开版 0.2.0。** 仅在开发者自己的 M4 Mac mini（16 GiB、macOS 26.7.1、Apple Container 1.5.0）测试。按所有者决定暂不进行第二台 Mac 测试。本版只有 ad hoc 签名，没有 Developer ID／Apple 公证；请先阅读[验证范围及已知限制](docs/RELEASE_0.2.0_VALIDATION.md)。
+**本次新增：** 搜索 Hugging Face、筛选单文件 GGUF 量化版本、查看容量／授权／估计内存，下载时固定版本并验证 SHA-256。通过 Apple Container 运行本地 llama.cpp，测试模型与 MCP 兼容性，确认工具调用后才执行。镜像更新支持经确认的容器替换、健康检查与恢复。[AI 验证记录](docs/AI_VALIDATION.md) · [镜像更新教程](docs/IMAGE_UPDATES.md)。
 
-## 五分钟开始体验
+仅在开发者自己的 M4 Mac mini（16 GiB、macOS 26.7.1）测试，第二台 Mac 测试仍延后。本预览版**只有 ad hoc 签名，没有 Developer ID 或 Apple 公证**。Release 手动附件只有 DMG；三语教程、测试与 Apache-2.0 源码放在仓库，GitHub 另会自动生成源码归档。
 
-1. 从 Release 下载 DMG 和可选的 `Container-Desk-0.2.0-Quick-Start.zip`，使用 `SHA256SUMS.txt` 核对文件。
-2. 将 **Container Desk.app** 拖入“应用程序”。本版仅有 ad hoc 签名，没有 Developer ID 或 Apple 公证；遇到 macOS 阻止时，参照[安装教程](docs/QUICK_START.zh-Hans.md)。
-3. 在“容器引擎”连接或安装受支持的官方 Apple Container。App 与引擎分别下载，管理员授权由 macOS 处理。
-4. 解压入门包，在该文件夹打开终端：
+## 五分钟尝试 Hugging Face
+
+1. 下载 DMG，将 **Container Desk.app** 拖到“应用程序”后打开。macOS 阻止时请按[单个 App 安装教程](docs/QUICK_START.zh-Hans.md)处理，不要全局关闭 Gatekeeper。
+2. 到“容器引擎”启动或安装 Apple 官方引擎；模型与 llama.cpp 服务器镜像另外下载。
+3. 打开“**本地 AI → 搜索 Hugging Face**”，点击 `SmolLM2-135M-Instruct`，选择 `bartowski/SmolLM2-135M-Instruct-GGUF`。
+4. 在文件筛选中输入 `Q4_K_M`，选择 `SmolLM2-135M-Instruct-Q4_K_M.gguf`（约 105 MB），查看授权后点击“**选择并下载**”。
+5. 轻量文字测试可用 2 CPU、1 GiB、1,024 上下文，再创建并启动 llama.cpp。使用 MCP 前先点击“测试模型与工具调用”；此小模型已通过文字推理，但未通过工具调用，出现兼容性提示是预期结果。[完整教程及故障排查](docs/AI_QUICK_START.zh-Hans.md)。
+
+GGUF 格式不保证引擎或工具调用兼容；Linux VM 内使用 CPU，没有 Metal。若只想快速测试容器，可下载并检查固定版本的脚本后执行：
 
 ```sh
+curl -fL https://raw.githubusercontent.com/eqwgeryfgbdf/container-desk/v0.3.0-preview/scripts/quick-test.sh -o quick-test.sh
 bash quick-test.sh --check
 bash quick-test.sh --run
 ```
 
-第一个命令只读。第二个使用专用 BusyBox 容器在 `127.0.0.1:18080` 提供网页，验证 HTTP、exec／日志访问、停止重启和文件保留，再清理自己创建的资源。不需要 Xcode、Python 或 sudo。使用 `--run --keep` 可保留容器，在 App 中体验后按输出命令清理。教程还提供纯界面的 Python 网页服务及简单项目导入示例；快速测试不代表全部界面或安装流程已验收。
+`--check` 为只读；`--run` 创建、验证并清除自己的本地 HTTP 测试容器，不会安装 AI 模型。不需要额外下载 Release ZIP。
 
 ## 常用界面与操作视频
 
@@ -56,11 +62,11 @@ bash quick-test.sh --run
 
 自动化覆盖容器生命周期、数据保留、文件、镜像、项目与转换、仓库失败／本地推送及资源保护。新增容器复制、镜像信息、仓库目录与三项中度安全修复回归测试。完整结果、跳过项目及长时间运行数据见[本版验证记录](docs/RELEASE_0.2.0_VALIDATION.md)；跳过不代表通过。
 
-仅在自己的设备上测试。全新引擎安装、真实旧版升级、外部私有 HTTPS 仓库成功流程及完整 VoiceOver 人工验收仍未验证。AI 延后；Docker 数据与本地镜像仍需单独迁移，尚无自动重启监督、切换／回滚、远程主机、内嵌终端或 App 关闭后更新。[功能状态](docs/FEATURE_ROADMAP.md) · [反馈模板](docs/TEST_REPORT.md)。
+仅在自己的设备上测试。全新引擎安装、真实旧版升级、外部私有 HTTPS 仓库成功流程及完整 VoiceOver 人工验收仍未验证。AI 功能见开发预览版教程；Docker 数据与本地镜像仍需单独迁移，尚无自动重启监督、切换／回滚、远程主机、内嵌终端或 App 关闭后更新。[功能状态](docs/FEATURE_ROADMAP.md) · [反馈模板](docs/TEST_REPORT.md)。
 
 ## 源码、打包与许可
 
-DMG、`source.zip` 及 manifest 对应同一个版本提交。源码包含 **Apache-2.0** 许可、资源、脚本和测试。`SHA256SUMS.txt` 覆盖上传附件，入门包中的 `BUILD.json` 记录来源提交。入门包不重复包含 DMG；0.1.2 历史附件保留以便追溯。
+后续 GitHub Releases 仅附 `.dmg` 安装文件。源码使用 GitHub 为 release tag 自动提供的下载，采用 **Apache-2.0** 许可。教程、测试脚本与视频放在仓库或文档；构建 manifest 和校验码仅保留于本地 `../work/release-metadata`，不再作为附件上传。历史附件保持原状。
 
 开发者需要 Command Line Tools／Xcode 26 和 Python 3：
 
@@ -69,7 +75,6 @@ bash scripts/test.sh
 bash scripts/build.sh
 # 先提交所有源码变更，再生成同版产物：
 bash scripts/package.sh ../outputs
-python3 scripts/make-quick-start.py --output ../outputs
 ```
 
 打包要求干净的 Git 工作目录，Release 标签必须对应 manifest 的提交。可选的 Developer ID／公证流程已准备，本次公开版仅有 ad hoc 签名。[Apache-2.0 许可](LICENSE) · [公开门槛](docs/PUBLIC_RELEASE_GATE.md)。
@@ -77,3 +82,7 @@ python3 scripts/make-quick-start.py --output ../outputs
 ## 官方依赖
 
 [Apple Container](https://github.com/apple/container) 为独立依赖，有自己的许可。官方安装包按需下载，未内嵌在 App 中。
+
+### 更新镜像与容器
+
+选取镜像 → **更新 → 检查并下载最新镜像**，再选 **将镜像套用至容器…**。验证包含摘要、运行状态及选填的 HTTP 健康检查；保留原容器供恢复。替代容器的名称／IP 会改变，挂载资料不会回滚。操作界面提供简体中文说明；详细限制与脚本测试见[更新指南（英文）](docs/IMAGE_UPDATES.md)。此功能目前位于开发版本。

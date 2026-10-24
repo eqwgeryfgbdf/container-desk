@@ -17,7 +17,7 @@ fi
 OUT="$ROOT/../outputs"
 BUILD="$ROOT/../work/release"
 if [[ -n "$(git -C "$ROOT" status --porcelain)" ]]; then
-  echo 'Commit source changes before packaging so the DMG and source archive match.' >&2
+  echo 'Commit source changes before packaging so the DMG matches its release tag.' >&2
   exit 1
 fi
 COMMIT="$(git -C "$ROOT" rev-parse HEAD)"

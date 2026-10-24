@@ -80,3 +80,13 @@ Current source and local development build include Baseline A. Existing `v0.1.2-
 ## AI scheduling decision — 2026-10-17
 
 AI model deployment is deferred while the core management workflows, automated QA and release acceptance are completed. The first future experiment should use one lightweight local model, with measured memory usage and response latency; no model is installed by the current QA or recording scripts.
+
+## Local AI development preview — 2026-10-19
+
+The earlier deferral is superseded for the development checkout: local llama.cpp CPU deployment, pinned small-model downloads, GGUF selection, chat, MCP connection/tool discovery and reviewed execution are implemented. Real 0.5B model/MCP tests passed; native UI acceptance is pending unlock. Cloud AI remains deferred. See [AI guide](AI_QUICK_START.md) and [acceptance results](AI_VALIDATION.md).
+
+- Development: image-page check/download with digest and architecture verification; reviewed container replacement, optional HTTP readiness, retained originals and persistent explicit rollback. Scripted BusyBox upgrade and unhealthy-service recovery verified on the development Mac. See `IMAGE_UPDATES.md` for supported configurations and data migration limits.
+
+## Hugging Face discovery — 2026-10-25
+
+Local AI now searches public Hugging Face GGUF repositories, lists single-file quantizations with filename filtering, size/license/model-card information and memory estimates, and downloads a selected pinned file with SHA-256 verification. Anonymous access only; gated/private models require manual access and local-file selection. Format filtering is not a guarantee of llama.cpp architecture support or MCP capability. A 135M / 105 MB model passed local text inference; its tool probe returned unsupported. Native search UI automation passed in three languages and two window sizes with light/dark coverage. This supersedes the earlier search/UI deferral for this flow only.

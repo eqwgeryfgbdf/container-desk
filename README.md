@@ -1,26 +1,32 @@
-# Container Desk 0.2.0 — Public Release
+# Container Desk 0.3.0 — Preview
 
 [English](README.md) · [中文（繁體）](README.zh-Hant.md) · [中文（简体）](README.zh-Hans.md)
 
-Native SwiftUI manager for **local Apple Container**, built with the macOS 26 SDK. Requires Apple Silicon, macOS 26 or later, and tested engine **1.5.0**. This is an independent application, not an Apple product.
+Native SwiftUI manager for **local Apple Container** on Apple Silicon and macOS 26+. Independent application, not an Apple product. Tested engine: **1.5.0**.
 
-[Download 0.2.0](https://github.com/eqwgeryfgbdf/container-desk/releases/tag/v0.2.0) · [Detailed quick start](docs/QUICK_START.md) · [Release notes](RELEASE_NOTES.md)
+[Download 0.3.0 preview DMG](https://github.com/eqwgeryfgbdf/container-desk/releases/download/v0.3.0-preview/Container-Desk-0.3.0-arm64-preview.dmg) · [Release notes](https://github.com/eqwgeryfgbdf/container-desk/releases/tag/v0.3.0-preview) · [Hugging Face & local AI tutorial](docs/AI_QUICK_START.md) · [Previous stable 0.2.0](https://github.com/eqwgeryfgbdf/container-desk/releases/tag/v0.2.0)
 
-**Public release 0.2.0.** Tested only on the developer's own M4 Mac mini (16 GiB, macOS 26.7.1, Apple Container 1.5.0). The owner explicitly deferred second-Mac testing. This release is ad hoc signed, without Developer ID or Apple notarization. Read the [verification scope and known limits](docs/RELEASE_0.2.0_VALIDATION.md) before use.
+**New in this preview:** search Hugging Face, filter single-file GGUF quantizations, compare sizes/licenses/memory estimates and download with pinned revisions and SHA-256 verification. Run llama.cpp locally in Apple Container, test model/MCP compatibility, and review tool calls before execution. Image updates now support reviewed container replacement, health checks and rollback. [AI validation](docs/AI_VALIDATION.md) · [Image update guide](docs/IMAGE_UPDATES.md).
 
-## Try it in five minutes
+Tested only on the developer's M4 Mac mini (16 GiB, macOS 26.7.1). Second-Mac testing remains deferred. This preview is **ad hoc signed, without Developer ID or Apple notarization**. Release attachments contain only the DMG; guides, tests and Apache-2.0 source remain in this repository. GitHub also generates source archives automatically.
 
-1. Download the DMG and optional `Container-Desk-0.2.0-Quick-Start.zip` from the release. Verify them using `SHA256SUMS.txt`.
-2. Drag **Container Desk.app** to **Applications**. This build is ad hoc signed, without Developer ID or Apple notarization; see the [installation guide](docs/QUICK_START.md#2-install-and-connect) if macOS blocks opening it.
-3. Open **Container Engine** to connect to or install the supported official Apple Container engine. The app and engine are separate downloads; administrator authorization belongs to macOS.
-4. Unzip the Quick Start bundle, open Terminal in its folder, and run:
+## Try Hugging Face in five minutes
+
+1. Download the DMG, drag **Container Desk.app** to **Applications**, then open it. If macOS blocks this unsigned preview, follow the per-app [installation guidance](docs/QUICK_START.md#2-install-and-connect); do not disable Gatekeeper globally.
+2. Start or install the official Apple Container engine from **Container Engine**. Models and the llama.cpp server image are separate downloads.
+3. Open **Local AI → Search Hugging Face**. Select the `SmolLM2-135M-Instruct` shortcut, then `bartowski/SmolLM2-135M-Instruct-GGUF`.
+4. Filter files with `Q4_K_M`, select `SmolLM2-135M-Instruct-Q4_K_M.gguf` (~105 MB), review its license and click **Select & Download**.
+5. For a tiny text test use 2 CPUs, 1 GiB and 1,024 context, then **Create and start llama.cpp**. Use **Test model and tool calling** before trying MCP. This model completed text inference but failed the tool-call probe; that warning is expected. [Full tutorial and troubleshooting](docs/AI_QUICK_START.md).
+
+GGUF format alone does not guarantee engine or tool-call support. Inference uses CPU inside the Linux VM, without Metal. For a container-only smoke test, download and inspect the versioned script, then run:
 
 ```sh
+curl -fL https://raw.githubusercontent.com/eqwgeryfgbdf/container-desk/v0.3.0-preview/scripts/quick-test.sh -o quick-test.sh
 bash quick-test.sh --check
 bash quick-test.sh --run
 ```
 
-The check is read-only. The test uses one temporary BusyBox HTTP container on `127.0.0.1:18080`, verifies HTTP, exec/log access and stop/start persistence, then removes its own resources. No Xcode, Python or sudo is needed. Use `--run --keep` to explore that container in the app and follow the printed cleanup commands. The guide also walks through a GUI-only Python web server and a small imported project. This smoke test does not certify every UI or installation path.
+`--check` is read-only; `--run` creates, verifies and removes its own loopback HTTP test container. It does not install an AI model. No extra Release ZIP is needed.
 
 ## Screenshots and video
 
@@ -57,11 +63,11 @@ The check is read-only. The test uses one temporary BusyBox HTTP container on `1
 
 Automated tests cover container lifecycle, persistent data, files, images, projects, conversion, registry failure/loopback push paths and resource protection. New regressions cover clone preconditions, image metadata, registry catalog validation and three repaired medium-severity security findings. See the [current validation record](docs/RELEASE_0.2.0_VALIDATION.md) for exact results, skipped checks and final stability measurements; a skipped check is not a pass.
 
-Clean engine installation, genuine engine upgrades, external private HTTPS registry success and complete manual VoiceOver acceptance remain unverified. Only the developer's own device was used. AI is deferred. Full Docker migration still requires separate data/local-image transfer, with no restart supervisor or automatic cutover/rollback. There is no remote-host management, embedded terminal or updater while the app is closed. [Feature status](docs/FEATURE_ROADMAP.md) · [Report a test result](docs/TEST_REPORT.md).
+Clean engine installation, genuine engine upgrades, external private HTTPS registry success and complete manual VoiceOver acceptance remain unverified. Only the developer's own device was used. AI is available in the development preview described above. Full Docker migration still requires separate data/local-image transfer, with no restart supervisor or automatic cutover/rollback. There is no remote-host management, embedded terminal or updater while the app is closed. [Feature status](docs/FEATURE_ROADMAP.md) · [Report a test result](docs/TEST_REPORT.md).
 
 ## Source, packaging and license
 
-The DMG, `source.zip` and manifest are built from the same release commit. The source ZIP contains **Apache-2.0** licensing, resources, scripts and tests. `SHA256SUMS.txt` covers the uploaded files; `BUILD.json` in the optional Quick Start ZIP records its source commit. The Quick Start ZIP does not duplicate the DMG. Historical 0.1.2 assets remain available for traceability.
+Future GitHub Releases attach only the `.dmg` installer. Source is available through GitHub’s automatic release-tag archives under **Apache-2.0**. Tutorials, test scripts and videos belong in the repository or documentation. Build manifests and checksums remain local under `../work/release-metadata`; they are not release attachments. Historical attachments remain unchanged.
 
 For contributors with Command Line Tools/Xcode 26 and Python 3:
 
@@ -70,11 +76,14 @@ bash scripts/test.sh
 bash scripts/build.sh
 # Commit all source changes before pairing release artifacts:
 bash scripts/package.sh ../outputs
-python3 scripts/make-quick-start.py --output ../outputs
 ```
 
-Packaging refuses a dirty checkout. Keep the GitHub release tag on the manifest's source commit. The optional Developer ID/notarization pipeline is prepared; this public build has only an ad hoc signature. [Apache-2.0 license](LICENSE) · [Release gates](docs/PUBLIC_RELEASE_GATE.md).
+Packaging refuses a dirty checkout. Keep the GitHub release tag on the build source commit. The optional Developer ID/notarization pipeline is prepared; this public build has only an ad hoc signature. [Apache-2.0 license](LICENSE) · [Release gates](docs/PUBLIC_RELEASE_GATE.md).
 
 ## Official dependency
 
 [Apple Container](https://github.com/apple/container) is a separate dependency with its own license. Its official installer is downloaded when needed and is not bundled in this app.
+
+### Update images and containers
+
+Select an image → **Update → Check & Download Latest Image**, then **Apply Image to Container…** to review and replace an outdated container. Verification includes digest, runtime state and an optional HTTP health URL. Originals are retained for recovery; container name/IP change and mounted data is not rolled back. See [the update guide](docs/IMAGE_UPDATES.md) for limits and scripted tests. This feature is in the development build.

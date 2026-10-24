@@ -6,9 +6,10 @@ import UniformTypeIdentifiers
     @StateObject private var store=Store()
     @StateObject private var core=CoreManager()
     @StateObject private var zoom=ContentZoom()
+    @StateObject private var ai=AIWorkspace()
     var body: some Scene {
         WindowGroup("Container Desk") {
-            MainView().environmentObject(store).environmentObject(core).environmentObject(zoom)
+            MainView().environmentObject(store).environmentObject(core).environmentObject(zoom).environmentObject(ai)
                 .environment(\.locale,Locale(identifier:store.localeID))
                 .preferredColorScheme(store.colorScheme)
                 .frame(minWidth:1100,minHeight:640)
@@ -56,7 +57,7 @@ struct MainView:View {
     @State private var columnVisibility:NavigationSplitViewVisibility = .all
     @State private var previousColumnVisibility:NavigationSplitViewVisibility = .all
     @AppStorage("sidebarOrder") private var sidebarOrder=SidebarOrder.defaults.joined(separator:",")
-    private let icons=["overview":"chart.bar.xaxis","containers":"shippingbox","images":"square.stack.3d.up","networks":"network","volumes":"externaldrive","registries":"server.rack","composeProjects":"square.stack.3d.up.fill","core":"cpu","settings":"gearshape"]
+    private let icons=["aiWorkspace":"sparkles","overview":"chart.bar.xaxis","containers":"shippingbox","images":"square.stack.3d.up","networks":"network","volumes":"externaldrive","registries":"server.rack","composeProjects":"square.stack.3d.up.fill","core":"cpu","settings":"gearshape"]
 
     var body:some View {
         NavigationSplitView(columnVisibility:$columnVisibility) {
@@ -107,6 +108,7 @@ struct MainView:View {
                         case "volumes": ResourceManagementView(kind:.volume)
                         case "registries": RegistryView()
                         case "composeProjects": ComposeProjectsView()
+                        case "aiWorkspace": AIWorkspaceView()
                         case "core": CoreView()
                         default: PreferencesView()
                         }

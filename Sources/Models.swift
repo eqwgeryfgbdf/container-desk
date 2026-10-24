@@ -302,7 +302,7 @@ enum ImagePlatform {
 
 /// Persist stable navigation IDs, never localized titles. Repair old/invalid preferences.
 enum SidebarOrder {
-    static let defaults=["overview","containers","images","networks","volumes","registries","composeProjects","core","settings"]
+    static let defaults=["overview","containers","images","networks","volumes","registries","composeProjects","aiWorkspace","core","settings"]
     static func normalized(_ value:String)->[String] {
         var seen=Set<String>()
         return (value.split(separator:",").map(String.init)+defaults).filter{defaults.contains($0) && seen.insert($0).inserted}
@@ -338,7 +338,7 @@ struct ContainerClonePlan {
     let id:String
     let fingerprint:Data
     let imageDigest:String
-    init(_ data:Data)throws {
+    init(_ data:Data,allowEmptyArguments:Bool=false)throws {
         func reject() -> DeskError{.message("cloneUnsupported")}
         guard let rows=try JSONSerialization.jsonObject(with:data) as? [[String:Any]],rows.count==1,
               let c=rows[0]["configuration"] as? [String:Any],let id=c["id"] as? String,
@@ -366,7 +366,7 @@ struct ContainerClonePlan {
         var request=CreateRequest();request.name=String(id.prefix(48))+"-copy";request.image=reference;request.cpus=cpus;request.memoryMB=Int(memory/1048576)
         request.architecture=arch;request.rosetta=c["rosetta"] as? Bool ?? false;request.network=networks.first?["network"] as? String ?? ""
         request.entrypoint=executable;request.commandArguments=args.joined(separator:"\n");request.workingDirectory=directory
-        guard !args.isEmpty,args.allSatisfy({!$0.isEmpty && !$0.contains(where:{$0.isNewline || $0=="\0"})}),env.allSatisfy({!$0.contains(where:{$0.isNewline || $0=="\0"})}) else{throw reject()}
+        guard (allowEmptyArguments || !args.isEmpty),args.allSatisfy({!$0.isEmpty && !$0.contains(where:{$0.isNewline || $0=="\0"})}),env.allSatisfy({!$0.contains(where:{$0.isNewline || $0=="\0"})}) else{throw reject()}
         if let user=process["user"] as? [String:Any],let ids=user["id"] as? [String:Any],let uid=ids["uid"] as? Int,let gid=ids["gid"] as? Int {request.user="\(uid):\(gid)"}
         else if let raw=(process["user"] as? [String:Any])?["raw"] as? [String:Any],let user=raw["userString"] as? String {request.user=user}
         else{throw reject()}

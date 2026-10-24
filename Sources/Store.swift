@@ -6,6 +6,8 @@ import AppKit
     @Published var containers:[ContainerItem]=[]
     @Published var usage:[String:Usage]=[:]
     @Published var images:[ResourceItem]=[]
+    @Published var imageUpdateStatus:[String:String]=[:]
+    @Published var containerUpdateReceipts:[ContainerUpdateReceipt]=[]
     @Published var networks:[ResourceItem]=[]
     @Published var volumes:[ResourceItem]=[]
     @Published var history:[Sample]=[]

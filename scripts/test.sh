@@ -17,3 +17,12 @@ bash "$ROOT/scripts/test-platform.sh"
 
 xcrun swiftc -swift-version 5 -parse-as-library -target arm64-apple-macos26.0 "$ROOT/Sources/Models.swift" "$ROOT/Tests/ConvenienceTests.swift" -o "$BUILD/ConvenienceTests"
 "$BUILD/ConvenienceTests"
+
+# Deterministic local AI/MCP tests; downloads only with test-ai.sh --live.
+bash "$ROOT/scripts/test-ai.sh"
+
+# Public model discovery parsing and verified cache behavior; no network by default.
+bash "$ROOT/scripts/test-huggingface.sh"
+
+# Image refresh, replacement, verification and rollback failure paths.
+bash "$ROOT/scripts/test-image-updates.sh"
