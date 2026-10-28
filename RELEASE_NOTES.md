@@ -1,3 +1,13 @@
+# Container Desk releases
+
+## 1.0.0
+
+Consolidated native app, current VM + package icon, container and image workflows, local AI / MCP, three-language documentation and website source. Release downloads contain only the DMG.
+
+[English · 繁體中文 · 简体中文 release notes](docs/RELEASE_NOTES_1.0.0.md) · [Validation and limits](docs/RELEASE_1.0.0_VALIDATION.md)
+
+---
+
 # Container Desk 0.3.0 Preview — Hugging Face, Local AI & Image Updates
 
 [English](#english) · [繁體中文](#繁體中文) · [简体中文](#简体中文)

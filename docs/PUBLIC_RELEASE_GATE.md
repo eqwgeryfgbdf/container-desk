@@ -1,3 +1,5 @@
+> **1.0.0 update (2026-10-28):** the owner requested a complete 1.0 public release under the previously authorized own-device test scope. Second-Mac and Developer ID/notarization requirements remain deferred, not passed. This historical gate is superseded for this release by [the 1.0 validation record](RELEASE_1.0.0_VALIDATION.md); unsupported scenarios remain explicitly limited.
+
 > 2026-10-18: The owner authorized a regular public 0.2.0 release and explicitly deferred second-Mac testing. Only the developer’s own Mac was used. This older record is preserved for traceability; its private/preview decision is no longer current. Unperformed gates remain unverified, not PASS. See [0.2.0 verification and limits](RELEASE_0.2.0_VALIDATION.md).
 >
 > 擁有者已決定公開 0.2.0 正式發行並暫不測試第二台 Mac；僅在自己的設備上測試。舊驗收標準保留供追溯，未執行項目不會改標通過。

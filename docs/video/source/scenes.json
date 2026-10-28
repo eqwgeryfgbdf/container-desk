@@ -1,0 +1,51 @@
+[
+  [
+    0,
+    8,
+    "從搜尋模型，到本機 AI",
+    "從搜尋到本機 AI，這是 Container Desk。",
+    "Search a model. Build local AI."
+  ],
+  [
+    8,
+    14,
+    "01　搜尋輕量模型",
+    "進入本機 AI，開啟 Hugging Face 搜尋。先選輕量模型快捷鍵，再挑選模型倉庫。",
+    "Open Local AI, search Hugging Face, then choose a model repository."
+  ],
+  [
+    22,
+    16,
+    "02　挑選量化檔案",
+    "用檔案篩選找到 Q 四 K M。這個小模型約一百零五 MB。下載前，查看容量、授權與模型說明。",
+    "Filter for Q4_K_M. Review the file size, license and model card."
+  ],
+  [
+    38,
+    12,
+    "03　下載，並驗證完整性",
+    "按選擇並下載。程式會固定版本，檢查檔案大小與校驗碼。下載完成，不會自動啟動容器。",
+    "Select and download. Revision, size and checksum are verified."
+  ],
+  [
+    50,
+    16,
+    "04　設定模型容器",
+    "輕量文字測試，可用兩核心、一 GB 記憶體，以及一千零二十四上下文。伺服器映像另外下載，使用 CPU 推論。",
+    "For a small text test: 2 CPUs, 1 GiB RAM and 1,024 context tokens."
+  ],
+  [
+    66,
+    14,
+    "05　先測相容性，再用工具",
+    "能回答文字，不代表能呼叫工具。這個小模型未通過工具測試。換用相容模型後，仍需逐批確認工具呼叫。",
+    "Text generation does not guarantee MCP support. Review tool calls before execution."
+  ],
+  [
+    80,
+    10,
+    "從 GitHub 開始",
+    "從 GitHub 下載 DMG，並查看三語教學。目前是預覽版，尚未經過 Apple 公證。",
+    "Download the DMG and read the multilingual guide. Preview; not notarized."
+  ]
+]

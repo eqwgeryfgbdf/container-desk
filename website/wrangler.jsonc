@@ -1,0 +1,21 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "container-desk-site",
+  "compatibility_date": "2026-10-12",
+  "assets": {
+    "directory": "./public",
+    "not_found_handling": "404-page",
+    "binding": "ASSETS",
+    "run_worker_first": [
+      "/api/locale"
+    ]
+  },
+  "routes": [
+    {
+      "pattern": "container.emo-lab.com",
+      "custom_domain": true
+    }
+  ],
+  "workers_dev": true,
+  "main": "src/worker.mjs"
+}

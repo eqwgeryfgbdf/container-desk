@@ -1,89 +1,77 @@
-# Container Desk 0.3.0 — Preview
+# Container Desk 1.0.0
 
 [English](README.md) · [中文（繁體）](README.zh-Hant.md) · [中文（简体）](README.zh-Hans.md)
 
-Native SwiftUI manager for **local Apple Container** on Apple Silicon and macOS 26+. Independent application, not an Apple product. Tested engine: **1.5.0**.
+Native SwiftUI management for **Apple Container** on Apple Silicon and macOS 26+. Independent open-source software, not an Apple product. The app is named **Container Desk**; the website title **Apple Container Desk** describes the engine it manages.
 
-[Download 0.3.0 preview DMG](https://github.com/eqwgeryfgbdf/container-desk/releases/download/v0.3.0-preview/Container-Desk-0.3.0-arm64-preview.dmg) · [Release notes](https://github.com/eqwgeryfgbdf/container-desk/releases/tag/v0.3.0-preview) · [Hugging Face & local AI tutorial](docs/AI_QUICK_START.md) · [Previous stable 0.2.0](https://github.com/eqwgeryfgbdf/container-desk/releases/tag/v0.2.0)
+[Download 1.0.0 DMG](https://github.com/eqwgeryfgbdf/container-desk/releases/download/v1.0.0/Container-Desk-1.0.0-arm64.dmg) · [Website](https://container.emo-lab.com/en/) · [Release notes](docs/RELEASE_NOTES_1.0.0.md) · [Quick start](docs/QUICK_START.md)
 
-**New in this preview:** search Hugging Face, filter single-file GGUF quantizations, compare sizes/licenses/memory estimates and download with pinned revisions and SHA-256 verification. Run llama.cpp locally in Apple Container, test model/MCP compatibility, and review tool calls before execution. Image updates now support reviewed container replacement, health checks and rollback. [AI validation](docs/AI_VALIDATION.md) · [Image update guide](docs/IMAGE_UPDATES.md).
+1.0 consolidates the existing container-management, projects, AI/MCP and image-update workflows into one release. It includes the latest **VM + Package** icon in the installer, Dock and app sidebar, three-language documentation and the website source.
 
-Tested only on the developer's M4 Mac mini (16 GiB, macOS 26.7.1). Second-Mac testing remains deferred. This preview is **ad hoc signed, without Developer ID or Apple notarization**. Release attachments contain only the DMG; guides, tests and Apache-2.0 source remain in this repository. GitHub also generates source archives automatically.
+**Distribution:** ad hoc signed, without Developer ID or Apple notarization. Requires Apple Silicon and macOS 26+; testing is limited to the developer’s M4 Mac mini, macOS 26.7.1 and Apple Container 1.5.0. Second-Mac testing remains deferred. A 1.0 version number does not certify every engine version, Docker project or AI model. [Current verification and remaining limits](docs/RELEASE_1.0.0_VALIDATION.md).
 
-## Try Hugging Face in five minutes
+## Start in a few minutes
 
-1. Download the DMG, drag **Container Desk.app** to **Applications**, then open it. If macOS blocks this unsigned preview, follow the per-app [installation guidance](docs/QUICK_START.md#2-install-and-connect); do not disable Gatekeeper globally.
-2. Start or install the official Apple Container engine from **Container Engine**. Models and the llama.cpp server image are separate downloads.
-3. Open **Local AI → Search Hugging Face**. Select the `SmolLM2-135M-Instruct` shortcut, then `bartowski/SmolLM2-135M-Instruct-GGUF`.
-4. Filter files with `Q4_K_M`, select `SmolLM2-135M-Instruct-Q4_K_M.gguf` (~105 MB), review its license and click **Select & Download**.
-5. For a tiny text test use 2 CPUs, 1 GiB and 1,024 context, then **Create and start llama.cpp**. Use **Test model and tool calling** before trying MCP. This model completed text inference but failed the tool-call probe; that warning is expected. [Full tutorial and troubleshooting](docs/AI_QUICK_START.md).
+1. Open the DMG, quit an existing Container Desk, and drag the new app into Applications. Approve replacement when requested. If macOS blocks opening, follow [per-app installation guidance](docs/QUICK_START.md); do not disable system protections globally.
+2. Connect to the official Apple Container engine in **Container Engine**. The engine is a separate installation, downloaded from Apple’s official release source.
+3. In **Images → Download & Deploy**, search Docker Hub or enter an image reference. Select an appropriate ARM64 image, download it and configure CPU, memory and published ports.
+4. Create the stopped container, then start it. Double-click for details, inspect logs and click a published TCP web port to open its service.
+5. For local AI, follow the [Hugging Face / llama.cpp / MCP guide](docs/AI_QUICK_START.md). Begin with SmolLM2 135M Q4_K_M (~105 MB). Text inference and tool calling are separate capabilities; the small test model did not pass tool calling.
 
-GGUF format alone does not guarantee engine or tool-call support. Inference uses CPU inside the Linux VM, without Metal. For a container-only smoke test, download and inspect the versioned script, then run:
+## Included features
+
+| Area | Available in 1.0 |
+| --- | --- |
+| Containers | Create, start, stop, restart, delete; reviewed batch actions; clone with explicit environment/mount choices; real host resources and container statistics. |
+| Interface | macOS SwiftUI, English / Traditional Chinese / Simplified Chinese, sidebar reordering, expanded details, 80–150% zoom and Reduce Motion-aware transitions. |
+| Images | Docker Hub search, platform inspection, download-and-configure, Dockerfile builds, tags, OCI import/export, updates and reviewed container replacement/rollback. |
+| Storage and files | Networks, volumes, selective cleanup, file browsing/transfers and container-to-image snapshots. No global prune; mounted data is not included in snapshots. |
+| Registry and projects | Registry login/push, HTTPS catalog/tag browsing, supported Compose import and Docker project conversion with unsupported-field diagnostics. |
+| Local AI and MCP | Public Hugging Face single-file GGUF search/download with revision and SHA-256 verification; llama.cpp CPU deployment; capability tests; reviewed MCP tool calls. |
+| Engine | Official-source installation and workload-aware manual / opt-in automatic updates while the app is open. |
+
+## Quick test
+
+Download and inspect the script before running it:
 
 ```sh
-curl -fL https://raw.githubusercontent.com/eqwgeryfgbdf/container-desk/v0.3.0-preview/scripts/quick-test.sh -o quick-test.sh
+curl -fL https://raw.githubusercontent.com/eqwgeryfgbdf/container-desk/v1.0.0/scripts/quick-test.sh -o quick-test.sh
 bash quick-test.sh --check
 bash quick-test.sh --run
 ```
 
-`--check` is read-only; `--run` creates, verifies and removes its own loopback HTTP test container. It does not install an AI model. No extra Release ZIP is needed.
+`--check` is read-only. `--run` creates a temporary loopback HTTP container, verifies it and removes its own resources. No AI model is installed. [Test details](docs/AUTOMATED_QA.md).
 
-## Screenshots and video
+## Screenshots and tutorial
 
-### Overview
+![Overview with actual host information](docs/images/overview-en.png)
+![Container management](docs/images/containers-en.jpg)
+![Container creation controls](docs/images/create-en.png)
 
-![Actual Mac specifications and live container totals](docs/images/overview-en.png)
+These captures show historical 0.2.0 UI with host names masked, not a fresh 1.0 acceptance run. [Media provenance](docs/MEDIA.md). The [90-second AI tutorial](docs/video/README.md) uses real interface stills, narration and labeled explanations; it is not a continuous deployment recording.
 
-### Container management
+## Upgrade and limits
 
-![Container management, search, status and resource allocation](docs/images/containers-en.jpg)
+- Quit the old app before replacement. Existing Apple Container workloads, images and volumes stay in the engine’s storage.
+- 1.0 uses the stable app identifier `local.containerdesk.app`. The 0.3 preview used `local.containerdesk.ai-development`; its interface preferences and saved AI selection are not automatically migrated. Reselect an existing local GGUF file or model cache when needed; do not delete engine data to upgrade.
+- Compose support is a validated subset. Docker local images and persistent data need separate migration; architecture selection does not convert binaries. No remote-host management, embedded terminal or background updater when the app is closed.
+- Local AI runs on CPU inside a Linux VM, without Metal. Restricted/split GGUF models are not handled by public search. Model quality and MCP support vary; connections and proposed tool calls require review.
+- Image replacement changes container names/IPs and causes downtime. Originals are retained; rollback does not reverse writes to mounted data or database migrations. [Update guide](docs/IMAGE_UPDATES.md).
+- Clean engine installation, real engine upgrades, external private HTTPS registry success and full manual VoiceOver acceptance remain unverified. Detailed results distinguish current checks from historical evidence.
 
-### Create a container
-
-![Downloaded image picker, CPU menu and memory slider with direct numeric entry](docs/images/create-en.png)
-
-[Watch the actual app walkthrough](https://github.com/eqwgeryfgbdf/container-desk/releases/download/v0.2.0/Container-Desk-Overview-zh-Hant.mp4) (Traditional Chinese captions). These screenshots and the video show **0.2.0 on the developer's own Mac**, using real disposable containers. Host names are visibly masked; runtime values are not fabricated. macOS's recording indicator may be visible. Media does not certify installation or upgrades. [Media provenance](docs/MEDIA.md).
-
-
-## What is included in 0.2.0
-
-- **Duplicate safely:** create a separate container from inspected configuration. Ports are cleared; environment and mounts require opt-in, mounts default read-only, and writable sharing requires a stopped source. The original container stays intact.
-- **Disk usage:** inspect actual image/container/volume usage and review selectively eligible image/network/volume cleanup; no global prune.
-- **Image defaults and catalogs:** inspect startup command, user, working directory and exposed ports before creation; browse HTTPS Registry V2 repository/tag pages and deploy a selected tag. Catalog authentication is a separate ephemeral Basic-auth session, not universal bearer-token support.
-- **Containers:** create, start, stop, restart, inspect and delete; reviewed batch selection/actions; CPU menu, synchronized memory slider/number field, and downloaded-image selector. New containers start stopped.
-- **Details:** double-click to expand, live CPU/memory/process/network summaries, session charts, searchable/exportable logs, clickable TCP web links and Copy URL. Missing measurements remain unavailable; network totals are cumulative traffic.
-- **Images and deployment:** Docker Hub search, registry references, platform inspection, download-and-configure, ARM64 or AMD64/Rosetta selection, Dockerfile builds, tag/delete, OCI import/export. Architecture selection is not binary conversion.
-- **Files and snapshots:** container file browsing, non-overwriting transfers, and Save Container as Image. Mounted data is excluded from snapshots; environment variables require opt-in. [Scope and limits](docs/CONTAINER_SNAPSHOTS.md).
-- **Registry, networks and volumes:** login/logout and image push, searchable inventories, creation, protected deletion and batch review. [Usage](docs/COMPOSE_AND_FILES.md).
-- **Projects and Docker migration:** review/import supported Compose configurations, convert a Docker project into a separate configuration, optionally resolve Compose overrides with the installed official Compose CLI, then start/stop/remove managed services. Unsupported fields block import; local Docker images and volume data need separate migration. [Conversion guide](docs/DOCKER_CONVERSION.md).
-- **Native interface:** saved sidebar ordering, 80–150% content zoom (⌘+, ⌘−, ⌘0), Reduce Motion-aware transitions, actual host hardware, English/Traditional Chinese/Simplified Chinese, and no demo mode.
-- **Engine:** official-source installation and manual/opt-in automatic updates with workload checks. Installation requires a tested release and system authorization. Updates run only while the app is open.
-
-## Verification and remaining work
-
-Automated tests cover container lifecycle, persistent data, files, images, projects, conversion, registry failure/loopback push paths and resource protection. New regressions cover clone preconditions, image metadata, registry catalog validation and three repaired medium-severity security findings. See the [current validation record](docs/RELEASE_0.2.0_VALIDATION.md) for exact results, skipped checks and final stability measurements; a skipped check is not a pass.
-
-Clean engine installation, genuine engine upgrades, external private HTTPS registry success and complete manual VoiceOver acceptance remain unverified. Only the developer's own device was used. AI is available in the development preview described above. Full Docker migration still requires separate data/local-image transfer, with no restart supervisor or automatic cutover/rollback. There is no remote-host management, embedded terminal or updater while the app is closed. [Feature status](docs/FEATURE_ROADMAP.md) · [Report a test result](docs/TEST_REPORT.md).
-
-## Source, packaging and license
-
-Future GitHub Releases attach only the `.dmg` installer. Source is available through GitHub’s automatic release-tag archives under **Apache-2.0**. Tutorials, test scripts and videos belong in the repository or documentation. Build manifests and checksums remain local under `../work/release-metadata`; they are not release attachments. Historical attachments remain unchanged.
-
-For contributors with Command Line Tools/Xcode 26 and Python 3:
+## Source and packaging
 
 ```sh
 bash scripts/test.sh
 bash scripts/build.sh
-# Commit all source changes before pairing release artifacts:
+# Commit the intended source before packaging:
 bash scripts/package.sh ../outputs
 ```
 
-Packaging refuses a dirty checkout. Keep the GitHub release tag on the build source commit. The optional Developer ID/notarization pipeline is prepared; this public build has only an ad hoc signature. [Apache-2.0 license](LICENSE) · [Release gates](docs/PUBLIC_RELEASE_GATE.md).
+Release attachments contain **only the DMG**. Source is available in GitHub’s automatic tag archives under [Apache-2.0](LICENSE). The installer and tag use the same source commit; SHA-256 is in the release body. The optional Developer ID/notarization pipeline is separate from the ad hoc public build.
 
-## Official dependency
-
-[Apple Container](https://github.com/apple/container) is a separate dependency with its own license. Its official installer is downloaded when needed and is not bundled in this app.
-
-### Update images and containers
-
-Select an image → **Update → Check & Download Latest Image**, then **Apply Image to Container…** to review and replace an outdated container. Verification includes digest, runtime state and an optional HTTP health URL. Originals are retained for recovery; container name/IP change and mounted data is not rolled back. See [the update guide](docs/IMAGE_UPDATES.md) for limits and scripted tests. This feature is in the development build.
+- [Website source and deployment](website/README.md)
+- [Files, registry and projects](docs/COMPOSE_AND_FILES.md)
+- [Docker conversion](docs/DOCKER_CONVERSION.md)
+- [Feature scope](docs/FEATURE_ROADMAP.md)
+- [Official Apple Container dependency](https://github.com/apple/container), installed separately.

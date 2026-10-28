@@ -7,7 +7,7 @@ cli=next(x for x in ['/usr/local/bin/container',str(pathlib.Path.home()/'.local/
 def run(*args):return subprocess.check_output([cli,*args],text=True,timeout=180)
 def containers():return {r['id']:r['status']['state'] for r in json.loads(run('list','--all','--format','json'))}
 def images():return {r.get('configuration',{}).get('name') for r in json.loads(run('image','list','--format','json'))}
-base=containers();before=images();image='docker.io/library/busybox:1.37';owned=image not in before;name='cd-ui-input-'+uuid.uuid4().hex[:10]
+base=containers();before=images();(a.out/'baseline.json').write_text(json.dumps({'containers':base,'images':sorted(before)},indent=2));image='docker.io/library/busybox:1.37';owned=image not in before;name='cd-ui-input-'+uuid.uuid4().hex[:10]
 cores=int(subprocess.check_output(['sysctl','-n','hw.logicalcpu'],text=True));memory=int(subprocess.check_output(['sysctl','-n','hw.memsize'],text=True))//1048576
 steps=[{'action':'nav','label':'Containers'},{'action':'press','label':'Create Container','role':'AXButton'},
        {'action':'set','label':'Name','value':name},{'action':'press','label':'Choose a downloaded image…','role':'AXPopUpButton'},
@@ -34,4 +34,8 @@ finally:
         if current[name]!='stopped':raise RuntimeError('Unexpected running fixture; inspect before cleanup')
         run('delete','--',name)
     if owned and image in images():run('image','delete','--',image)
-    if containers()!=base or images()!=before:raise RuntimeError('Resource baseline changed; inspect only owned fixtures')
+    after_containers=containers();after_images=images()
+    (a.out/'after.json').write_text(json.dumps({'containers':after_containers,'images':sorted(after_images)},indent=2))
+    if after_containers!=base or after_images!=before:
+        (a.out/'result.json').write_text(json.dumps({'status':'FAIL','reason':'Resource baseline changed; inspect baseline.json and after.json'},indent=2))
+        raise RuntimeError('Resource baseline changed; inspect only owned fixtures')

@@ -1,8 +1,8 @@
-# Local AI and MCP — 0.3.0 development preview
+# Local AI and MCP — 1.0
 
 [繁體中文](AI_QUICK_START.zh-Hant.md) · [简体中文](AI_QUICK_START.zh-Hans.md)
 
-Download the [0.3.0 preview DMG](https://github.com/eqwgeryfgbdf/container-desk/releases/download/v0.3.0-preview/Container-Desk-0.3.0-arm64-preview.dmg). Native search UI automation passed on the developer’s Mac; see [validation and limits](AI_VALIDATION.md). This is an ad hoc signed preview, not Apple-notarized or a stable release. Public 0.2.0 does not contain these features.
+Download the [1.0 DMG](https://github.com/eqwgeryfgbdf/container-desk/releases/download/v1.0.0/Container-Desk-1.0.0-arm64.dmg). Native search UI automation passed on the developer’s Mac; see [validation and limits](AI_VALIDATION.md). 1.0 includes these features with ad hoc signing and without Apple notarization. See the [1.0 verification record](RELEASE_1.0.0_VALIDATION.md) for current checks and remaining limits.
 
 ## Start a model
 
@@ -76,7 +76,7 @@ bash scripts/test-ai.sh --live       # small real model, temporary image/contain
 CONTAINERDESK_BUNDLE_ID=local.containerdesk.ai-development bash scripts/build.sh ../work/ai-build
 open '../work/ai-build/Container Desk.app'
 # Choose English + Light in this isolated candidate, unlock the Mac, grant Accessibility:
-python3 scripts/test-ai-ui.py
+CONTAINERDESK_UI_BUNDLE_ID=local.containerdesk.ai-development python3 scripts/test-ai-ui.py
 ```
 
 The live test needs network access and free port 19891. It uses unique test resources, preserves pre-existing workloads, and removes its temporary model/container and newly downloaded image on normal completion. If the process is forcibly killed, inspect `cd-ai-test-*` and the system temporary directory before manual cleanup. Logs/reports are local under `../work/ai-tests`. UI captures remain private under `../work/ai-ui-tests`; inspect/redact host identity before publication. `--generate-only` only creates a scenario, never reports a UI pass.

@@ -1,4 +1,4 @@
-> 0.2.0: tests run only on the developer’s own Mac. Second-Mac testing is deferred by the owner. See [current validation](RELEASE_0.2.0_VALIDATION.md). The desktop must be unlocked for native UI tests; they do not bypass the lock screen.
+> 1.0.0: tests run only on the developer’s own Mac. Second-Mac testing is deferred by the owner. See [current validation](RELEASE_1.0.0_VALIDATION.md). The desktop must be unlocked for native UI tests; they do not bypass the lock screen.
 
 # Automated QA
 
@@ -36,7 +36,7 @@ The live suite downloads official Python/BusyBox/Distribution images as needed. 
 
 ## Acceptance that remains separate
 
-- Clean installation / real upgrade acceptance remains unverified. The owner deferred a second Mac for 0.2.0; do not mark this check passed.
+- Clean installation / real upgrade acceptance remains unverified. The owner deferred a second Mac; do not mark this check passed.
 - Trusted HTTPS private-registry login success with a dedicated account.
 - Manual VoiceOver reading quality, high contrast, sidebar drag ordering and service URL opening in the user's browser. Three-language creation layout is covered separately by the matrix.
 - A 60-minute idle performance run. Use the app PID from `../work/tests/UIAutomation metadata`:
@@ -47,7 +47,20 @@ python3 scripts/soak.py --pid APP_PID --minutes 60 --out ../work/qa/soak.json
 
 The soak checks process survival, median idle CPU below 5% of one core and RSS growth no more than 100 MiB. A shorter run is explicitly `INCOMPLETE`; it does not pass the release gate. Navigation latency and data refresh latency remain separate checks.
 
-AI deployment is intentionally deferred. A future trial should start with one lightweight local model and measured memory/latency before expanding compatibility.
+## Local AI, Hugging Face and image updates
+
+These run separately from the default orchestrator so downloads and service replacement are explicit. Run live suites sequentially on an otherwise quiet engine; concurrent unrelated workload changes correctly fail baseline checks.
+
+```sh
+bash scripts/test-image-updates.sh --live
+bash scripts/test-huggingface.sh --live --download --inference --allow-image-pull
+python3 scripts/test-ai-ui.py
+python3 scripts/test-huggingface-ui.py
+```
+
+The Hugging Face trial requires the 135M Q4_K_M file to be under 128 MiB (~105 MB at the tested revision). It verifies the download, starts a temporary 2-CPU / 1-GiB llama.cpp container on loopback port 19893, performs text inference and measures tool capability. Keep that port free. The pinned server image is a separate download if absent. Newly created test containers, the temporary model and newly pulled server image are cleaned up; existing models are not used. Unsupported tool calling is reported rather than treated as successful capability.
+
+The AI UI scripts default to the release app identifier. If testing a development build, set `CONTAINERDESK_UI_BUNDLE_ID=local.containerdesk.ai-development` for each script. These scripts require an unlocked desktop and test three languages, light/dark appearance and window sizes; they do not download a model.
 
 ## Recording policy
 

@@ -1,0 +1,27 @@
+1
+00:00:00,500 --> 00:00:07,600
+Search a model. Build local AI.
+
+2
+00:00:08,500 --> 00:00:21,600
+Open Local AI, search Hugging Face, then choose a model repository.
+
+3
+00:00:22,500 --> 00:00:37,600
+Filter for Q4_K_M. Review the file size, license and model card.
+
+4
+00:00:38,500 --> 00:00:49,600
+Select and download. Revision, size and checksum are verified.
+
+5
+00:00:50,500 --> 00:01:05,600
+For a small text test: 2 CPUs, 1 GiB RAM and 1,024 context tokens.
+
+6
+00:01:06,500 --> 00:01:19,600
+Text generation does not guarantee MCP support. Review tool calls before execution.
+
+7
+00:01:20,500 --> 00:01:29,600
+Download the DMG and read the multilingual guide. Preview; not notarized.

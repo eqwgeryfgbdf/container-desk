@@ -9,6 +9,7 @@ def rows():return json.loads(command('list','--all','--format','json'))
 base={r['id']:r['status']['state'] for r in rows()}
 images=json.loads(command('image','list','--format','json'));image='docker.io/library/python:3.13-slim'
 base_images={r.get('configuration',{}).get('name') for r in images}
+(a.out/'baseline.json').write_text(json.dumps({'containers':base,'images':sorted(base_images)},indent=2))
 created_image=image not in base_images
 name='cd-ui-'+uuid.uuid4().hex[:8];web=name+'-web';worker=name+'-worker'
 with socket.socket() as s:s.bind(('127.0.0.1',0));port=s.getsockname()[1]
@@ -70,5 +71,6 @@ finally:
     current_images={r.get('configuration',{}).get('name') for r in json.loads(command('image','list','--format','json'))}
     if created_image and image in current_images:command('image','delete','--',image)
     after_images={r.get('configuration',{}).get('name') for r in json.loads(command('image','list','--format','json'))}
-    if after_images!=base_images:raise RuntimeError('Image baseline changed; inspect unrelated activity/leftovers')
+    (a.out/'after.json').write_text(json.dumps({'containers':after,'images':sorted(after_images)},indent=2))
+    if after_images!=base_images:raise RuntimeError('Image baseline changed; inspect baseline.json and after.json for unrelated activity/leftovers')
     if recording and (recording.returncode != 0 or not (a.out/'raw.mov').exists()):raise RuntimeError('Recording did not produce a movie')

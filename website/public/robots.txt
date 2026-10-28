@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://container.emo-lab.com/sitemap.xml

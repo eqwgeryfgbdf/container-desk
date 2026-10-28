@@ -36,6 +36,7 @@ func wait(_ label:String,role:String?=nil,seconds:Double=12)throws->AXUIElement 
 func press(_ e:AXUIElement)throws {try check((attribute(e,kAXEnabledAttribute) as? Bool) != false,"Control disabled: \(text(e))");try check(AXUIElementPerformAction(e,kAXPressAction as CFString) == .success,"AXPress failed: \(text(e))");pump(0.3)}
 func point(_ e:AXUIElement)throws->CGPoint {guard let v=attribute(e,kAXPositionAttribute),CFGetTypeID(v)==AXValueGetTypeID() else{throw Failure(description:"Missing bounds")};var p=CGPoint.zero;AXValueGetValue(v as! AXValue,.cgPoint,&p);return p}
 func click(_ e:AXUIElement,count:Int=1)throws {let p=try point(e);var size=CGSize.zero;if let v=attribute(e,kAXSizeAttribute),CFGetTypeID(v)==AXValueGetTypeID(){AXValueGetValue(v as! AXValue,.cgSize,&size)};let at=CGPoint(x:p.x+size.width/2,y:p.y+size.height/2);for clickIndex in 1...count {for kind:CGEventType in [.leftMouseDown,.leftMouseUp]{let ev=CGEvent(mouseEventSource:nil,mouseType:kind,mouseCursorPosition:at,mouseButton:.left);ev?.setIntegerValueField(.mouseEventClickState,value:Int64(clickIndex));ev?.post(tap:.cghidEventTap)};pump(0.08)};pump(0.4)}
+
 func window()->AXUIElement? {
     let windows=attribute(app,kAXWindowsAttribute) as? [AXUIElement] ?? []
     return windows.first{string($0,kAXIdentifierAttribute).contains("AppWindow")} ?? windows.first{attribute($0,kAXMainAttribute) as? Bool == true}
@@ -81,6 +82,10 @@ do {
    case "enabled":
     let element=try wait(label,role:role)
     try check((attribute(element,kAXEnabledAttribute) as? Bool)==(step["value"] as? Bool),"Unexpected enabled state: \(label)")
+   case "expectWindowTitle":
+    let deadline=Date().addingTimeInterval(12)
+    while Date()<deadline,window().map({string($0,kAXTitleAttribute)}) != label {pump(0.15)}
+    try check(window().map({string($0,kAXTitleAttribute)})==label,"Unexpected detail window; expected: " + label)
    case "expect":_=try wait(label,role:role,seconds:step["timeout"] as? Double ?? 12)
    case "capture":
     let list=CGWindowListCopyWindowInfo([.optionOnScreenOnly,.excludeDesktopElements],kCGNullWindowID) as? [[String:Any]] ?? []

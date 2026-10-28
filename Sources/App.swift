@@ -62,7 +62,7 @@ struct MainView:View {
     var body:some View {
         NavigationSplitView(columnVisibility:$columnVisibility) {
             VStack(alignment:.leading,spacing:0) {
-                HStack(spacing:10){Image(systemName:"shippingbox").font(.title2);Text("Container Desk").font(.headline)}.padding(.horizontal,18).padding(.top,16).padding(.bottom,22)
+                HStack(spacing:10){Image(nsImage:NSImage(named:NSImage.applicationIconName) ?? NSImage()).resizable().scaledToFit().frame(width:32,height:32).accessibilityHidden(true);Text("Container Desk").font(.headline)}.padding(.horizontal,18).padding(.top,16).padding(.bottom,22)
                 HStack(spacing:9){Image(systemName:s.host.icon).foregroundStyle(.secondary);VStack(alignment:.leading,spacing:3){Text(s.host.name).font(.subheadline).lineLimit(1);Label(s.t(s.connected ? "connected":"disconnected"),systemImage:s.connected ? "checkmark.circle.fill":"circle").font(.caption).foregroundStyle(s.connected ? Color.green:Color.secondary)}}.padding(.horizontal,18).padding(.bottom,18)
                 List(selection:$s.section) {
                     ForEach(SidebarOrder.normalized(sidebarOrder),id:\.self) { id in
@@ -258,6 +258,10 @@ struct MainView:View {
                         TableColumn(s.t("memory")){c in Text(s.usage[c.id].map{bytes($0.memory)} ?? "—").monospacedDigit()}.width(min:75,ideal:90)
                     }
                     .tableStyle(.inset(alternatesRowBackgrounds:false))
+                    // Recreate the table for a new filter so AppKit cannot retain
+                    // a scroll offset or recycled row geometry from the old result set.
+                    .id(s.query)
+                    .id(s.filter)
                     .contextMenu(forSelectionType:String.self){ids in
                         if ids.count==1,let id=ids.first,let c=s.containers.first(where:{$0.id==id}){
                             Button(s.t("expandContainerDetails")){openContainerDetails(ids)}
@@ -274,10 +278,15 @@ struct MainView:View {
                     } primaryAction: { ids in openContainerDetails(ids) }
                     .overlay{if s.filtered.isEmpty{ContentUnavailableView.search(text:s.query)}}
                 }.frame(minWidth:560,maxWidth:.infinity,maxHeight:.infinity)
-                if selectedIDs.count==1,let c=s.chosen {
-                    InspectorView(item:c,onStop:{verb="stop";pending=c},onDelete:{verb="delete";pending=c})
-                        .frame(minWidth:285,idealWidth:320,maxWidth:380,maxHeight:.infinity)
-                }
+                // Keep both split panes mounted so the first selection cannot move
+                // rows between the two clicks of a double-click.
+                VStack(spacing:0) {
+                    if selectedIDs.count==1,let c=s.chosen {
+                        InspectorView(item:c,onStop:{verb="stop";pending=c},onDelete:{verb="delete";pending=c})
+                    } else {
+                        ContentUnavailableView(s.t("selectContainerDetails"),systemImage:"shippingbox")
+                    }
+                }.frame(minWidth:285,idealWidth:320,maxWidth:380,maxHeight:.infinity)
             }
         }
     }

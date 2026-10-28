@@ -1,8 +1,8 @@
-# 本機 AI 與 MCP：0.3.0 開發預覽版
+# 本機 AI 與 MCP：1.0
 
 [English](AI_QUICK_START.md) · [简体中文](AI_QUICK_START.zh-Hans.md)
 
-下載 [0.3.0 預覽版 DMG](https://github.com/eqwgeryfgbdf/container-desk/releases/download/v0.3.0-preview/Container-Desk-0.3.0-arm64-preview.dmg)。本機已通過原生搜尋介面自動化測試，詳見[驗證範圍](AI_VALIDATION.md)。本版只有 ad hoc 簽章，沒有 Apple 公證，仍為預覽版；0.2.0 不包含這些功能。
+下載 [1.0 DMG](https://github.com/eqwgeryfgbdf/container-desk/releases/download/v1.0.0/Container-Desk-1.0.0-arm64.dmg)。本機已通過原生搜尋介面自動化測試，詳見[驗證範圍](AI_VALIDATION.md)。1.0 已包含這些功能，只有 ad hoc 簽章，沒有 Apple 公證；請看[本版驗證](RELEASE_1.0.0_VALIDATION.md)。
 
 ## 啟動模型
 
@@ -67,7 +67,7 @@ bash scripts/test-ai.sh --live
 CONTAINERDESK_BUNDLE_ID=local.containerdesk.ai-development bash scripts/build.sh ../work/ai-build
 open '../work/ai-build/Container Desk.app'
 # 候選版選 English、Light；Mac 解鎖並授予測試程式輔助使用權限後：
-python3 scripts/test-ai-ui.py
+CONTAINERDESK_UI_BUNDLE_ID=local.containerdesk.ai-development python3 scripts/test-ai-ui.py
 ```
 
 一般迴歸不下載模型。`--live` 需要網路與空閒的 19891 連接埠，只使用上述小模型；正常結束會清除臨時模型、容器及本次新增映像，保留既有工作負載。若強制終止，請檢查 `cd-ai-test-*` 與系統暫存目錄再清理。結果在 `../work/ai-tests`。介面腳本不下載、不連 MCP、不改動容器；三語 × 深淺色 × 兩種尺寸共 12 組，截圖留在 `../work/ai-ui-tests`，公開前需檢查並遮蔽主機資訊。`--generate-only` 僅產生腳本，不能算測試通過。

@@ -54,7 +54,7 @@ steps += [{'action':'nav','label':t('settings',old)},
 scenario=out/'scenario.json';scenario.write_text(json.dumps(steps,ensure_ascii=False,indent=2)+'\n')
 runner=out/'UIAutomation'
 subprocess.run(['xcrun','swiftc',str(root/'Tests/UI/UIAutomation.swift'),'-o',str(runner)],check=True)
-env=dict(os.environ,CONTAINERDESK_UI_BUNDLE_ID='local.containerdesk.ai-development')
+env=dict(os.environ,CONTAINERDESK_UI_BUNDLE_ID=os.environ.get('CONTAINERDESK_UI_BUNDLE_ID','local.containerdesk.app'))
 with (out/'ui.log').open('w') as log:
  result=subprocess.run([str(runner),'run',str(scenario)],env=env,stdout=log,stderr=subprocess.STDOUT,timeout=480)
 print((out/'ui.log').read_text())

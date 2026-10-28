@@ -1,0 +1,73 @@
+import { chromium, expect } from '@playwright/test';
+import assert from 'node:assert/strict';
+import { mkdir, writeFile } from 'node:fs/promises';
+const base = process.env.SITE_URL || 'http://localhost:8796';
+const out = new URL('../../../work/website-qa/', import.meta.url);
+await mkdir(out, { recursive: true });
+const browser = await chromium.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: true });
+try {
+  const page = await browser.newPage({ viewport: { width: 1440, height: 1000 }, reducedMotion: 'no-preference' });
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.addInitScript(() => {
+    localStorage.setItem('container-desk.language.v1', 'zh-Hant');
+    window.motionCalls = [];
+    const animate = Element.prototype.animate;
+    Element.prototype.animate = function (...args) {
+      window.motionCalls.push(this.id || this.tagName);
+      return animate.apply(this, args);
+    };
+  });
+  await page.goto(base, { waitUntil: 'networkidle' });
+  assert.equal(await page.locator('.hero-logo').getAttribute('src'), '/assets/app-icon-vm-package.png');
+  assert(await page.evaluate(() => window.motionCalls.includes('H1')), 'hero entrance must animate');
+  await page.evaluate(() => window.scrollTo(0, 150));
+  await expect(page.locator('.site-header')).toHaveClass(/scrolled/);
+  await page.evaluate(() => window.scrollTo(0, 0));
+  const button = page.locator('.hero-actions .button');
+  await button.hover();
+  await expect.poll(() => button.evaluate(el => getComputedStyle(el).transform)).not.toBe('none');
+  await button.evaluate(el => Promise.all(el.getAnimations().map(a => a.finished)));
+  await page.screenshot({ path: new URL('button-hover.png', out).pathname });
+  const box = await button.boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await expect.poll(() => button.evaluate(el => Number(getComputedStyle(el).transform.match(/matrix\(([^,]+)/)?.[1]))).toBeLessThan(1);
+  // Release outside the download link; mouse feedback must not require a navigation.
+  await page.mouse.move(2, 300); await page.mouse.up();
+  const tabs = page.locator('[role=tab]');
+  await tabs.nth(1).click();
+  await expect.poll(() => page.evaluate(() => window.motionCalls.filter(id => id === 'app-shot').length)).toBe(1);
+  await page.locator('#app-shot').evaluate(el => Promise.all(el.getAnimations().map(a => a.finished)));
+  // Rapid changes in one frame must only animate the final selected image.
+  await tabs.evaluateAll(nodes => { nodes[2].click(); nodes[0].click(); nodes[1].click(); });
+  await expect.poll(() => page.evaluate(() => window.motionCalls.filter(id => id === 'app-shot').length)).toBe(2);
+  await expect(page.locator('#app-shot')).toHaveAttribute('src', /containers.jpg$/);
+  await expect(tabs.nth(1)).toHaveAttribute('aria-selected', 'true');
+  await expect(page.locator('#full-shot')).toHaveAttribute('href', /containers.jpg$/);
+  await tabs.nth(1).press('End');
+  await expect(page.locator('#app-shot')).toHaveAttribute('src', /create.png$/);
+  await expect.poll(() => page.evaluate(() => window.motionCalls.filter(id => id === 'app-shot').length)).toBe(3);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect.poll(() => page.evaluate(() => document.getAnimations().length)).toBe(0);
+  const calls = await page.evaluate(() => window.motionCalls.length);
+  await tabs.nth(0).click();
+  await page.locator('#app-shot').evaluate(el => el.decode());
+  await page.locator('summary').first().click();
+  await expect(page.locator('details').first()).toHaveAttribute('open', '');
+  assert.equal(await page.evaluate(() => window.motionCalls.length), calls);
+  await button.hover();
+  assert.equal(await button.evaluate(el => getComputedStyle(el).transform), 'none');
+  assert.equal(await button.evaluate(el => getComputedStyle(el, '::before').display), 'none');
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.locator('summary').first().click();
+  await page.locator('summary').first().click();
+  await expect.poll(() => page.evaluate(() => window.motionCalls.includes('P'))).toBe(true);
+  const card = page.locator('.feature').first();
+  await card.hover();
+  await expect.poll(() => card.evaluate(el => getComputedStyle(el).transform)).not.toBe('none');
+  assert.deepEqual(errors, []);
+  const report = { base, status: 'PASS', checks: ['VM/package logo and hero entrance', 'scroll header material', 'button hover and press', 'decoded screenshot transitions', 'rapid selection race', 'keyboard selection', 'dynamic reduced motion cancellation', 'reduced motion hover and FAQ', 'FAQ entrance', 'card hover'], javascriptErrors: errors };
+  await writeFile(new URL('motion-results.json', out), JSON.stringify(report, null, 2));
+  console.log('PASS: 10 interaction/motion checks, including live reduced-motion changes and rapid tab selection.');
+} finally { await browser.close(); }

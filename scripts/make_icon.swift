@@ -1,21 +1,42 @@
 import AppKit
-let directory=CommandLine.arguments[1]
-try FileManager.default.createDirectory(atPath:directory,withIntermediateDirectories:true)
-for points in [16,32,128,256,512] {
-    for scale in [1,2] {
-        let n=points*scale
-        let image=NSImage(size:NSSize(width:n,height:n))
-        image.lockFocus()
-        let rect=NSRect(x:Double(n)*0.07,y:Double(n)*0.07,width:Double(n)*0.86,height:Double(n)*0.86)
-        NSColor(calibratedRed:0.08,green:0.39,blue:0.9,alpha:1).setFill()
-        NSBezierPath(roundedRect:rect,xRadius:Double(n)*0.19,yRadius:Double(n)*0.19).fill()
-        let symbol=NSImage(systemSymbolName:"shippingbox",accessibilityDescription:nil)!.withSymbolConfiguration(.init(pointSize:Double(n)*0.48,weight:.medium))!
-        let tinted=NSImage(size:symbol.size)
-        tinted.lockFocus();NSColor.white.set();NSRect(origin:.zero,size:symbol.size).fill();symbol.draw(at:.zero,from:.zero,operation:.destinationIn,fraction:1);tinted.unlockFocus()
-        tinted.draw(in:NSRect(x:Double(n)*0.25,y:Double(n)*0.25,width:Double(n)*0.5,height:Double(n)*0.5))
-        image.unlockFocus()
-        let bitmap=NSBitmapImageRep(data:image.tiffRepresentation!)!
-        let file="icon_\(points)x\(points)\(scale==2 ? "@2x":"").png"
-        try bitmap.representation(using:.png,properties:[:])!.write(to:URL(fileURLWithPath:directory).appendingPathComponent(file))
+
+// Export the approved VM + Package artwork without redrawing the brand.
+// Usage: swift scripts/make_icon.swift <output.iconset> [source.png]
+let arguments = CommandLine.arguments
+guard arguments.count == 2 || arguments.count == 3 else {
+    fputs("Usage: swift scripts/make_icon.swift <output.iconset> [source.png]\n", stderr)
+    exit(1)
+}
+let output = URL(fileURLWithPath: arguments[1], isDirectory: true)
+let defaultSource = URL(fileURLWithPath: #filePath)
+    .deletingLastPathComponent().deletingLastPathComponent()
+    .appendingPathComponent("Resources/Brand/ContainerDesk-VM-Package.png")
+let source = arguments.count == 3 ? URL(fileURLWithPath: arguments[2]) : defaultSource
+guard let artwork = NSImage(contentsOf: source), artwork.size.width > 0 else {
+    fputs("Cannot read brand artwork: \(source.path)\n", stderr)
+    exit(1)
+}
+try FileManager.default.createDirectory(at: output, withIntermediateDirectories: true)
+for points in [16, 32, 128, 256, 512] {
+    for scale in [1, 2] {
+        let pixels = points * scale
+        guard let bitmap = NSBitmapImageRep(
+            bitmapDataPlanes: nil, pixelsWide: pixels, pixelsHigh: pixels,
+            bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true,
+            isPlanar: false, colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0
+        ), let context = NSGraphicsContext(bitmapImageRep: bitmap) else {
+            fatalError("Cannot allocate icon bitmap")
+        }
+        NSGraphicsContext.saveGraphicsState()
+        NSGraphicsContext.current = context
+        context.imageInterpolation = .high
+        artwork.draw(in: NSRect(x: 0, y: 0, width: pixels, height: pixels),
+                     from: .zero, operation: .copy, fraction: 1)
+        NSGraphicsContext.restoreGraphicsState()
+        let filename = "icon_\(points)x\(points)\(scale == 2 ? "@2x" : "").png"
+        guard let data = bitmap.representation(using: .png, properties: [:]) else {
+            fatalError("Cannot encode icon bitmap")
+        }
+        try data.write(to: output.appendingPathComponent(filename))
     }
 }

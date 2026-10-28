@@ -155,7 +155,7 @@ actor MCPClient {
                 let legacyError = error is MCPRemoteError || (error as? AIHTTPError).map{[400,404,405,406].contains($0.status)} == true || (stdio != nil && error.localizedDescription=="commandTimeout")
                 guard legacyError else{throw error}
                 protocolVersion="2025-11-25"
-                let initialized=try await rpc("initialize",["protocolVersion":protocolVersion,"capabilities":[:],"clientInfo":["name":"Container Desk","version":"0.3.0-dev"]])
+                let initialized=try await rpc("initialize",["protocolVersion":protocolVersion,"capabilities":[:],"clientInfo":["name":"Container Desk","version":Bundle.main.object(forInfoDictionaryKey:"CFBundleShortVersionString") as? String ?? "1.0.0"]])
                 guard let version=initialized["protocolVersion"] as? String,["2025-11-25","2025-06-18","2025-03-26","2024-11-05"].contains(version) else{throw DeskError.message("aiMCPVersionUnsupported")}
                 protocolVersion=version
                 _=try await rpc("notifications/initialized",[:],notification:true)
@@ -196,7 +196,7 @@ actor MCPClient {
         sequence+=1;let id=sequence
         var params=parameters
         let modern=protocolVersion=="2026-07-28"
-        if modern {params["_meta"]=["io.modelcontextprotocol/protocolVersion":protocolVersion,"io.modelcontextprotocol/clientInfo":["name":"Container Desk","version":"0.3.0-dev"],"io.modelcontextprotocol/clientCapabilities":[:]] as [String:Any]}
+        if modern {params["_meta"]=["io.modelcontextprotocol/protocolVersion":protocolVersion,"io.modelcontextprotocol/clientInfo":["name":"Container Desk","version":Bundle.main.object(forInfoDictionaryKey:"CFBundleShortVersionString") as? String ?? "1.0.0"],"io.modelcontextprotocol/clientCapabilities":[:]] as [String:Any]}
         var body:[String:Any]=["jsonrpc":"2.0","method":method,"params":params];if !notification{body["id"]=id}
         let reply:[String:Any]
         if let stdio {reply=try await stdio.exchange(body,id:notification ? nil:id,timeout:timeout)} else {

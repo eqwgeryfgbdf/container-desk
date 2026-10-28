@@ -1,3 +1,5 @@
+> Current release: **1.0.0** consolidates the implemented management, AI/MCP and image-update features below. Historical dates describe their development. See [1.0 verification](RELEASE_1.0.0_VALIDATION.md) for current results and remaining limits.
+
 # Functional baseline and convenience roadmap
 
 Updated 2026-10-18. User priority: finish the common container-management baseline first, then local AI, then cloud AI. Routine implementation decisions proceed without waiting for replies. Decisions about accounts, paid services, model licensing and optional providers stay deferred. This file tracks scope; it is not a claim of feature parity or public-release acceptance.

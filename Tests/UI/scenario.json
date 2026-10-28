@@ -75,6 +75,10 @@
     "value": ""
   },
   {
+    "action": "pause",
+    "seconds": 1
+  },
+  {
     "action": "capture",
     "path": "$CAPTURE/containers.png"
   },
@@ -83,6 +87,10 @@
     "label": "$WEB",
     "role": "AXStaticText",
     "title": "雙擊展開資訊，查看真實資源使用量"
+  },
+  {
+    "action": "expectWindowTitle",
+    "label": "$WEB"
   },
   {
     "action": "expect",
@@ -185,6 +193,11 @@
     "action": "press",
     "label": "Back to Containers",
     "role": "AXButton"
+  },
+  {
+    "action": "set",
+    "label": "Search containers",
+    "value": ""
   },
   {
     "action": "nav",
@@ -322,6 +335,6 @@
   {
     "action": "pause",
     "seconds": 3,
-    "title": "Container Desk｜0.2.0・真實操作錄製"
+    "title": "Container Desk｜1.0.0・真實操作錄製"
   }
 ]

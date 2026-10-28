@@ -1,8 +1,8 @@
-# 本地 AI 与 MCP：0.3.0 开发预览版
+# 本地 AI 与 MCP：1.0
 
 [English](AI_QUICK_START.md) · [繁體中文](AI_QUICK_START.zh-Hant.md)
 
-下载 [0.3.0 预览版 DMG](https://github.com/eqwgeryfgbdf/container-desk/releases/download/v0.3.0-preview/Container-Desk-0.3.0-arm64-preview.dmg)。本机已通过原生搜索界面自动化测试，详见[验证范围](AI_VALIDATION.md)。本版只有 ad hoc 签名，没有 Apple 公证，仍为预览版；0.2.0 不包含这些功能。
+下载 [1.0 DMG](https://github.com/eqwgeryfgbdf/container-desk/releases/download/v1.0.0/Container-Desk-1.0.0-arm64.dmg)。本机已通过原生搜索界面自动化测试，详见[验证范围](AI_VALIDATION.md)。1.0 已包含这些功能，仅 ad hoc 签名，没有 Apple 公证；请看[本版验证](RELEASE_1.0.0_VALIDATION.md)。
 
 ## 启动模型
 
@@ -67,7 +67,7 @@ bash scripts/test-ai.sh --live
 CONTAINERDESK_BUNDLE_ID=local.containerdesk.ai-development bash scripts/build.sh ../work/ai-build
 open '../work/ai-build/Container Desk.app'
 # 候选版选择 English、Light；Mac 解锁并授予测试程序辅助功能权限后：
-python3 scripts/test-ai-ui.py
+CONTAINERDESK_UI_BUNDLE_ID=local.containerdesk.ai-development python3 scripts/test-ai-ui.py
 ```
 
 常规回归不下载模型。`--live` 需要网络和空闲的 19891 端口，仅使用上述小模型；正常结束会清理临时模型、容器及本次新增镜像，保留既有工作负载。若强制终止，请检查 `cd-ai-test-*` 与系统临时目录再清理。结果在 `../work/ai-tests`。界面脚本不下载、不连接 MCP、不改动容器；三语 × 深浅色 × 两种尺寸共 12 组，截图保留在 `../work/ai-ui-tests`，公开前需检查并遮蔽主机信息。`--generate-only` 仅生成脚本，不能算测试通过。

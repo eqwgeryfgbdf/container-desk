@@ -87,7 +87,7 @@ finally:
         ('real-core-upgrade','Requires a controlled previous-version engine; this run does not stop or replace the host engine.'),
         ('private-registry-success','Requires a dedicated HTTPS test registry account; failure/loopback push paths are automated.'),
         ('accessibility-manual','VoiceOver reading quality, contrast and subjective layout review need manual acceptance.'),
-        ('ai-models','Deferred by product decision; later start with a small local model.')]: skip(name,reason)
+        ('ai-models','Run scripts/test-huggingface.sh --live --download --inference --allow-image-pull separately for the bounded 135M model test; this orchestrator does not download models.')]: skip(name,reason)
     report={**metadata,'results':results,'passed':sum(r['status']=='PASS' for r in results),'failed':sum(r['status']=='FAIL' for r in results),'skipped':sum(r['status'] in ['SKIP','PARTIAL'] for r in results)}
     (out/'report.json').write_text(json.dumps(report,indent=2))
     suite=ET.Element('testsuite',name='ContainerDesk',tests=str(len(results)),failures=str(report['failed']),skipped=str(report['skipped']))

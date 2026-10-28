@@ -71,7 +71,7 @@ import CryptoKit
         let file=try await AIModelDownload(choice){_ in}.run(directory:dir)
         try check(fm.fileExists(atPath:file.path),"Live model download passes GGUF header, exact size and SHA-256 verification")
         guard inference else{return}
-        let cli=ProcessInfo.processInfo.environment["AI_CONTAINER"] ?? "/Users/server/.local/bin/container"
+        guard let cli=ProcessInfo.processInfo.environment["AI_CONTAINER"] ?? ["/usr/local/bin/container", FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".local/bin/container").path, "/opt/homebrew/bin/container"].first(where:{fm.isExecutableFile(atPath:$0)}) else{throw DeskError.message("Apple Container executable not found; set AI_CONTAINER to its path")}
         let original=try ContainerItem.parse((try await ProcessRunner.checked(cli,["list","--all","--format","json"])).data)
         let imageList=try ResourceItem.parseImages((try await ProcessRunner.checked(cli,["image","list","--format","json"])).data)
         let hadImage=imageList.contains(where:{$0.id==AIDeployment.image})

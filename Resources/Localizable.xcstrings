@@ -15840,6 +15840,28 @@
           }
         }
       }
+    },
+    "selectContainerDetails": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select a container to view details"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "選取容器以查看資訊"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择容器以查看详情"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

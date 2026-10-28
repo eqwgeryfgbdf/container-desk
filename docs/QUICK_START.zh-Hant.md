@@ -1,105 +1,44 @@
-# 快速上手 — Container Desk 0.2.0 公開版
+# Container Desk 1.0 — 快速上手
 
-> 本頁保留 0.2.0 的歷史附件與教學。0.3.0 預覽版只上傳 DMG；請看[新版首頁](../README.zh-Hant.md)及 [Hugging Face 教學](AI_QUICK_START.zh-Hant.md)。下方單一 App 安裝說明仍適用。
+[English](QUICK_START.md) · [繁體中文](QUICK_START.zh-Hant.md) · [简体中文](QUICK_START.zh-Hans.md)
 
-[English](QUICK_START.md) · **中文（繁體）** · [中文（简体）](QUICK_START.zh-Hans.md)
+## 1. 系統需求
 
-不需編譯即可嘗試真實本機服務。0.2.0 將公開發行，僅在開發者自己的 M4 Mac mini（16 GiB、macOS 26.7.1、Apple Container 1.5.0）測試；依擁有者決定暫不測試第二台 Mac。
+Apple Silicon、macOS 26 以上，並另外安裝 [Apple 官方 Container](https://github.com/apple/container)。目前僅在開發者的 M4 Mac mini／macOS 26.7.1／引擎 1.5.0 測試。[驗證範圍](RELEASE_1.0.0_VALIDATION.md)。
 
-## 1. 下載哪個檔案？
+## 2. 安裝與連接
 
-前往 [v0.2.0](https://github.com/eqwgeryfgbdf/container-desk/releases/tag/v0.2.0)。
+1. 從 [v1.0.0](https://github.com/eqwgeryfgbdf/container-desk/releases/tag/v1.0.0) 下載 `Container-Desk-1.0.0-arm64.dmg`。手動上傳附件只有 DMG，原始碼封存由 GitHub 另外產生。
+2. 可執行 `shasum -a 256 Container-Desk-1.0.0-arm64.dmg`，與 Release 正文的完整校驗碼比對。
+3. 先結束舊 App，再開啟 DMG、拖入「應用程式」並確認取代；想保留降版選項可先備份舊 App。不要刪除引擎資料或容器。
+4. 本版只有 ad hoc 簽章，尚未公證。若 macOS 阻擋，確認來源後到「系統設定 → 隱私權與安全性 → 強制打開／仍要打開」，依單一 App 提示確認。不要全域停用 Gatekeeper。
+5. 在「容器引擎」連接既有引擎，或從支援的 Apple 官方來源安裝；系統安裝可能需要管理員授權。運行中的工作負載會延後引擎更新，不要為了安裝 App 停止其他服務。
 
-| 檔案 | 用途 |
-|---|---|
-| `Container-Desk-0.2.0-arm64.dmg` | 安裝 Mac App，不需要 Xcode。 |
-| `Container-Desk-0.2.0-Quick-Start.zip` | 選用的入門包：三語教學、快速測試腳本、兩個 `.command` 啟動器及範例專案，不重複包含 DMG。 |
-| `Container-Desk-0.2.0-source.zip` | 同版 Apache-2.0 原始碼、建置腳本和完整自動化測試。 |
-| `Container-Desk-0.2.0-manifest.json` | 原始碼提交、檔案樹與主要產物雜湊。 |
-| `SHA256SUMS.txt` | 所有附件的 SHA-256（不包含校驗檔自己）。 |
-| `Container-Desk-Overview-zh-Hant.mp4` | Actual 0.2.0 app footage / 0.2.0 實機操作 / 0.2.0 实机操作；繁體字幕。 |
+0.3 預覽版使用不同的偏好設定識別；1.0 回到正式 App 識別。必要時重新選擇介面偏好與既有 AI 模型。替換 App 不搬移或刪除引擎資料。
 
-需求：Apple Silicon、macOS 26 以上、可下載映像檔的網路，以及 **Apple Container 1.5.0**。不支援 Intel Mac。只有原始碼建置／完整 QA 需要 Xcode 或 Command Line Tools 26 與 Python 3；快速測試只用內建 Bash、curl 和已安裝的引擎。
+## 3. 建立網頁容器
 
-全部附件放同一資料夾後，可執行 `shasum -a 256 -c SHA256SUMS.txt`。若只下載 DMG，請執行 `shasum -a 256 Container-Desk-0.2.0-arm64.dmg`，比對校驗檔內相應的完整雜湊；缺少選用附件不代表 DMG 損壞。
+1. 「映像檔 → 下載與部署 → 搜尋 Docker Hub」，選官方 `nginx`、`alpine` 標籤、ARM64。
+2. 下載後設定名稱 `my-web`、1 CPU、256 MiB；主機空閒連接埠 `18080` 對應容器 `80`，TCP，其餘保留預設。
+3. 建立後按「啟動」，點擊 `127.0.0.1:18080` 開啟服務；若連接埠已被占用，改用另一個空閒主機連接埠。
+4. 雙擊容器展開資訊／日誌，使用 ⌘+／⌘−／⌘0 縮放與還原。
+5. 完成後只停止、刪除自己的測試容器；刪除容器不等於備份掛載資料。
 
-## 2. 安裝與連線
+## 4. 選用腳本測試
 
-1. 開啟 DMG，把 **Container Desk** 拖到 **應用程式**，再從應用程式啟動。更新舊版前先結束舊 App；完成後退出 DMG。
-2. 此版本只有 ad hoc 簽章，尚無 Developer ID 或 Apple 公證，首次啟動可能被 macOS 阻擋。確認信任這份下載後，依 [Apple 的單一 App 開啟說明](https://support.apple.com/en-nz/102445)檢查「系統設定 → 隱私權與安全性 → 強制打開／仍要打開」。不要全域關閉 Gatekeeper。若沒有單一 App 允許選項，請回報完整提示。
-3. 開啟左側 **容器引擎**。若尚未安裝引擎，可使用 App 的官方來源安裝流程，或從 [Apple Container](https://github.com/apple/container)安裝支援版本；macOS 管理員授權由你本人確認。App 與引擎是分開安裝的。
-4. 視需要啟動引擎，等狀態變成「已連線」。在總覽核對真實 CPU、記憶體及系統版本。遇到無法識別的自訂安裝，先閱讀提示，不要覆寫既有設定。
-5. 到設定選擇英文／繁體／簡體介面；CPU 與記憶體範圍取自主機規格。
-
-## 3. 五分鐘快速測試，免編譯
-
-解壓入門包，在該資料夾開啟終端機。先閱讀腳本，再執行：
+先下載並閱讀相同版本的腳本：
 
 ```sh
+curl -fL https://raw.githubusercontent.com/eqwgeryfgbdf/container-desk/v1.0.0/scripts/quick-test.sh -o quick-test.sh
 bash quick-test.sh --check
 bash quick-test.sh --run
 ```
 
-`--check` 只讀取環境。`--run` 僅在映像不存在時下載官方 `busybox:1.37`，建立 UUID 名稱的測試容器（1 CPU／256 MiB），只將 HTTP 發布至 `127.0.0.1:18080`，驗證網頁回應、exec／日誌存取、停止再啟動及檔案保留，最後刪除該容器和由這次新下載的映像參照。原本已有的映像與其他容器會保留；不安裝／升級引擎、不使用 sudo、不掛載主機資料夾、不全域清除資源、不上傳報告。
+`--check` 唯讀；`--run` 建立唯一命名的 localhost HTTP 服務，驗證後清除自身資源。加上 `--keep` 會保留測試容器並列出清理方式。不需額外測試 ZIP，也不下載 AI 模型。
 
-預期看到 `PASS:` 且結束代碼為 0。`BLOCKED`／`FAIL` 或非零代碼代表未滿足條件或失敗，不算通過。18080 已被占用時，可加上 `--port 18081`。
+## 5. 更多操作
 
-想保留服務，在 App 裡操作看看：
-
-```sh
-bash quick-test.sh --run --keep
-```
-
-腳本會印出精確容器名稱、網址與清理命令。回到 Container Desk 重新整理容器，選取 `cd-quick-…`；雙擊展開資訊、點擊連接埠網址、查看日誌，再從「更多操作 → 檔案」檢視 `/www/index.html`。完成後執行腳本印出的停止／刪除命令；映像沒有其他用途才刪除。`--keep` 會刻意留下運行中的測試服務。
-
-也可在 Finder 開啟 `Check-Mac.command`（唯讀）或 `Run-Quick-Test.command`（實際測試）。啟動器會停留讓你閱讀結果；下載的腳本可能需要 macOS 允許，亦可使用上述明確的終端機命令。此測試驗證引擎基本流程，不等於完整 UI、乾淨安裝或升級驗收。
-
-## 4. 全部透過 App 建立網頁服務
-
-1. **映像檔 → 下載與快速部署**。搜尋 `python`，選官方 `library/python`、標籤 `3.13-slim`、Linux ARM64；或在「映像名稱或網址」直接輸入 `docker.io/library/python:3.13-slim`。
-2. 按「下載並設定」。名稱 `my-python-web`、CPU `1`、記憶體 `512 MiB`；主機連接埠 `18081`、容器連接埠 `8080`、TCP。確認主機埠未占用，保留預設網路，不加入主機掛載或密鑰。
-3. 進階設定的入口程式填 `python3`。命令參數**一行一個**，不要加 Shell 引號：
-
-```text
--u
--m
-http.server
-8080
---bind
-0.0.0.0
-```
-
-4. 建立後容器保持**已停止**；選取後按啟動。
-5. 點擊連接埠連結，或開啟 `http://127.0.0.1:18081/`。看到目錄列表表示實際服務可連線，日誌應出現請求。失敗時先看容器狀態與日誌。
-6. 雙擊容器進入完整資訊；Command `+`／`-` 調整介面大小，查看 CPU／記憶體、日誌及檔案。核取方塊可批次選取，執行前先核對目標清單。
-7. 完成後停止並刪除 **my-python-web**。映像是獨立資源，確認沒有其他容器需要才移除 Python 映像。
-
-## 5. 專案、倉庫與檔案
-
-- **專案**：匯入入門包的 `docs/examples/quick-web.yaml`（或[這份範例](examples/quick-web.yaml)），閱讀驗證／相容性報告後啟動。使用本機 `18082` 埠、小型 BusyBox 網頁服務，沒有主機掛載。開啟 `http://127.0.0.1:18082/`，應顯示 `Container Desk project works`。完成後停止／移除專案並檢查保留資源。Docker 轉換只涵蓋已支援的設定，不支援的欄位會列出；詳見[轉換指南](DOCKER_CONVERSION.md)。
-- **映像倉庫**：先使用自己有權限的測試倉庫；登入透過官方 CLI 儲存憑證，標記／推送都是明確操作。可搜尋公開映像，不代表有 Docker Hub 推送權限。私人 HTTPS 倉庫登入成功仍須依帳號環境驗收。
-- **檔案**：先用測試容器試傳輸至空白目的地。限制為 4 GiB／10,000 個項目及一般未壓縮 tar；特殊壓縮、稀疏檔案或不支援的中繼資料會拒絕。既有目的地檔案受保護。詳見[檔案與專案指南](COMPOSE_AND_FILES.md)。
-
-## 6. 新增便利功能
-
-- **複製：** 容器 → 更多操作 → 複製／另外重建，檢查來源設定後再設定新容器。原容器保留；連接埠清除，掛載預設唯讀，環境變數需選擇加入。儲存卷是共用，不是複製；需要可寫層變更時先儲存為映像。
-- **磁碟用量：** 映像／網路／儲存卷 → 磁碟用量與清理，重新整理後選取並確認個別項目。刪除前重查參照，不刪除容器，也不全域 prune。
-- **瀏覽倉庫：** 輸入 HTTPS 主機，必要時直接指定專案，再選標籤部署。目錄 Basic 認證僅暫存本次視窗；拉取／推送另用 CLI 登入。部分服務不支援目錄或需要尚未支援的 Bearer 流程。簡短主機名會明確加上 `:443`，認證拉取請使用相同名稱登入。
-- **映像資訊：** 建立時選擇本機映像與架構，展開映像預設資訊查看啟動指令、使用者、工作目錄與連接埠；不會自動公開連接埠。
-
-## 排除問題與回報
-
-| 狀況 | 處理方式 |
-|---|---|
-| GitHub 404 | 核對 Release 網址及網路連線，儲存庫公開後不需邀請權限。 |
-| App 無法開啟 | 核對 Apple Silicon、macOS 26、DMG 完整校驗碼，記錄系統提示。 |
-| 未連線／找不到 CLI | 在容器引擎頁確認官方引擎的安裝與啟動狀態，不要刪除引擎資料。 |
-| 連接埠已占用 | 改用 18081 或其他空閒埠，不要停止不相關的服務。 |
-| 搜尋／下載失敗 | 檢查網路、DNS、倉庫限制與認證，排除原因後重試。 |
-| 只有 AMD64 映像 | 優先選 ARM64；AMD64 需相容的 Rosetta 設定，改標籤不是二進位轉換。 |
-| 專案欄位不支援 | 查看驗證報告及[支援範圍](COMPOSE_AND_FILES.md)，不可假設所有 Docker 專案原樣可用。 |
-| 測試清理失敗 | 依腳本列出的 UUID 名稱只檢查該測試資源，不要全域 prune。 |
-
-回報 App 版本、macOS／晶片、引擎版本、操作步驟、預期／實際結果及 `PASS`／`FAIL` 輸出即可。分享前移除電腦名稱、私人路徑、環境變數內容、密碼與 Token。腳本不會自動傳送報告。
-
-開發者先執行 `bash scripts/build.sh`，再執行 `python3 scripts/qa.py --live --ui`；先讀[自動化說明](AUTOMATED_QA.md)。介面測試期間請保持 Mac 解鎖，暫停操作桌面。[本版驗證紀錄](RELEASE_0.2.0_VALIDATION.md)列出真實結果。乾淨安裝、真正引擎升級、外部私人 HTTPS 倉庫成功流程及完整人工無障礙驗收仍未驗證；AI 延後。
+- [Hugging Face／llama.cpp／MCP](AI_QUICK_START.zh-Hant.md)：先用約 105 MB 小模型，文字推論不等於支援工具調用。
+- [映像更新與回復](IMAGE_UPDATES.md)：先了解停機及掛載資料限制。
+- [檔案、倉庫與 Compose](COMPOSE_AND_FILES.md)、[Docker 轉換](DOCKER_CONVERSION.md)：僅支援明列範圍，持久資料需另外搬移。
+- [回報問題](TEST_REPORT.md)：附 App／引擎／macOS 版本與錯誤，不要附密碼、Token 或私人環境變數。
